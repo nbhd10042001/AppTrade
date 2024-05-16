@@ -1,0 +1,12 @@
+@using App.Services
+@inject SidebarAdminService _sidebarAdminService
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Admin Control Panel";
+}
+
+@section Sidebar
+{
+    @Html.Raw(_sidebarAdminService.RenderHtml())
+}

@@ -1,0 +1,16 @@
+@{
+    var message = TempData["StatusMessage"] as string;
+    var typeMessage = TempData["TypeStatusMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(message) && string.IsNullOrEmpty(typeMessage)){
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @message
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(typeMessage)){
+    <div class="alert alert-@typeMessage alert-dismissible fade show" role="alert">
+        @message
+    </div>
+}

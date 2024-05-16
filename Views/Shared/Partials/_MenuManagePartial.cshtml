@@ -1,0 +1,30 @@
+@using Microsoft.AspNetCore.Authorization;
+@inject IAuthorizationService authorizationService
+
+@{
+    var result = await authorizationService.AuthorizeAsync(this.User, "ViewManageMenu");
+}
+@if (result.Succeeded)
+{
+    <a class="app-tag-a-1 mx-1" asp-controller="AdminCP" asp-action="Index" asp-area="AdminControlPanel">
+        <i class="fas fa-cog"></i> Quản trị</a>
+
+    @* <div class="dropdown">
+        <a class="dropdown-toggle app-tag-a-1" href="#"
+            id="managedropdownmenu" data-bs-toggle="dropdown">
+            <i class="fas fa-cog"></i> Manage
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-right" style="background-color: aquamarine" aria-labelledby="managedropdownmenu">
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="DbManage" asp-action="Index" asp-area="Database">Database</a>
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="Contact" asp-action="Index" asp-area="Contact">Quản lí Contacts</a>
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="Role" asp-action="Index" asp-area="Identity">Quản lí Roles</a>
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="User" asp-action="Index" asp-area="Identity">Quản lí Users</a>
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="Category" asp-action="Index" asp-area="Blog">Quản lí chuyên mục Blog</a>
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="Post" asp-action="Index" asp-area="Blog">Quản lí Posts</a>
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="CategoryProduct" asp-action="Index" asp-area="Product">Quản lí chuyên mục Sản phẩm</a>
+            <a id="app-item-menu-dropdown" class="dropdown-item" asp-controller="ProductManage" asp-action="Index" asp-area="Product">Quản lí các Sản phẩm</a>
+            <a id="app-item-menu-dropdown" target="_blank" class="dropdown-item" asp-controller="FileManager" asp-action="Index" asp-area="Files">Files</a>
+        </div>
+    </div> *@
+}

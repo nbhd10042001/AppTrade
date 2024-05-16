@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+    netcore-mysql:
+      image: "mysql:5.7"
+      container_name: mysql-net
+      restart: on-failure
+      hostname: mysqlnet
+      networks:
+        - my-network
+      environment:
+        MYSQL_ROOT_PASSWORD: abc123   #Thiết lập password cho root
+      volumes:
+        - storedb:/var/lib/mysql
+      ports:
+        - "3307:3306"                # Ánh xạ cổng 3307 vào cổng mặc định 3306 SQL
+
+networks:                            # TẠO NETWORK
+  my-network:
+    driver: bridge
+
+volumes:                              # TẠO Ổ ĐĨA LƯU DB
+  storedb:

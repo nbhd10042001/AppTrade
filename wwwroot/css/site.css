@@ -1,0 +1,72 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.text-truncation {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#app-tag-a{
+  text-decoration: none;
+  color: #258cfb;
+  &:hover{
+    color: blue;
+  }
+}
+
+#app-tag-a-dele{
+  text-decoration: none;
+  color: rgba(255, 0, 0, 0.696);
+  &:hover{
+    color: red;
+  }
+}
+
+.app-tag-a-1 {
+  color: white !important;
+  text-decoration: none;
+  &:hover{
+    color: aquamarine !important;
+  }
+}
+
+.app-tag-a-2 {
+  color: black !important;
+  text-decoration: none;
+  &:hover{
+    color: blue !important;
+    text-decoration: none;
+  }
+}
+
+#app-item-menu-dropdown{
+  color: black;
+  &:hover{
+    background-color: white;
+  }
+}
+
+
+
+

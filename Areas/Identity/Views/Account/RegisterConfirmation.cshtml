@@ -1,0 +1,12 @@
+@model App.Areas.Identity.Controllers.AutoConfirmModel;
+
+@{
+    ViewData["Title"] = "Thông báo";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>
+    Hãy kiểm tra hòm thư để biết cách xác thực tài khoản
+    <hr>
+    <a asp-area="Identity" asp-action="ConfirmEmail" asp-controller="Account" asp-route-userid="@Model.id" asp-route-code="@Model.code">Auto Confirmation here!</a>
+</p>
