@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using App.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,6 +27,7 @@
     <link rel="stylesheet" href="~/css/_product.css" />
     
 </head>
+
 <body style="background-color: rgb(17, 16, 16);">
     <header id="header-edit">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark box-shadow mb-3">
@@ -35,17 +41,20 @@
 
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link app-tag-a-1" asp-area="" asp-controller="Home" asp-action="Index">
+                            @if(string.IsNullOrEmpty(UserManager.GetUserName(User)) == false)
+                            {
+                                <li class="nav-item">
+                                <a class="nav-link site-a-white" asp-area="" asp-controller="Home" asp-action="Index">
                                     <i class="fas fa-home"></i> Home
                                 </a>
-                            </li>
+                                </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link app-tag-a-1" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
-                                    <i class="fas fa-shopping-cart"></i> Shop
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link site-a-white" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
+                                        <i class="fas fa-shopping-cart"></i> Shop
+                                    </a>
+                                </li>
+                            }
                             
                         </ul>
                         @await Html.PartialAsync("/Views/Shared/Partials/_CartPartial.cshtml")
@@ -58,7 +67,7 @@
             </div>
         </nav>
     </header>
-    <div class="container view-product">
+    <div class="container view-dark">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

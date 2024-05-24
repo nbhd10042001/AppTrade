@@ -53,9 +53,9 @@
                 @Html.DisplayFor(modelItem => item.Slug)
             </td>
             <td>
-                <a id="app-tag-a" asp-action="Edit" asp-route-id="@item.Id" asp-route-oldparentid="@item.ParentCategoryId">Edit</a> |    
-                <a id="app-tag-a" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a id="app-tag-a-dele" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="site-a-blue" asp-action="Edit" asp-route-id="@item.Id" asp-route-oldparentid="@item.ParentCategoryId">Edit</a> |    
+                <a class="site-a-blue" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a class="site-a-red" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 

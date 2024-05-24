@@ -27,23 +27,16 @@ body {
   text-overflow: ellipsis;
 }
 
-#app-tag-a{
+.site-a-red{
   text-decoration: none;
-  color: #258cfb;
+  color: red !important;
   &:hover{
-    color: blue;
+    color: rgb(187, 90, 0) !important;
+    text-decoration: none;
   }
 }
 
-#app-tag-a-dele{
-  text-decoration: none;
-  color: rgba(255, 0, 0, 0.696);
-  &:hover{
-    color: red;
-  }
-}
-
-.app-tag-a-1 {
+.site-a-white {
   color: white !important;
   text-decoration: none;
   &:hover{
@@ -51,8 +44,9 @@ body {
   }
 }
 
-.app-tag-a-2 {
-  color: black !important;
+.site-a-blue {
+  color: rgb(63, 83, 231) !important;
+
   text-decoration: none;
   &:hover{
     color: blue !important;
@@ -65,6 +59,16 @@ body {
   &:hover{
     background-color: white;
   }
+}
+
+.view-dark{
+  background-color: rgb(26, 26, 26);
+  color: white;
+}
+
+.view-gray{
+  background-color: rgb(53, 53, 53);
+  color: white;
 }
 
 

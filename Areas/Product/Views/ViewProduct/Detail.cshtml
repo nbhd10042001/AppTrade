@@ -8,7 +8,6 @@
 
 <div class="detail-post">
     <h1>@Model.Title</h1>
-    <div class="sapo">@Model.Description</div>
 
     <div><p>Price: <strong>@Model.Price</strong></p></div>
 
@@ -32,4 +31,7 @@
 
     <hr>
     @Html.Raw(Model.Description)
+    <div>
+        <a class="site-a-blue" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">Back to list</a>
+    </div>
 </div>

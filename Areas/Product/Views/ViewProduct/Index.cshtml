@@ -53,7 +53,7 @@ else
             <div class="card-footer">
                 <p class="text-center">Price: <strong>@product.Price $</strong></p>
                 <hr>
-                <a class="card-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug" style="text-decoration:none;">
+                <a class="card-link site-a-blue" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug">
                     Xem chi tiet
                 </a>
                 <a asp-action="AddToCart" asp-route-productid="@product.ProductId" class="btn btn-success mx-2">

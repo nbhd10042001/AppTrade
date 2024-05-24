@@ -8,7 +8,7 @@
 
 <style>
     .bg-login-image{
-        background-image: url(https://as1.ftcdn.net/v2/jpg/03/95/29/32/1000_F_395293226_A4boRgABAbfXmAmmynQHcjjIIB3MjDCj.jpg);
+        background-image: url(https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs2/321944840/original/fe0705baf8ed274f0ab0816a7b45835d6304476b/make-a-3d-render-of-your-csgo-skins.png);
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
@@ -21,15 +21,15 @@
 
     <div class="col-xl-10 col-lg-12 col-md-9">
 
-        <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card o-hidden border-0 shadow-lg my-5 bg-login-image">
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                    <div class="col-3 d-none d-lg-block"></div>
                     <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Đăng ký!</h1>
+                                <h1 class="h4 text-white mb-4">Đăng ký!</h1>
                             </div>
                             <form class="user" asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
                                 <div asp-validation-summary="All" class="text-danger"></div>
@@ -94,14 +94,15 @@
 
                             <hr>
                             <div class="text-center">
-                                <a class="small" asp-action="ForgotPassword">Quên mật khẩu?</a>
+                                <a class="small site-a-white" asp-action="ForgotPassword">Quên mật khẩu?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Có tài khoản? Đăng nhập</a>
+                                <a class="small site-a-white" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Có tài khoản? Đăng nhập</a>
                             </div>
 
                         </div>
                     </div>
+                    <div class="col-3 d-none d-lg-block"></div>
                 </div>
             </div>
         </div>
