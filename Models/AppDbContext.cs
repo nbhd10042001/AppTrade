@@ -1,5 +1,6 @@
 
 
+using App.Models.Product;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,9 +33,24 @@ public class AppDbContext : IdentityDbContext<AppUser> //DbContext
             }
         }
 
-       
+        // fluent API cho product
+        modelBuilder.Entity<CategoryProductModel>(entity => {
+            entity.HasIndex(c => c.Slug) // danh chi muc de sau nay tim kiem nhanh va de dang
+                    .IsUnique(); // thiet lap chi muc Slug la duy nhat, khong duoc phep co 2 category co slug giong nhay
+        });
+
+        modelBuilder.Entity<ProductModel>(entity => {
+            entity.HasIndex(p => p.Slug).IsUnique();
+        });
+
+        modelBuilder.Entity<ProductCategoryProduct>(entity => {
+            entity.HasKey(c => new {c.ProductID, c.CategoryProductID});
+        });
        
     }
 
-    
+    public DbSet<CategoryProductModel> CategoryProducts {set; get;}
+    public DbSet<ProductModel> Products {set; get;}
+    public DbSet<ProductCategoryProduct> ProductCategoryProducts {set; get;}
+    public DbSet<ProductPhotoModel> ProductPhotos {set; get;}
 }

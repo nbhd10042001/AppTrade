@@ -35,6 +35,7 @@
                                 <h1 class="h4 text-gray-900 mb-4">Đăng nhập!</h1>
                             </div>
                             <form class="user" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
                                 
                                 <div class="form-group">
                                     <input asp-for="UserNameOrEmail" class="form-control form-control-user" />

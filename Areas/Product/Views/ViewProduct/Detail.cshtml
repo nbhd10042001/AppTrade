@@ -1,0 +1,35 @@
+@using App.Models.Product
+@model App.Models.Product.ProductModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+
+<div class="detail-post">
+    <h1>@Model.Title</h1>
+    <div class="sapo">@Model.Description</div>
+
+    <div><p>Price: <strong>@Model.Price</strong></p></div>
+
+    <a asp-action="AddToCart" asp-route-productid="@Model.ProductId" class="btn btn-success">
+        Dat hang
+    </a>
+
+    <div>
+        <i>Update: @Model.DateUpdated</i> / Author: <strong>@Model.Author.UserName</strong>
+    </div>
+
+    @if(Model.Photos.Any())
+    {
+        <div class="d-flex flex-wrap">
+            @foreach(var photo in Model.Photos)
+            {
+                <img class="w-50" src="/contents/Products/@photo.FileName">
+            }
+        </div>
+    }
+
+    <hr>
+    @Html.Raw(Model.Description)
+</div>

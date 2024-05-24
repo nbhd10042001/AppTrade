@@ -1,9 +1,11 @@
+using App.Areas.Product.Models.Services;
 using App.Data;
 using App.Models;
 using App.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using MySqlConnector;
 
 namespace AppTrade;
@@ -35,6 +37,14 @@ public class Program
         builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
         builder.Services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
         builder.Services.AddTransient<SidebarAdminService>();
+        builder.Services.AddTransient<CartService>();
+
+        builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddSession(cfg => {
+            cfg.Cookie.Name = "appMVC";
+            cfg.IdleTimeout = new TimeSpan(0, 30, 0); // thoi gian ton tai session (30p)
+        });
+
 
         //dang ky Identity
         builder.Services.AddIdentity<AppUser, IdentityRole>()
@@ -97,7 +107,17 @@ public class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
+        app.UseStaticFiles(new StaticFileOptions(){
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "Uploads")
+            ),
+            // url: /contents/image.jpg => Uploads/image.jpg
+            RequestPath = "/contents"
+        });
+
         app.UseRouting();
+        app.UseSession();
+
 
         app.UseAuthentication();
         app.UseAuthorization();

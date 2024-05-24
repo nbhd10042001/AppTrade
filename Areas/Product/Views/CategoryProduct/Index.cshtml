@@ -1,0 +1,79 @@
+@using App.Models.Product
+@model IEnumerable<App.Models.Product.CategoryProductModel>
+
+@using App.Services
+@inject SidebarAdminService _sidebarAdminService
+
+@{
+    ViewData["Title"] = "Products";
+    Layout = "_LayoutAdmin";
+
+}
+
+<h1>Chuyen muc San pham</h1>
+
+<partial name="_AlertMessage"></partial>
+
+<p>
+    <a class="btn btn-primary btn-sm" asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slug)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model) {
+            await RenderCategory(item, 0);
+        }
+
+    </tbody>
+</table>
+
+
+@{
+    async Task RenderCategory(CategoryProductModel item, int level)
+    {
+        string prefix = string.Concat(Enumerable.Repeat("&nbsp;&nbsp;&nbsp;&nbsp;", level));
+
+        <tr>
+            <td>
+                @Html.Raw(prefix) @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Slug)
+            </td>
+            <td>
+                <a id="app-tag-a" asp-action="Edit" asp-route-id="@item.Id" asp-route-oldparentid="@item.ParentCategoryId">Edit</a> |    
+                <a id="app-tag-a" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a id="app-tag-a-dele" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+
+        if(item.ChildrenCategory?.Count > 0)
+        {
+            foreach (var childrenCate in item.ChildrenCategory)
+            {
+                await RenderCategory(childrenCate, level + 1);
+            }
+        }
+    }
+}
+
+@{
+    _sidebarAdminService.SetActive("CategoryProduct", "Index", "Product");
+}
+
+@section Sidebar
+{
+    @Html.Raw(_sidebarAdminService.RenderHtml())
+}

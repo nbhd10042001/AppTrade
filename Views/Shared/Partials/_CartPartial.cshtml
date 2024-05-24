@@ -1,0 +1,22 @@
+@using App.Areas.Product.Models
+@using App.Areas.Product.Models.Services
+@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor _httpContextAccessor
+@inject CartService _cartService
+
+@{
+    var cart = _cartService.GetCartItems();
+
+    if (cart.Count > 0) 
+    {
+        @* asp-route="cart" thuc hien action Cart trong ViewProductController.cs *@
+        <div class="nav-item">
+            <a class="link-danger mx-2" style="text-decoration: none;" asp-route="cart">
+                <i class="fas fa-shopping-cart"></i>
+                Giỏ hàng(@cart.Count)
+            </a>
+        </div>   
+    }
+}
+

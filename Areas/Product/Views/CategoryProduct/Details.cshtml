@@ -1,0 +1,50 @@
+@model App.Models.Product.CategoryProductModel
+
+@using App.Services
+@inject SidebarAdminService _sidebarAdminService
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "_LayoutAdmin";
+
+}
+
+<h1>Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Slug)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Slug)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ParentCategory)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ParentCategory.Slug)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@{
+    _sidebarAdminService.SetActive("CategoryProduct", "Index", "Product");
+}
+
+@section Sidebar
+{
+    @Html.Raw(_sidebarAdminService.RenderHtml())
+}

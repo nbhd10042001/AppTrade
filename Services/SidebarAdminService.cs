@@ -73,39 +73,7 @@ public class SidebarAdminService
 
                 }
             });
-
-        Items.Add(new SidebarItem() {Type = SidebarItemType.Divider});
-
-        Items.Add(new SidebarItem() 
-            {
-                Type = SidebarItemType.NavItem,
-                Title = "Quan li Blog",
-                AwesomeIcon = "far fa-folder",
-                CollapseId = "BlogManage",
-
-                Items = new List<SidebarItem>()
-                {
-                    new SidebarItem()
-                    {
-                        Type = SidebarItemType.NavItem,
-                        Items = null,
-                        Title = "Quan li Chuyen muc",
-                        Area = "Blog",
-                        Controller = "Category",
-                        Action = "Index"
-                    },
-                    new SidebarItem()
-                    {
-                        Type = SidebarItemType.NavItem,
-                        Items = null,
-                        Title = "Quan li Bai viet",
-                        Area = "Blog",
-                        Controller = "Post",
-                        Action = "Index"
-                    }
-
-                }
-            });
+            
         Items.Add(new SidebarItem() {Type = SidebarItemType.Divider});
 
         Items.Add(new SidebarItem() 

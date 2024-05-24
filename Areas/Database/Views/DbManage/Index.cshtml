@@ -1,0 +1,79 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore;
+@using System.Data;
+@using App.Services
+
+@inject SidebarAdminService _sidebarAdminService
+@inject AppDbContext dbContext;
+@inject UserManager<AppUser> _userManager;
+
+@{
+    ViewData["Title"] = "Thong tin DB";
+
+    var connect = dbContext.Database.GetDbConnection();
+    var dbname = connect.Database;
+    var canConnect = dbContext.Database.CanConnect();
+
+    var migrationsPending = dbContext.Database.GetPendingMigrations();
+    var migrationsApplied = dbContext.Database.GetAppliedMigrations();
+
+    var userAdmin = await _userManager.FindByEmailAsync($"admin@example.com");
+}
+
+<partial name="_AlertMessage"></partial>
+
+<h1>Thong tin co so du lieu</h1>
+<p> - Database: @dbname</p>
+<p> - Source: @connect.DataSource</p>
+<p> - State: @connect.State</p>
+<p> - Can Connect: @canConnect</p>
+@if(userAdmin == null)
+{
+    <p> - Admin: Chua co Admin, hay <a asp-controller="DbManage" asp-action="SeedAdmin">Seed Admin</a></p>
+}
+else
+{
+    <p> - Admin: Da co Admin</p>
+}
+
+<hr>
+<h2>Migrations</h2>
+
+@foreach(var migration in migrationsApplied)
+{
+    <p>@migration</p>
+}
+
+
+@foreach(var migration in migrationsPending)
+{
+    <p>@migration (pending)</p>
+}
+
+@if (migrationsPending.Any())
+{
+    <form method="post">
+        <button class="btn btn-success" asp-controller="DbManage" asp-action="Migrate">Update(Create) Databse</button>
+    </form>
+}
+
+@if(!canConnect)
+{
+    <p class="alert alert-danger">Khong co ket noi toi databse</p>
+}
+
+@if(canConnect)
+{
+
+    <a class="btn btn-danger" asp-controller="DbManage" asp-action="DeleteDB">Delete Databse : @dbname</a>
+    <a class="btn btn-warning" asp-controller="DbManage" asp-action="SeedData">Seed Databse</a>
+}
+
+@{
+    _sidebarAdminService.SetActive("DbManage", "Index", "Database");
+}
+
+@section Sidebar
+{
+    @Html.Raw(_sidebarAdminService.RenderHtml())
+}

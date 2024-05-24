@@ -1,28 +1,36 @@
-﻿@using App.Models.Product
-@{
-    ViewData["Title"] = "Home Page";
-    var products = ViewBag.products as IQueryable<ProductModel>;
+@using App.Models.Product;
 
+@model List<ProductModel>
+
+@{
+    List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
+    CategoryProductModel categoryChoosed = ViewBag.categoryChoosed as CategoryProductModel;
+    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Products";
 }
 
-<partial name="_AlertMessage"></partial>
+@* List Products *@
+<h1>@ViewData["Title"]</h1>
+
+@if (categoryChoosed != null){
+    <p>@categoryChoosed.Content</p>
+}
+else
+{
+    <p>Toan bo cac san pham cua tat ca cac danh muc</p>
+}
+
+<hr>
 
 <style>
     .card-product{
-        width: 24%;
+        width: 20%;
         background-color: rgb(41, 41, 41);
         color: white;
     }
 </style>
 
-<div class="text-center">
-    <h1 class="display-4 text-white">Welcome to <a class="text-info" style="text-decoration: none;">TradeCSGO</a></h1>
-    <p class="text-white">Trade or buy any skin weapons CSGO from here!</p>
-
-</div>
-
-@* <div class="d-flex flex-wrap justify-content-between">
-    @foreach(var product in products)
+<div class="d-flex flex-wrap justify-content-between">
+    @foreach(var product in Model)
     {
         var srcImg = "/contents/noImg.png";
         if (product.Photos.Any())
@@ -44,6 +52,7 @@
 
             <div class="card-footer">
                 <p class="text-center">Price: <strong>@product.Price $</strong></p>
+                <hr>
                 <a class="card-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug" style="text-decoration:none;">
                     Xem chi tiet
                 </a>
@@ -53,4 +62,7 @@
             </div>
         </div>
     }
-</div> *@
+</div>
+
+
+<partial name="_PagingXTL" model="@ViewBag.pagingmodel" />

@@ -22,11 +22,11 @@
     <link rel="stylesheet" href="~/css/_product.css" />
     
 </head>
-<body>
+<body style="background-color: rgb(17, 16, 16);">
     <header id="header-edit">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark box-shadow mb-3">
             <div class="container-fluid">
-                    <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">AppMVC</a>
+                    <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeCSGO</a>
                     
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -36,27 +36,35 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link app-tag-a-1" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link app-tag-a-1" asp-area="" asp-controller="Home" asp-action="Index">
+                                    <i class="fas fa-home"></i> Home
+                                </a>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link app-tag-a-1" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link app-tag-a-1" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
+                                    <i class="fas fa-shopping-cart"></i> Shop
+                                </a>
                             </li>
                             
                         </ul>
+                        @await Html.PartialAsync("/Views/Shared/Partials/_CartPartial.cshtml")
+                        <partial name="/Views/Shared/Partials/_MenuManagePartial.cshtml"></partial>
                         <partial name="/Views/Shared/Partials/_LoginPartial.cshtml"></partial>
+
 
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container view-product">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer id="footer-edit" class="border-top footer text-white-50" style="text-align:center">
+    <footer id="footer-edit" class="footer text-white-50" style="text-align:center">
         <div class="container">
             &copy; 2024 - AppTrade - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
