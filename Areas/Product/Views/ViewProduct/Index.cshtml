@@ -5,7 +5,7 @@
 @{
     List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
     CategoryProductModel categoryChoosed = ViewBag.categoryChoosed as CategoryProductModel;
-    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Products";
+    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Skins";
 }
 
 @* List Products *@
@@ -16,7 +16,7 @@
 }
 else
 {
-    <p>Toan bo cac san pham cua tat ca cac danh muc</p>
+    <p>Toàn bộ Skins</p>
 }
 
 <hr>
@@ -26,6 +26,11 @@ else
         width: 20%;
         background-color: rgb(41, 41, 41);
         color: white;
+    }
+
+    .image-edit{
+        height: 50%;
+        width: 100%;
     }
 </style>
 
@@ -38,8 +43,8 @@ else
             srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
         }
 
-        <div class="card mb-2 card-product">
-            <img src="@srcImg" class="card-img-top" alt="...">
+        <div class="card card-product mb-2">
+            <img src="@srcImg" class="card-img-top image-edit" alt="...">
             <div class="card-body">
                 <h5 class="card-title">@product.Title</h5>
                 <p class="card-text text-truncation">@product.Description</p>

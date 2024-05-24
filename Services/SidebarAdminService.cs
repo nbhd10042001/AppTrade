@@ -17,12 +17,12 @@ public class SidebarAdminService
 
         // Khoi tao cac muc sidebar
         Items.Add(new SidebarItem() {Type = SidebarItemType.Divider});
-        Items.Add(new SidebarItem() {Type = SidebarItemType.Heading, Title="Quan li chung"});
+        Items.Add(new SidebarItem() {Type = SidebarItemType.Heading, Title="Quản lí chung"});
 
         Items.Add(new SidebarItem() 
             {
                 Type = SidebarItemType.NavItem,
-                Title = "Quan li Database",
+                Title = "Quản lí Database",
                 AwesomeIcon = "fas fa-database",
                 Items = null,
                 Area = "Database",
@@ -33,7 +33,7 @@ public class SidebarAdminService
         Items.Add(new SidebarItem() 
             {
                 Type = SidebarItemType.NavItem,
-                Title = "Quan li Lien he",
+                Title = "Quản lí liên hệ",
                 AwesomeIcon = "far fa-address-card",
                 Items = null,
                 Area = "Contact",
@@ -46,7 +46,7 @@ public class SidebarAdminService
         Items.Add(new SidebarItem() 
             {
                 Type = SidebarItemType.NavItem,
-                Title = "Phan quyen va Thanh vien",
+                Title = "Phân quyền và thành viên",
                 AwesomeIcon = "far fa-folder",
                 CollapseId = "RolesAndUsers",
 
@@ -56,7 +56,7 @@ public class SidebarAdminService
                     {
                         Type = SidebarItemType.NavItem,
                         Items = null,
-                        Title = "Quan li Role",
+                        Title = "Quản lí Role",
                         Area = "Identity",
                         Controller = "Role",
                         Action = "Index"
@@ -65,7 +65,7 @@ public class SidebarAdminService
                     {
                         Type = SidebarItemType.NavItem,
                         Items = null,
-                        Title = "Quan li User",
+                        Title = "Quản lí User",
                         Area = "Identity",
                         Controller = "User",
                         Action = "Index"
@@ -79,7 +79,7 @@ public class SidebarAdminService
         Items.Add(new SidebarItem() 
             {
                 Type = SidebarItemType.NavItem,
-                Title = "Quan li San pham",
+                Title = "Quản lí sản phẩm",
                 AwesomeIcon = "far fa-folder",
                 CollapseId = "ProductManage",
 
@@ -89,7 +89,7 @@ public class SidebarAdminService
                     {
                         Type = SidebarItemType.NavItem,
                         Items = null,
-                        Title = "Quan li CMSP",
+                        Title = "Quản lí CMSP",
                         Area = "Product",
                         Controller = "CategoryProduct",
                         Action = "Index"
@@ -98,7 +98,7 @@ public class SidebarAdminService
                     {
                         Type = SidebarItemType.NavItem,
                         Items = null,
-                        Title = "Quan li San pham",
+                        Title = "Quản lí Skins",
                         Area = "Product",
                         Controller = "ProductManage",
                         Action = "Index"

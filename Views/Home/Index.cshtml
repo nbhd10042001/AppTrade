@@ -1,4 +1,8 @@
-﻿@using App.Models.Product
+﻿@using App.Models
+@using App.Models.Product
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> _userManager
+
 @{
     ViewData["Title"] = "Home Page";
     var products = ViewBag.products as IQueryable<ProductModel>;
@@ -21,17 +25,22 @@
 
 </div>
 
-<div class="text-center">
-    <br>
-    <br>
-    <br>
-    <h3 style="color: rgb(12, 118, 210);">Login now to get special SKIN !!!!!!!!</h3>
-    <br>
-    <a class="btn btn-info w-25" asp-area="Identity" asp-controller="Account" asp-action="Login"><strong>LOGIN</strong></a>
-    <br>
-    <br>
-    <br>
-</div>
+@if(string.IsNullOrEmpty(_userManager.GetUserName(User)) == true)
+{
+    <div class="text-center">
+        using Microsoft.AspNetCore.Identity;
+        <br>
+        <br>
+        <br>
+        <h3 style="color: rgb(12, 118, 210);">Login now to get special SKIN !!!!!!!!</h3>
+        <br>
+        <a class="btn btn-info w-25" asp-area="Identity" asp-controller="Account" asp-action="Login"><strong>LOGIN</strong></a>
+        <br>
+        <br>
+        <br>
+    </div>
+}
+
 
 @* <div class="d-flex flex-wrap justify-content-between">
     @foreach(var product in products)
