@@ -106,8 +106,6 @@ public class SidebarAdminService
 
                 }
             });
-
-
     }
 
     public string RenderHtml()

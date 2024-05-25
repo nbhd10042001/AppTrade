@@ -5,12 +5,15 @@
 
 @if (!string.IsNullOrEmpty(message) && string.IsNullOrEmpty(typeMessage)){
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        @message
+            @message
     </div>
 }
 
 @if (!string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(typeMessage)){
     <div class="alert alert-@typeMessage alert-dismissible fade show" role="alert">
         @message
+        <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
 }

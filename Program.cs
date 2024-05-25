@@ -38,6 +38,7 @@ public class Program
         builder.Services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
         builder.Services.AddTransient<SidebarAdminService>();
         builder.Services.AddTransient<CartService>();
+        builder.Services.AddTransient<DarkModeService>();
 
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(cfg => {

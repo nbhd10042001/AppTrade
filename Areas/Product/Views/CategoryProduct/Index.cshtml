@@ -44,9 +44,13 @@
     async Task RenderCategory(CategoryProductModel item, int level)
     {
         string prefix = string.Concat(Enumerable.Repeat("&nbsp;&nbsp;&nbsp;&nbsp;", level));
+        var color = "";
+        if (level == 0) color = "danger";
+        else if (level == 1) color = "primary";
+        else color = "dark";
 
         <tr>
-            <td>
+            <td class="text-@color">
                 @Html.Raw(prefix) @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>

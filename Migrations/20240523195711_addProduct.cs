@@ -1,5 +1,7 @@
 ﻿using System;
 using App.Data;
+using App.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 

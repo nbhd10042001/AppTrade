@@ -1,10 +1,15 @@
+@using App.Services
 @using Microsoft.AspNetCore.Identity
 @using App.Models
 @using App.Models.MenuAdmin
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+@inject DarkModeService dmService
 
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +24,11 @@
 
     <title>@ViewData["Title"]</title>
 
-    <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibAdmincpPartial.cshtml"></partial>
+    <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibCssAdmincpPartial.cshtml"></partial>
+    @if(user != null)
+    {
+        @Html.Raw(dmService.ChangeViewMode(user.DarkMode))
+    }
 
 </head>
 
@@ -28,7 +37,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav view-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav view-mode-sidebar sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
@@ -46,6 +55,10 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
+            <div class="text-center d-none d-md-inline">
+                <a asp-area="AdminControlPanel" asp-controller="AdminCP" asp-action="ChangeDarkMode"><i class="fas fa-moon"></i> </a>
+            </div>
+
         </ul>
         <!-- End of Sidebar -->
 
@@ -56,7 +69,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light view-gray topbar mb-4 static-top shadow">
+                <nav class="navbar navbar-expand navbar-light view-mode-topbar topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -108,7 +121,7 @@
                         {
                             <li>
                                 <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">
-                                    <i class="fas fa-sign-in-alt"></i> Login
+                                    <i class="fas fa-sign-in-alt "></i> Login
                                 </a>
                             </li>
                         }
@@ -132,7 +145,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer view-gray">
+            <footer class="sticky-footer view-mode-topbar">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; App MVC</span>
@@ -155,7 +168,8 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <!-- Custom scripts for all pages-->
-    <script src="~/js/sb-admin-2.min.js"></script>
+    <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibJsAdmincpPartial.cshtml"></partial>
+
 </body>
 
 </html>
