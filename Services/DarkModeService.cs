@@ -22,12 +22,12 @@ public class DarkModeService
         {
             html.Append(@"
                 <style>
-                    .view-mode-sidebar{
+                    .dark-mode-sidebar{
                         background-color: rgb(26, 26, 26);
                         color: rgb(255, 255, 255) !important;
                     }
 
-                    .view-mode-topbar{
+                    .dark-mode-topbar{
                         background-color: rgb(55, 55, 55);
                         color: rgb(255, 255, 255) !important;
                     }
@@ -38,12 +38,12 @@ public class DarkModeService
         {
             html.Append(@"
                 <style>
-                    .view-mode-sidebar{
+                    .light-mode-sidebar{
                         background-color: rgb(100, 100, 100);
                         color: rgb(0, 0, 0) !important;
                     }
 
-                    .view-mode-topbar{
+                    .light-mode-topbar{
                         background-color: rgb(162, 231, 239);
                         color: rgb(0, 0, 0) !important;
                     }

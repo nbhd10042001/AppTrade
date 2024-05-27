@@ -25,10 +25,15 @@
     <title>@ViewData["Title"]</title>
 
     <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibCssAdmincpPartial.cshtml"></partial>
-    @if(user != null)
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="">
+    @* @if(user != null)
     {
         @Html.Raw(dmService.ChangeViewMode(user.DarkMode))
-    }
+    } *@
+
+
 
 </head>
 
@@ -37,7 +42,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav view-mode-sidebar sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
@@ -55,8 +60,14 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <div class="text-center d-none d-md-inline">
+            @* <div class="text-center d-none d-md-inline">
                 <a asp-area="AdminControlPanel" asp-controller="AdminCP" asp-action="ChangeDarkMode"><i class="fas fa-moon"></i> </a>
+            </div> *@
+
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="dark-mode-button">
+                    <i id="icon-dark-mode" class="fas"></i> </a> 
+                </button>
             </div>
 
         </ul>
@@ -69,7 +80,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light view-mode-topbar topbar mb-4 static-top shadow">
+                <nav id="topbar" class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -145,7 +156,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer view-mode-topbar">
+            <footer id="footer" class="sticky-footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; App MVC</span>
@@ -169,6 +180,9 @@
 
     <!-- Custom scripts for all pages-->
     <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibJsAdmincpPartial.cshtml"></partial>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
 
 </body>
 
