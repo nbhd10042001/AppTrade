@@ -13,24 +13,18 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AppTrade.styles.css" asp-append-version="true" />
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
      @* font-awesome *@
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 
     @* other .css *@
-    <link rel="stylesheet" href="~/css/_footer.css" />
-    <link rel="stylesheet" href="~/css/_header.css" />
     <link rel="stylesheet" href="~/css/_post.css" />
     <link rel="stylesheet" href="~/css/_product.css" />
     
 </head>
 
-<body style="background-color: rgb(17, 16, 16);">
-    <header id="header-edit">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark box-shadow mb-3">
+<body id="body-layout">
+    <header id="header-layout">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
             <div class="container-fluid">
                     <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeCSGO</a>
                     
@@ -44,17 +38,24 @@
                             @if(string.IsNullOrEmpty(UserManager.GetUserName(User)) == false)
                             {
                                 <li class="nav-item">
-                                <a class="nav-link site-a-white" asp-area="" asp-controller="Home" asp-action="Index">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
                                     <i class="fas fa-home"></i> Home
                                 </a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link site-a-white" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
+                                    <a class="nav-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
                                         <i class="fas fa-shopping-cart"></i> Shop
                                     </a>
                                 </li>
+                            
                             }
+
+                            <li class="nav-item">
+                                <a class="nav-link" id="dark-mode-button">
+                                    <i id="icon-dark-mode" class="fas"></i>
+                                </a>
+                            </li>
                             
                         </ul>
                         @await Html.PartialAsync("/Views/Shared/Partials/_CartPartial.cshtml")
@@ -67,19 +68,24 @@
             </div>
         </nav>
     </header>
-    <div class="container view-dark">
+
+    <div id="container-layout" class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer id="footer-edit" class="footer text-white-50" style="text-align:center">
+    <footer id="footer-layout" class="footer" style="text-align:center">
         <div class="container">
             &copy; 2024 - AppTrade - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 
 </html>

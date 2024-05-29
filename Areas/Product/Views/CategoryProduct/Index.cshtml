@@ -1,9 +1,6 @@
 @using App.Models.Product
 @model IEnumerable<App.Models.Product.CategoryProductModel>
 
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
-
 @{
     ViewData["Title"] = "Products";
     Layout = "_LayoutAdmin";
@@ -71,13 +68,4 @@
             }
         }
     }
-}
-
-@{
-    _sidebarAdminService.SetActive("CategoryProduct", "Index", "Product");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
 }

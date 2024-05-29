@@ -1,6 +1,4 @@
 @model List<RoleModel>
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
 
 @{
     ViewData["Title"] = "Danh sách các role (vai trò)";
@@ -52,11 +50,3 @@
     }
 </table>
 
-@{
-    _sidebarAdminService.SetActive("Role", "Index", "Identity");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}

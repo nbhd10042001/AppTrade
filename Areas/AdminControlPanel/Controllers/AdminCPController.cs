@@ -18,13 +18,4 @@ public class AdminCPController : Controller
     [Route("/admincp")]
     public IActionResult Index () => View();
 
-    [Route("/admincp/changemode")]
-    public async Task<IActionResult> ChangeDarkModeAsync()
-    {
-        var user = await _userManager.GetUserAsync(HttpContext.User);
-        user.DarkMode = !user.DarkMode;
-        await _userManager.UpdateAsync(user);
-
-        return View(nameof(Index), "AdminCP");
-    }
 }

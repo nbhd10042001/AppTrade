@@ -15,5 +15,4 @@ public class AppUser : IdentityUser
     [DataType(DataType.Date)]
     public DateTime? BirthDate {set; get;}
 
-    public bool DarkMode {set; get;} = true;
 }

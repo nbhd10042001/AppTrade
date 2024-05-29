@@ -1,6 +1,4 @@
 @model IdentityRole
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
 
 @{
     ViewData["Title"] = "Xóa role";
@@ -31,11 +29,3 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 
-@{
-    _sidebarAdminService.SetActive("Role", "Index", "Identity");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}

@@ -2,26 +2,17 @@
 @using App.Models.Product
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<AppUser> _userManager
-
 @{
     ViewData["Title"] = "Home Page";
     var products = ViewBag.products as IQueryable<ProductModel>;
-
 }
+
 
 <partial name="_AlertMessage"></partial>
 
-<style>
-    .card-product{
-        width: 24%;
-        background-color: rgb(41, 41, 41);
-        color: white;
-    }
-</style>
-
 <div class="text-center">
-    <h1 class="display-4 text-white">Welcome to <a class="text-info" style="text-decoration: none;">TradeCSGO</a></h1>
-    <p class="text-white">Trade or buy any skin weapons CSGO from here!</p>
+    <h1 class="display-4">Welcome to <a class="text-info" style="text-decoration: none;"><strong>TradeCSGO</strong></a></h1>
+    <p>Trade or buy any skin weapons CSGO from here!</p>
 
 </div>
 
@@ -39,9 +30,19 @@
         <br>
     </div>
 }
+else
+{
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+}
 
+<h4 class="text-center"><strong>New Product Update!</strong></h4>
+<br>
 
-@* <div class="d-flex flex-wrap justify-content-between">
+<div id="card-product" class="d-flex flex-wrap">
     @foreach(var product in products)
     {
         var srcImg = "/contents/noImg.png";
@@ -50,7 +51,7 @@
             srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
         }
 
-        <div class="card mb-2 card-product">
+        <div class="card mb-2">
             <img src="@srcImg" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">@product.Title</h5>
@@ -60,17 +61,18 @@
                         @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
                     </i>
                 </p>
+                <a class="card-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug" style="text-decoration:none;">
+                    Detail
+                </a>
             </div>
 
-            <div class="card-footer">
-                <p class="text-center">Price: <strong>@product.Price $</strong></p>
-                <a class="card-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug" style="text-decoration:none;">
-                    Xem chi tiet
-                </a>
-                <a asp-action="AddToCart" asp-route-productid="@product.ProductId" class="btn btn-success mx-2">
+            <div class="card-footer text-center">
+                <p>Price: <strong>@product.Price $</strong></p>
+                <a asp-area="Product" asp-controller="ViewProduct" asp-action="AddToCart" asp-route-productid="@product.ProductId" class="btn btn-success">
                     Đặt hàng
                 </a>
             </div>
         </div>
     }
-</div> *@
+</div>
+

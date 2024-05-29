@@ -1,5 +1,6 @@
 
 
+using App.Models.Contacts;
 using App.Models.Product;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,7 @@ public class AppDbContext : IdentityDbContext<AppUser> //DbContext
         });
        
     }
+    public DbSet<ContactModel> Contacts {set; get;}
 
     public DbSet<CategoryProductModel> CategoryProducts {set; get;}
     public DbSet<ProductModel> Products {set; get;}

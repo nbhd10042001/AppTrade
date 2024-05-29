@@ -47,24 +47,59 @@ $(document).ready(function () {
        
 
     function toggleDarkMode() {
-        $("#accordionSidebar").removeClass("light-mode-sidebar");
-        $("#accordionSidebar").addClass("dark-mode-sidebar");
-        $("#topbar").removeClass("light-mode-topbar");
-        $("#topbar").addClass("dark-mode-topbar");
-        $("#footer").removeClass("light-mode-topbar");
-        $("#footer").addClass("dark-mode-topbar");
+        // layoutAdmin controll panel
+        $("#accordionSidebar").removeClass("sidebar-light");
+        $("#accordionSidebar").addClass("sidebar-dark");
+        $("#topbar-admin").removeClass("topbar-light");
+        $("#topbar-admin").addClass("topbar-dark");
+        $("#footer-admin").removeClass("topbar-light");
+        $("#footer-admin").addClass("topbar-dark");
+
+        
+        //layout main
+        $("#body-layout").removeClass("body-light");
+        $("#body-layout").addClass("body-dark");
+        $("#header-layout").removeClass("header-light");
+        $("#header-layout").addClass("header-dark");
+        $("#footer-layout").removeClass("header-light");
+        $("#footer-layout").addClass("header-dark");
+        $("#container-layout").removeClass("container-light");
+        $("#container-layout").addClass("container-dark");
+
+        $("#card-product").removeClass("card-product-light");
+        $("#card-product").addClass("card-product-dark");
+        $("#cart-table").addClass("text-white");
+        $("#cart-table").removeClass("text-dark");
+
         $("#icon-dark-mode").addClass("fa-sun");
         $("#icon-dark-mode").removeClass("fa-moon");
 
     }
 
     function toggleLightMode(){
-        $("#accordionSidebar").removeClass("dark-mode-sidebar");
-        $("#accordionSidebar").addClass("light-mode-sidebar");
-        $("#topbar").removeClass("dark-mode-topbar");
-        $("#topbar").addClass("light-mode-topbar");
-        $("#footer").removeClass("dark-mode-topbar");
-        $("#footer").addClass("light-mode-topbar");
+        // layoutAdmin controll panel
+        $("#accordionSidebar").addClass("sidebar-light");
+        $("#accordionSidebar").removeClass("sidebar-dark");
+        $("#topbar-admin").removeClass("topbar-dark");
+        $("#topbar-admin").addClass("topbar-light");
+        $("#footer-admin").removeClass("topbar-dark");
+        $("#footer-admin").addClass("topbar-light");
+
+        //layout main
+        $("#body-layout").removeClass("body-dark");
+        $("#body-layout").addClass("body-light");
+        $("#header-layout").removeClass("header-dark");
+        $("#header-layout").addClass("header-light");
+        $("#footer-layout").removeClass("header-dark");
+        $("#footer-layout").addClass("header-light");
+        $("#container-layout").removeClass("container-dark");
+        $("#container-layout").addClass("container-light");
+
+        $("#card-product").removeClass("card-product-dark");
+        $("#card-product").addClass("card-product-light");
+        $("#cart-table").addClass("text-dark");
+        $("#cart-table").removeClass("text-white");
+
         $("#icon-dark-mode").removeClass("fa-sun");
         $("#icon-dark-mode").addClass("fa-moon");
 

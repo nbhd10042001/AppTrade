@@ -3,7 +3,6 @@
 @using System.Data;
 @using App.Services
 
-@inject SidebarAdminService _sidebarAdminService
 @inject AppDbContext dbContext;
 @inject UserManager<AppUser> _userManager;
 
@@ -67,13 +66,4 @@ else
 
     <a class="btn btn-danger" asp-controller="DbManage" asp-action="DeleteDB">Delete Databse : @dbname</a>
     <a class="btn btn-warning" asp-controller="DbManage" asp-action="SeedData">Seed Databse</a>
-}
-
-@{
-    _sidebarAdminService.SetActive("DbManage", "Index", "Database");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
 }

@@ -1,8 +1,5 @@
 @model App.Areas.Product.Models.CreateProductModel;
 
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
-
 @{
     ViewData["Title"] = "Edit";
     Layout = "_LayoutAdmin";
@@ -200,13 +197,4 @@
             LoadPhotos();
         });
     </script>
-}
-
-@{
-    _sidebarAdminService.SetActive("ProductManage", "Index", "Product");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
 }

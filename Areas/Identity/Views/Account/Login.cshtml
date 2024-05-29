@@ -11,7 +11,7 @@
 
 <style>
     .bg-login-image{
-        background-image: url(https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs2/321944840/original/fe0705baf8ed274f0ab0816a7b45835d6304476b/make-a-3d-render-of-your-csgo-skins.png);
+        @* background-image: url(https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs2/321944840/original/fe0705baf8ed274f0ab0816a7b45835d6304476b/make-a-3d-render-of-your-csgo-skins.png); *@
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
@@ -32,10 +32,10 @@
                     <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-white mb-4">Đăng nhập!</h1>
+                                <h1 class="h4 mb-4">Đăng nhập!</h1>
                             </div>
                             <form class="user" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                                <div asp-validation-summary="All" class="text-danger"></div>
+                                @* <div asp-validation-summary="All" class="text-danger"></div> *@
                                 
                                 <div class="form-group">
                                     <input asp-for="UserNameOrEmail" class="form-control form-control-user" />

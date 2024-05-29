@@ -1,5 +1,3 @@
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
 
 @{
     ViewData["Title"] = "Delete Database";
@@ -15,11 +13,3 @@
     <a asp-controller="DbManage" asp-action="Index">Back</a>
 </form>
 
-@{
-    _sidebarAdminService.SetActive("DbManage", "Index", "Database");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}

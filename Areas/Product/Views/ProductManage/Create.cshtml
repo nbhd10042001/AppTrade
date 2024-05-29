@@ -1,8 +1,5 @@
 @model App.Areas.Product.Models.CreateProductModel;
 
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
-
 @{
     ViewData["Title"] = "Create";
     Layout = "_LayoutAdmin";
@@ -71,14 +68,4 @@
     </script>
 
     <partial name="_ValidationScriptsPartial" />
-}
-
-
-@{
-    _sidebarAdminService.SetActive("ProductManage", "Index", "Product");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
 }

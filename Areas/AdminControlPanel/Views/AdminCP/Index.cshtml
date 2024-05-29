@@ -1,5 +1,3 @@
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
 
 @{
     Layout = "_LayoutAdmin";
@@ -8,7 +6,3 @@
 
 <h1 class="text-center">Trang quản trị của Admin</h1>
 
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}

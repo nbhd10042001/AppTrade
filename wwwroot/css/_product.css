@@ -14,3 +14,23 @@
     }
   }
 
+.card-product-dark .card{
+  background-color: rgb(55, 55, 55);
+  color: white;
+  width: 20%;
+}
+
+.card-product-dark .card .card-img-top{
+  height: 25%;
+}
+
+.card-product-light .card{
+  background-color: rgb(235, 235, 235);
+  color: black;
+  width: 20%;
+}
+
+.card-product-light .card .card-img-top{
+  height: 25%;
+}
+

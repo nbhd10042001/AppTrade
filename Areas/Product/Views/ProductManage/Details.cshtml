@@ -1,8 +1,4 @@
 @model App.Models.Product.ProductModel
-
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
-
 @{
     ViewData["Title"] = "Details";
     Layout = "_LayoutAdmin";
@@ -63,12 +59,3 @@
     <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
-
-@{
-    _sidebarAdminService.SetActive("ProductManage", "Index", "Product");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}

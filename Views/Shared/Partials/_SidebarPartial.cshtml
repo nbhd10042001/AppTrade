@@ -1,0 +1,51 @@
+@using Microsoft.AspNetCore.Mvc.Routing
+@inject App.Services.UrlHelperService urlHelperService
+
+
+<hr class="sidebar-divider my-1">
+
+<div class="sidebar-heading">Quản lí chung</div>
+
+<li class="nav-item">
+    <a class="nav-link" href="/database-manage/Index">
+        <i class="fas fa-database"></i>
+        <span>Quản lí Database</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="@urlHelperService.GetLink("Index", "Contact", "Contact")">
+        <i class="far fa-address-card"></i>
+        <span>Quản lí liên hệ</span></a>
+</li>
+
+<hr class="sidebar-divider my-1">
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#RolesAndUsers"
+        aria-expanded="true" aria-controls="RolesAndUsers">
+        <i class="far fa-folder"></i> <span>Phân quyền và thành viên</span> 
+    </a>
+    
+    <div id="RolesAndUsers" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="@urlHelperService.GetLink("Index", "Role", "Identity")">Quản lí Role</a>
+            <a class="collapse-item" href="@urlHelperService.GetLink("Index", "User", "Identity")">Quản lí User</a>
+        </div>
+    </div>
+</li>
+
+<hr class="sidebar-divider my-1">
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ProductManage"
+        aria-expanded="true" aria-controls="ProductManage">
+        <i class="far fa-folder"></i> <span>Quản lí sản phẩm</span> 
+    </a>
+    
+    <div id="ProductManage" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="@urlHelperService.GetLink("Index", "CategoryProduct", "Product")">Quản lí CMSP</a>
+            <a class="collapse-item" href="@urlHelperService.GetLink("Index", "ProductManage", "Product")">Quản lí SP</a>
+        </div>
+    </div>
+</li>

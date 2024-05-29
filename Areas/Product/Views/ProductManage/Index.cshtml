@@ -1,8 +1,5 @@
 @model IEnumerable<App.Models.Product.ProductModel>
 
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
-
 @{
     ViewData["Title"] = "Index";
     Layout = "_LayoutAdmin";
@@ -81,12 +78,3 @@
 
 
 <partial name="_PagingXTL" model="@ViewBag.pagingmodel" />
-
-@{
-    _sidebarAdminService.SetActive("ProductManage", "Index", "Product");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}

@@ -66,7 +66,7 @@ namespace App.Areas.Product.Controllers
             products = products.OrderByDescending(p => p.DateUpdated);
 
             // pagingModel------------------------------------------------------------
-            const int ITEMS_PER_PAGE = 6;
+            const int ITEMS_PER_PAGE = 10;
             int totalProducts = products.Count();
             int countPages = (int)Math.Ceiling((double)totalProducts / ITEMS_PER_PAGE);
 

@@ -5,7 +5,7 @@
 @{
     List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
     CategoryProductModel categoryChoosed = ViewBag.categoryChoosed as CategoryProductModel;
-    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Skins";
+    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Products";
 }
 
 @* List Products *@
@@ -16,25 +16,12 @@
 }
 else
 {
-    <p>Toàn bộ Skins</p>
+    <p>Toàn bộ Product</p>
 }
 
 <hr>
 
-<style>
-    .card-product{
-        width: 20%;
-        background-color: rgb(41, 41, 41);
-        color: white;
-    }
-
-    .image-edit{
-        height: 50%;
-        width: 100%;
-    }
-</style>
-
-<div class="d-flex flex-wrap justify-content-between">
+<div id="card-product" class="d-flex flex-wrap">
     @foreach(var product in Model)
     {
         var srcImg = "/contents/noImg.png";
@@ -43,8 +30,8 @@ else
             srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
         }
 
-        <div class="card card-product mb-2">
-            <img src="@srcImg" class="card-img-top image-edit" alt="...">
+        <div class="card mb-2">
+            <img src="@srcImg" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">@product.Title</h5>
                 <p class="card-text text-truncation">@product.Description</p>
@@ -53,14 +40,14 @@ else
                         @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
                     </i>
                 </p>
+                <a class="card-link site-a-blue" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug">
+                    Detail
+                </a>
             </div>
 
-            <div class="card-footer">
-                <p class="text-center">Price: <strong>@product.Price $</strong></p>
+            <div class="card-footer text-center">
+                <p class="">Price: <strong>@product.Price $</strong></p>
                 <hr>
-                <a class="card-link site-a-blue" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug">
-                    Xem chi tiet
-                </a>
                 <a asp-action="AddToCart" asp-route-productid="@product.ProductId" class="btn btn-success mx-2">
                     Đặt hàng
                 </a>
@@ -68,6 +55,5 @@ else
         </div>
     }
 </div>
-
 
 <partial name="_PagingXTL" model="@ViewBag.pagingmodel" />

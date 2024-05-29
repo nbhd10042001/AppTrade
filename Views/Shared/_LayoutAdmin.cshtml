@@ -1,15 +1,10 @@
 @using App.Services
 @using Microsoft.AspNetCore.Identity
 @using App.Models
-@using App.Models.MenuAdmin
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
-@inject DarkModeService dmService
 
-@{
-    var user = await UserManager.GetUserAsync(User);
-}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,13 +23,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="">
-    @* @if(user != null)
-    {
-        @Html.Raw(dmService.ChangeViewMode(user.DarkMode))
-    } *@
-
-
-
 </head>
 
 <body id="page-top">
@@ -42,7 +30,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav sidebar accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
@@ -50,19 +38,16 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">TradeCSGO</div>
+                <div class="mx-3">TradeCSGO</div>
             </a>
 
-            @await RenderSectionAsync("Sidebar", false)
+            
+            <partial name="/Views/Shared/Partials/_SidebarPartial.cshtml"></partial>
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-
-            @* <div class="text-center d-none d-md-inline">
-                <a asp-area="AdminControlPanel" asp-controller="AdminCP" asp-action="ChangeDarkMode"><i class="fas fa-moon"></i> </a>
-            </div> *@
 
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="dark-mode-button">
@@ -80,7 +65,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav id="topbar" class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow">
+                <nav id="topbar-admin" class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -156,7 +141,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer id="footer" class="sticky-footer">
+            <footer id="footer-admin" class="sticky-footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; App MVC</span>
@@ -181,8 +166,6 @@
     <!-- Custom scripts for all pages-->
     <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibJsAdmincpPartial.cshtml"></partial>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-
 
 </body>
 

@@ -11,16 +11,16 @@
 
     <title>@ViewData["Title"]</title>
 
-    <link rel="stylesheet" href="~/css/_header.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibCssAdmincpPartial.cshtml"></partial>
 
 </head>
 
 
-<body id="header-edit">
-    <header id="header-edit">
+<body id="body-layout">
+    <header id="header-layout">
         <div>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
                 <div class="container-fluid">
                         <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeCSGO</a>
                         
@@ -32,7 +32,7 @@
                         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                             <ul class="navbar-nav flex-grow-1">
                                 <li class="nav-item">
-                                    <a class="nav-link site-a-white" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
                                         Privacy
                                     </a>
                                 </li>
@@ -45,12 +45,14 @@
         </div>
     </header>
 
-    <div class="container view-dark" >
+    <div id="container-layout" class="container" >
         @RenderBody()
     </div>
 
     @await RenderSectionAsync("Scripts", required: false)
     <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibJsAdmincpPartial.cshtml"></partial>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
 
 </body>
 

@@ -1,7 +1,0 @@
-:root{
-  --color1 : rgb(25, 25, 28);
-}
-
-#header-edit{
-    background-color: var(--color1);
-  }

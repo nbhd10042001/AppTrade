@@ -1,8 +1,5 @@
 @model App.Models.Product.CategoryProductModel
 
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
-
 @{
     ViewData["Title"] = "Edit";
     Layout = "_LayoutAdmin";
@@ -45,11 +42,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@{
-    _sidebarAdminService.SetActive("CategoryProduct", "Index", "Product");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}

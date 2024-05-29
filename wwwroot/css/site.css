@@ -36,14 +36,6 @@ body {
   }
 }
 
-.site-a-white {
-  color: white !important;
-  text-decoration: none;
-  &:hover{
-    color: aquamarine !important;
-  }
-}
-
 .site-a-blue {
   color: rgb(63, 83, 231) !important;
 
@@ -61,25 +53,62 @@ body {
   }
 }
 
-.dark-mode-sidebar{
+/* css for layoutAdmin */
+.sidebar-dark{
   background-color: black;
-  color: white;
 }
 
-.dark-mode-topbar{
-  background-color: rgb(42, 42, 42);
-  color: white;
+.sidebar-dark .nav-item .nav-link {
+  color: rgb(255, 255, 255);
 }
 
-.light-mode-sidebar{
-  background-color: rgb(152, 152, 152);
-  color: rgb(0, 0, 0) !important;
+.sidebar-light{
+  background-color: white;
 }
 
-.light-mode-topbar{
-  background-color: rgb(170, 170, 170);
+.sidebar-light .nav-item .nav-link {
   color: rgb(0, 0, 0);
 }
+
+.topbar-dark{
+  background-color: rgb(42, 42, 42);
+  color: rgb(255, 255, 255);
+}
+
+.topbar-light{
+  background-color: rgb(245, 245, 245);
+  color: black;
+}
+
+
+/* css for layout main */
+.header-dark{
+  background-color: rgb(0, 0, 0);
+  color: white;
+}
+
+.header-light{
+  background-color: rgb(255, 255, 255);
+}
+
+.body-dark{
+  background-color: rgb(27, 27, 27);
+}
+
+.body-light{
+  background-color: rgb(228, 228, 228);
+}
+
+.container-dark{
+  background-color: rgb(15, 15, 15);
+  color: white;
+}
+
+.container-light{
+  background-color: rgb(240, 240, 240);
+  color: black;
+}
+
 
 
 

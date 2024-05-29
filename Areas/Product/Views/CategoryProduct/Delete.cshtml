@@ -1,7 +1,5 @@
 @model App.Models.Product.CategoryProductModel
 
-@using App.Services
-@inject SidebarAdminService _sidebarAdminService
 
 @{
     ViewData["Title"] = "Delete";
@@ -30,12 +28,3 @@
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
-
-@{
-    _sidebarAdminService.SetActive("CategoryProduct", "Index", "Product");
-}
-
-@section Sidebar
-{
-    @Html.Raw(_sidebarAdminService.RenderHtml())
-}
