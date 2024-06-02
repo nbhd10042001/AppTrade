@@ -19,6 +19,10 @@
     @* other .css *@
     <link rel="stylesheet" href="~/css/_post.css" />
     <link rel="stylesheet" href="~/css/_product.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     
 </head>
 
@@ -26,44 +30,41 @@
     <header id="header-layout">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
             <div class="container-fluid">
-                    <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeCSGO</a>
-                    
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeGun</a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"><i id="icon-mobile-bar" class="fas fa-bars"></i></span>
+                </button>
 
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            @if(string.IsNullOrEmpty(UserManager.GetUserName(User)) == false)
-                            {
-                                <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                    <i class="fas fa-home"></i> Home
-                                </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
-                                        <i class="fas fa-shopping-cart"></i> Shop
-                                    </a>
-                                </li>
-                            
-                            }
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if(string.IsNullOrEmpty(UserManager.GetUserName(User)) == false)
+                        {
+                            <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                            </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" id="dark-mode-button">
-                                    <i id="icon-dark-mode" class="fas"></i>
+                                <a class="nav-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
+                                    <i class="fas fa-shopping-cart"></i> Shop
                                 </a>
                             </li>
-                            
-                        </ul>
-                        @await Html.PartialAsync("/Views/Shared/Partials/_CartPartial.cshtml")
-                        <partial name="/Views/Shared/Partials/_MenuManagePartial.cshtml"></partial>
-                        <partial name="/Views/Shared/Partials/_LoginPartial.cshtml"></partial>
+                        
+                        }
 
-
+                        <li class="nav-item">
+                            <a class="nav-link" id="dark-mode-button">
+                                <i id="icon-dark-mode" class="fas"></i>
+                            </a>
+                        </li>
+                        
                     </ul>
+                    @await Html.PartialAsync("/Views/Shared/Partials/_CartPartial.cshtml")
+                    <partial name="/Views/Shared/Partials/_MenuManagePartial.cshtml"></partial>
+                    <partial name="/Views/Shared/Partials/_LoginPartial.cshtml"></partial>
                 </div>
             </div>
         </nav>
@@ -80,12 +81,10 @@
             &copy; 2024 - AppTrade - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    
+
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
-
+    
 </html>
+

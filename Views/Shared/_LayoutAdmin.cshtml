@@ -19,13 +19,12 @@
 
     <title>@ViewData["Title"]</title>
 
-    <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibCssAdmincpPartial.cshtml"></partial>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <partial name="/Views/Shared/Partials/LoadLibrary/_Lib_Css_AdminCP_Partial.cshtml"></partial>
+    <partial name="/Views/Shared/Partials/LoadLibrary/_Lib_Js_AdminCP_Partial.cshtml"></partial>
 
-    <link rel="stylesheet" href="">
 </head>
 
-<body id="page-top">
+<body id="page-top" style="margin-bottom: 0px;">
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -38,7 +37,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="mx-3">TradeCSGO</div>
+                <div class="mx-3">TradeGun</div>
             </a>
 
             
@@ -164,8 +163,8 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <!-- Custom scripts for all pages-->
-    <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibJsAdmincpPartial.cshtml"></partial>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    @* phai de sb-admin.js o duoi cung *@
+    <script src="~/js/sb-admin-2.min.js"></script> 
 
 </body>
 

@@ -110,50 +110,82 @@ namespace App.Areas.Database.Controllers
             }
 
             // SeedProductCategory();
-            SeedItemsCSGO();
+            SeedProducts();
 
             StatusMessage = "Ban vua seed database";
             return RedirectToAction("Index");
         }
 
-        private void SeedItemsCSGO()
+        private void SeedProducts()
         {
+            // delete category seed
+            _dbContext.CategoryProducts.RemoveRange(_dbContext.CategoryProducts.Where(c => c.Content.Contains("[fakeData]")));
             _dbContext.Products.RemoveRange(_dbContext.Products.Where(p => p.Description.Contains("[fakeData]")));
+            _dbContext.SaveChanges();
 
-            string[] SkinsName = ["ak-p2", "ak-wb", "butterfly-camber", "m4a1-demon", "m4a1-holo", "m4a4-dust"];
+            // create seed data categories
+            List<string> NameCategories = new List<string>(){"snip", "shotgun", "pistol", "rifl", "smg"};
+            var categories = new List<CategoryProductModel>();
+            foreach(var name in NameCategories)
+            {
+                var CPmodel = new CategoryProductModel(){
+                    Title = name,
+                    Content = $"Description for category {name} [fakeData]",
+                    Slug = AppUtilities.GenerateSlug(name)
+                };
+                categories.Add(CPmodel);
+            }
+            _dbContext.CategoryProducts.AddRange(categories);
+
+            // create seed data products
+            var productPath = Path.Combine("Uploads", "Products");
+            DirectoryInfo di = new DirectoryInfo(productPath);
+            FileInfo[] Images = di.GetFiles("*.*");
+            List<string> FileNames = new List<string>();
+
+            foreach (var img in Images)
+                FileNames.Add(img.Name);
+
             var user = _userManager.GetUserAsync(this.User).Result;
             List<ProductModel> products = new List<ProductModel>();
+            List<ProductCategoryProduct> product_categories = new List<ProductCategoryProduct>();
             Random rand = new Random();
 
-            foreach(var name in SkinsName)
+            foreach(var filename in FileNames)
             {
+                var name = Path.GetFileNameWithoutExtension(filename);
                 var product = new ProductModel(){
                     Title = name,
-                    Description = $"description skin {name} [fakeData]",
+                    Description = $"description for weapon: {name} [fakeData]",
                     AuthorId = user.Id,
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     Price = rand.Next(10000),
-                    Slug = AppUtilities.GenerateSlug(name)
+                    Slug = AppUtilities.GenerateSlug(name),
                 };
                 products.Add(product);
+                product_categories.Add(new ProductCategoryProduct(){
+                    Product = product,
+                    CategoryProduct = categories[rand.Next(categories.Count - 1)] // random ngau nhien 1 trong cac categories duoc phat sinh
+                });
             }
             _dbContext.AddRange(products);
+            _dbContext.AddRange(product_categories);
             _dbContext.SaveChanges();
 
-            foreach(var name in SkinsName)
+            foreach(var filename in FileNames)
             {
+                var name = Path.GetFileNameWithoutExtension(filename);
                 var product = _dbContext.Products.Where(p => p.Title == name)
                                             .Include(p => p.Photos)
                                             .FirstOrDefault();
 
                 _dbContext.ProductPhotos.Add(new ProductPhotoModel(){
                     ProductID = product.ProductId,
-                    FileName = $"{name}.png"
+                    FileName = filename
                 });
             }
             _dbContext.SaveChanges();
-
         }
 
         private void SeedProductCategory()

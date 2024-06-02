@@ -11,9 +11,8 @@
 
     <title>@ViewData["Title"]</title>
 
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibCssAdmincpPartial.cshtml"></partial>
-
+    <partial name="/Views/Shared/Partials/LoadLibrary/_Lib_Css_AdminCP_Partial.cshtml"></partial>
+    <partial name="/Views/Shared/Partials/LoadLibrary/_Lib_Js_AdminCP_Partial.cshtml"></partial>
 </head>
 
 
@@ -22,7 +21,7 @@
         <div>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
                 <div class="container-fluid">
-                        <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeCSGO</a>
+                        <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeGun</a>
                         
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
@@ -45,14 +44,12 @@
         </div>
     </header>
 
-    <div id="container-layout" class="container" >
+    <div class="container" >
         @RenderBody()
     </div>
 
     @await RenderSectionAsync("Scripts", required: false)
-    <partial name="/Views/Shared/Partials/LoadLibrary/_LoadLibJsAdmincpPartial.cshtml"></partial>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <!-- Custom scripts for all pages-->
 
 </body>
 

@@ -3,7 +3,7 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "multiple-select@1.2.3",
+      "library": "multiple-select@1.7.0",
       "destination": "wwwroot/lib/multiple-select"
     },
     {

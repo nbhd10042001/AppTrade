@@ -9,6 +9,7 @@
 <style>
     .bg-login-image{
         @* background-image: url(https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs2/321944840/original/fe0705baf8ed274f0ab0816a7b45835d6304476b/make-a-3d-render-of-your-csgo-skins.png); *@
+        background-image: none;
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
@@ -21,7 +22,7 @@
 
     <div class="col-xl-10 col-lg-12 col-md-9">
 
-        <div class="card o-hidden border-0 shadow-lg my-5 bg-login-image">
+        <div id="card-login" class="card o-hidden border-0 shadow-lg my-5 bg-login-image">
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
@@ -32,7 +33,7 @@
                                 <h1 class="h4 mb-4">Đăng ký!</h1>
                             </div>
                             <form class="user" asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                                @* <div asp-validation-summary="All" class="text-danger"></div> *@
+                                <div asp-validation-summary="All" class="text-danger"></div>
                                 
                                 <div class="form-group">
                                     <input asp-for="UserName" class="form-control form-control-user" />

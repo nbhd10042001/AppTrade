@@ -47,7 +47,7 @@ $(document).ready(function () {
        
 
     function toggleDarkMode() {
-        // layoutAdmin controll panel
+        // layout Admin controll panel
         $("#accordionSidebar").removeClass("sidebar-light");
         $("#accordionSidebar").addClass("sidebar-dark");
         $("#topbar-admin").removeClass("topbar-light");
@@ -63,21 +63,27 @@ $(document).ready(function () {
         $("#header-layout").addClass("header-dark");
         $("#footer-layout").removeClass("header-light");
         $("#footer-layout").addClass("header-dark");
+
         $("#container-layout").removeClass("container-light");
         $("#container-layout").addClass("container-dark");
-
         $("#card-product").removeClass("card-product-light");
         $("#card-product").addClass("card-product-dark");
         $("#cart-table").addClass("text-white");
         $("#cart-table").removeClass("text-dark");
 
+        // layout login
+        $("#card-login").removeClass("card-login-light");
+        $("#card-login").addClass("card-login-dark");
+
+        // itoggle icon
+        $("#icon-mobile-bar").addClass("text-white");
+        $("#icon-mobile-bar").removeClass("text-dark");
         $("#icon-dark-mode").addClass("fa-sun");
         $("#icon-dark-mode").removeClass("fa-moon");
-
     }
 
     function toggleLightMode(){
-        // layoutAdmin controll panel
+        // layout Admin controll panel
         $("#accordionSidebar").addClass("sidebar-light");
         $("#accordionSidebar").removeClass("sidebar-dark");
         $("#topbar-admin").removeClass("topbar-dark");
@@ -85,24 +91,30 @@ $(document).ready(function () {
         $("#footer-admin").removeClass("topbar-dark");
         $("#footer-admin").addClass("topbar-light");
 
-        //layout main
+        // layout Main
         $("#body-layout").removeClass("body-dark");
         $("#body-layout").addClass("body-light");
         $("#header-layout").removeClass("header-dark");
         $("#header-layout").addClass("header-light");
         $("#footer-layout").removeClass("header-dark");
         $("#footer-layout").addClass("header-light");
+
         $("#container-layout").removeClass("container-dark");
         $("#container-layout").addClass("container-light");
-
         $("#card-product").removeClass("card-product-dark");
         $("#card-product").addClass("card-product-light");
         $("#cart-table").addClass("text-dark");
         $("#cart-table").removeClass("text-white");
 
+        // layout login
+        $("#card-login").addClass("card-login-light");
+        $("#card-login").removeClass("card-login-dark");
+
+        // itoggle icon
+        $("#icon-mobile-bar").addClass("text-dark");
+        $("#icon-mobile-bar").removeClass("text-white");
         $("#icon-dark-mode").removeClass("fa-sun");
         $("#icon-dark-mode").addClass("fa-moon");
-
     }
  });
 

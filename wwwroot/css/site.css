@@ -53,7 +53,7 @@ body {
   }
 }
 
-/* css for layoutAdmin */
+/* custom css for layout Admin */
 .sidebar-dark{
   background-color: black;
 }
@@ -81,9 +81,9 @@ body {
 }
 
 
-/* css for layout main */
+/* custom css for layout main */
 .header-dark{
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(14, 14, 14);
   color: white;
 }
 
@@ -92,7 +92,7 @@ body {
 }
 
 .body-dark{
-  background-color: rgb(27, 27, 27);
+  background-color: rgb(42, 42, 42);
 }
 
 .body-light{
@@ -100,7 +100,7 @@ body {
 }
 
 .container-dark{
-  background-color: rgb(15, 15, 15);
+  background-color: rgb(27, 27, 27);
   color: white;
 }
 
@@ -109,6 +109,16 @@ body {
   color: black;
 }
 
+/* custom css for layout login */
+.card-login-dark{
+  background-color: rgb(27, 27, 27);
+  color: white;
+}
+
+.card-login-light{
+  background-color: rgb(240, 240, 240);
+  color: black;
+}
 
 
 

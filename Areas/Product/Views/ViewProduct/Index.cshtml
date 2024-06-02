@@ -1,15 +1,20 @@
+@using App.Areas.Product.Models
 @using App.Models.Product;
 
-@model List<ProductModel>
+@model SelectFilters
 
 @{
-    List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
     CategoryProductModel categoryChoosed = ViewBag.categoryChoosed as CategoryProductModel;
     ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Products";
+
+    List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
+    List<ProductModel> Products = ViewBag.productsInPage as List<ProductModel>;
+    var MSLCategories = ViewBag.MSLCategories as MultiSelectList;
 }
 
 @* List Products *@
 <h1>@ViewData["Title"]</h1>
+
 
 @if (categoryChoosed != null){
     <p>@categoryChoosed.Content</p>
@@ -19,10 +24,36 @@ else
     <p>Toàn bộ Product</p>
 }
 
+@* Filter *@
+<div class=" w-25 shadow">
+    <form method="post" asp-action="ListFilter" asp-area="Product" asp-controller="ViewProduct" class="mx-1 my-1">
+        <i class="fas fa-filter"></i> Filter
+        
+        <div class="form-group">
+            <label asp-for="selectFilters" class="control-label"></label>
+            <select asp-for="selectFilters" id="MSLFilter" class="w-100">
+                <option selected="true" value="101">Last</option>
+                <option value="102">Old Update</option>
+                <option value="103">Price High</option>
+                <option value="104">Price Low</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="selectCategories" class="control-label"></label>
+            <select asp-for="selectCategories" id="MSLCategories" asp-items="MSLCategories" multiple="multiple" class="w-100"></select>
+        </div>
+        
+        <div class="form-group">
+            <input type="submit" value="Done" class="btn btn-sm btn-primary  my-2" />
+        </div>
+    </form>
+</div>
+
 <hr>
 
 <div id="card-product" class="d-flex flex-wrap">
-    @foreach(var product in Model)
+    @foreach(var product in Products)
     {
         var srcImg = "/contents/noImg.png";
         if (product.Photos.Any())
@@ -36,12 +67,14 @@ else
                 <h5 class="card-title">@product.Title</h5>
                 <p class="card-text text-truncation">@product.Description</p>
                 <p>
-                    <i class="text-danger">
-                        @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
+                    <i>
+                        <small>
+                            @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
+                        </small>
                     </i>
                 </p>
                 <a class="card-link site-a-blue" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug">
-                    Detail
+                    <u>Detail</u>
                 </a>
             </div>
 
@@ -57,3 +90,21 @@ else
 </div>
 
 <partial name="_PagingXTL" model="@ViewBag.pagingmodel" />
+
+@section Scripts
+{
+    <link rel="stylesheet" href="~/lib/multiple-select/multiple-select.min.css" />
+    <script src="~/lib/multiple-select/multiple-select.min.js"></script>
+
+    <script>
+        $("#MSLFilter").multipleSelect({
+            single: true,
+        });
+
+        $("#MSLCategories").multipleSelect({
+            selectAll: false,
+            keepOpen: false,
+            isOpen: false,
+        });
+    </script>
+}

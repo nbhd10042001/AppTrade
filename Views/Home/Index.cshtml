@@ -11,8 +11,8 @@
 <partial name="_AlertMessage"></partial>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to <a class="text-info" style="text-decoration: none;"><strong>TradeCSGO</strong></a></h1>
-    <p>Trade or buy any skin weapons CSGO from here!</p>
+    <h1 class="display-4">Welcome to <a class="text-info" style="text-decoration: none;"><strong>TradeGun</strong></a></h1>
+    <p>Trade or buy any weapons REALIZE from here!</p>
 
 </div>
 
@@ -22,7 +22,7 @@
         <br>
         <br>
         <br>
-        <h3 style="color: rgb(12, 118, 210);">Login now to get special SKIN !!!!!!!!</h3>
+        <h3 style="color: rgb(12, 118, 210);">Login now to get special Weapon !!!!!!!!</h3>
         <br>
         <a class="btn btn-info w-25" asp-area="Identity" asp-controller="Account" asp-action="Login"><strong>LOGIN</strong></a>
         <br>
@@ -39,7 +39,7 @@ else
     <br>
 }
 
-<h4 class="text-center"><strong>New Product Update!</strong></h4>
+<h4 class="text-center"><strong>New Weapon Update!</strong></h4>
 <br>
 
 <div id="card-product" class="d-flex flex-wrap">
@@ -57,8 +57,10 @@ else
                 <h5 class="card-title">@product.Title</h5>
                 <p class="card-text text-truncation">@product.Description</p>
                 <p>
-                    <i class="text-danger">
-                        @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
+                    <i>
+                        <small>
+                            @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
+                        </small>
                     </i>
                 </p>
                 <a class="card-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug" style="text-decoration:none;">

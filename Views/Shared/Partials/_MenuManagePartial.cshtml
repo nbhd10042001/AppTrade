@@ -6,6 +6,10 @@
 }
 @if (result.Succeeded)
 {
-    <a class="nav-link mx-1" asp-controller="AdminCP" asp-action="Index" asp-area="AdminControlPanel">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="AdminCP" asp-action="Index" asp-area="AdminControlPanel">
         <i class="fas fa-cog"></i> Quản trị</a>
+        </li>
+    </ul>
 }

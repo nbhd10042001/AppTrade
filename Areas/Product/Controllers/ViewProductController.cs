@@ -4,8 +4,12 @@ using App.Areas.Product.Models.Services;
 using App.Data;
 using App.Models;
 using App.Models.Product;
+using App.Services;
+using Google.Protobuf;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 
 namespace App.Areas.Product.Controllers
 {
@@ -30,13 +34,27 @@ namespace App.Areas.Product.Controllers
         [TempData]
         public string TypeStatusMessage{set; get;}
 
-        [Route("product/{categoryslug?}")]
-        public ActionResult Index(string categoryslug, [FromQuery(Name = "p")]int currentPage)
+        [HttpPost]
+        [Route("product/filter")]
+        public IActionResult ListFilter ([Bind("selectFilters, selectCategories")] SelectFilters filters)
         {
-            var categories = GetCategories();
-            ViewBag.categories = categories;
-            ViewBag.categoryslug = categoryslug;
+            List<int> filterIDs = new List<int>();
+            List<int> filterCateIDs = new List<int>();
 
+            if(filters.selectCategories != null)
+                foreach (var filter in filters.selectCategories)
+                    filterCateIDs.Add(Int32.Parse(filter));
+
+            if(filters.selectFilters != null)
+                foreach (var filter in filters.selectFilters)
+                    filterIDs.Add(Int32.Parse(filter));
+
+            return RedirectToAction(nameof(Index), new {f = filterIDs, fc = filterCateIDs});
+        }
+
+        [Route("product/{categoryslug?}")]
+        public ActionResult Index(string categoryslug, [FromQuery(Name = "p")]int currentPage, [FromQuery(Name = "f")]List<int> filters, [FromQuery(Name = "fc")]List<int> filterCates)
+        {
             CategoryProductModel categoryChoosed = null; 
             // kiem tra neu url co query categoryslug thi thuc hien lay category 
             if (!string.IsNullOrEmpty(categoryslug))
@@ -54,7 +72,7 @@ namespace App.Areas.Product.Controllers
                                         .ThenInclude(pc => pc.CategoryProduct)
                                         .AsQueryable();   
 
-            // lay ra cac post co idcate == id cateSelect
+            // lay ra cac product co idcategory == id categorySelect
             if (categoryChoosed != null)
             {
                 var ids = new List<int>();
@@ -63,7 +81,31 @@ namespace App.Areas.Product.Controllers
                 products = products.Where(p => p.ProductCategoryProducts.Where(pc => ids.Contains(pc.CategoryProductID)).Any());
             }
 
+            // custome filter and sort product
             products = products.OrderByDescending(p => p.DateUpdated);
+            foreach(var f in filters)
+            {
+                if (f == 101){
+                    products = products.OrderByDescending(p => p.DateUpdated);
+                    break;
+                }
+                else if (f == 102){
+                    products = products.OrderBy(p => p.DateUpdated);
+                    break;
+                }
+                else if (f == 103){
+                    products = products.OrderByDescending(p => p.Price);
+                    break;
+                }
+                else if (f == 104){
+                    products = products.OrderBy(p => p.Price);
+                    break;
+                }
+            }
+            
+            // sort by category
+            if(filterCates.Count > 0)
+                products = products.Where(p => p.ProductCategoryProducts.Where(pc => filterCates.Contains(pc.CategoryProductID)).Any());
 
             // pagingModel------------------------------------------------------------
             const int ITEMS_PER_PAGE = 10;
@@ -83,12 +125,20 @@ namespace App.Areas.Product.Controllers
             var productsInPage = products.Skip((currentPage - 1) * ITEMS_PER_PAGE)
                                     .Take(ITEMS_PER_PAGE);
 
+            // ViewBag
+            var categories = GetCategories();
+            ViewBag.categories = categories;
+
+            ViewBag.categoryslug = categoryslug;
             ViewBag.pagingModel = pagingModel;
             ViewBag.totalProducts = totalProducts;
 
+            var allcategories = _context.CategoryProducts.ToList();
+            ViewBag.MSLCategories = new MultiSelectList(allcategories, "Id", "Title");
             ViewBag.categoryChoosed = categoryChoosed;
+            ViewBag.productsInPage = productsInPage.ToList();
 
-            return View(productsInPage.ToList());
+            return View();
         }
 
         [Route("product/{productslug}.html")]
