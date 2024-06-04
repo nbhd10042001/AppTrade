@@ -54,8 +54,57 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
     </dl>
+
+    <div id="box-photo-upload" class="d-flex flex-warp photo-upload" data-id="@Model.ProductId">
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    @* Xu li upload hinh anh *@
+    <script>
+        function LoadPhotos()
+        {   
+            var box = $("#box-photo-upload");
+            var ProductID = box.data("id");
+            box.empty();
+
+            var formData = new FormData();
+            formData.append("id", ProductID);
+
+            var urlListPhoto = "@Url.Action("ListPhotos")";
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlListPhoto,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    // console.log(data);
+                    data.photos.forEach(function(item) {
+                        //console.log(item.id);
+                        //console.log(item.path);
+
+                        var e = $(
+                            '<div class="photo-detail w-25 p-1">' +
+                                '<img class="w-100" src="'+ item.path +'"   >' +
+                            '</div>'
+                        );
+                        box.append(e);
+                    });
+                }
+            });
+        }
+
+        // kiem tra da nap tat ca document can thiet thi thuc hien load photos cua product
+        $(document).ready(function() {
+            LoadPhotos();
+        });
+    </script>
+}

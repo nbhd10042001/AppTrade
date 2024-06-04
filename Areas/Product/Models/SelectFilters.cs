@@ -9,4 +9,7 @@ public class SelectFilters
     
     [Display(Name = "Category")]
     public string[] selectCategories {set; get;}
+
+    [Display(Name = "Search")]
+    public string SearchBar {set; get;}
 }

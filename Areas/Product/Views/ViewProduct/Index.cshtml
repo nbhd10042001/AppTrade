@@ -10,11 +10,34 @@
     List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
     List<ProductModel> Products = ViewBag.productsInPage as List<ProductModel>;
     var MSLCategories = ViewBag.MSLCategories as MultiSelectList;
+    var filterSelected = ViewBag.filterSelected as List<int>;
+    var seachBar = ViewBag.searchBar as string;
 }
 
 @* List Products *@
 <h1>@ViewData["Title"]</h1>
 
+@* Kiem tra danh sach lua chon fiters de save thong tin lua chon *@
+@{
+    var fs1 = false;
+    var fs2 = false;
+    var fs3 = false;
+    var fs4 = false;
+    if (filterSelected != null)
+    {
+        foreach(var fs in filterSelected)
+        {
+            if (fs == 101)
+                fs1 = true;
+            else if (fs == 102)
+                fs2 = true;
+            else if (fs == 103)
+                fs3 = true;
+            else if (fs == 104)
+                fs4 = true;
+        }
+    }
+}
 
 @if (categoryChoosed != null){
     <p>@categoryChoosed.Content</p>
@@ -24,24 +47,29 @@ else
     <p>Toàn bộ Product</p>
 }
 
+
 @* Filter *@
-<div class=" w-25 shadow">
+<div class="shadow w-50">
     <form method="post" asp-action="ListFilter" asp-area="Product" asp-controller="ViewProduct" class="mx-1 my-1">
         <i class="fas fa-filter"></i> Filter
-        
-        <div class="form-group">
+        <div class="form-group w-25">
             <label asp-for="selectFilters" class="control-label"></label>
             <select asp-for="selectFilters" id="MSLFilter" class="w-100">
-                <option selected="true" value="101">Last</option>
-                <option value="102">Old Update</option>
-                <option value="103">Price High</option>
-                <option value="104">Price Low</option>
+                <option selected="@fs1" value="101">Last</option>
+                <option selected="@fs2" value="102">Old Update</option>
+                <option selected="@fs3" value="103">Price High</option>
+                <option selected="@fs4" value="104">Price Low</option>
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group w-25">
             <label asp-for="selectCategories" class="control-label"></label>
-            <select asp-for="selectCategories" id="MSLCategories" asp-items="MSLCategories" multiple="multiple" class="w-100"></select>
+            <select  asp-for="selectCategories" id="MSLCategories" asp-items="MSLCategories" multiple="multiple" class="w-100"></select>
+        </div>
+        <hr>
+        <i class="fas fa-search"></i> Search
+        <div class="form-group">
+            <input asp-for="SearchBar" value="@seachBar" class="w-75">
         </div>
         
         <div class="form-group">
@@ -53,6 +81,9 @@ else
 <hr>
 
 <div id="card-product" class="d-flex flex-wrap">
+    @* <div id="box-product" >
+    </div> *@
+
     @foreach(var product in Products)
     {
         var srcImg = "/contents/noImg.png";
@@ -81,12 +112,16 @@ else
             <div class="card-footer text-center">
                 <p class="">Price: <strong>@product.Price $</strong></p>
                 <hr>
-                <a asp-action="AddToCart" asp-route-productid="@product.ProductId" class="btn btn-success mx-2">
-                    Đặt hàng
-                </a>
+                <div id="box-cart">
+                    <span onclick="AddToCart(@product.ProductId)" class="btn btn-success mx-2">
+                        Đặt hàng
+                    </span>
+                </div>
+                
             </div>
         </div>
     }
+
 </div>
 
 <partial name="_PagingXTL" model="@ViewBag.pagingmodel" />
@@ -102,9 +137,61 @@ else
         });
 
         $("#MSLCategories").multipleSelect({
+            placeholder: "none",
             selectAll: false,
             keepOpen: false,
             isOpen: false,
         });
+    </script>
+
+    <script>
+        function AddToCart (id)
+        {
+            var formData = new FormData();
+            formData.append("id", id);
+            var urlAction = "@Url.Action("AddToCart", "ViewProduct")";
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    LoadCart();
+                }
+            });
+        };
+
+        function LoadCart ()
+        {
+            var box = $("#cart-partial");
+            box.empty();
+            var formData = new FormData();
+            var urlAction = "@Url.Action("LoadCartCount", "ViewProduct")";
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    console.log(data.count);
+                    // load cart
+                    var e = $(
+                        '<a class="link-danger mx-2" style="text-decoration: none;" asp-route="cart">'+
+                            '<i class="fas fa-shopping-cart"> Giỏ hàng('+ data.count +') </i>'+
+                        '</a>'
+                    );
+                    box.append(e);
+                }
+            });
+        }
+
     </script>
 }

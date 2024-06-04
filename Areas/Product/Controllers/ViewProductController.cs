@@ -14,6 +14,7 @@ using NuGet.Protocol;
 namespace App.Areas.Product.Controllers
 {
     [Area("Product")]
+    [Route("viewproduct/{action}")]
     public class ViewProductController : Controller
     {
         private readonly ILogger<ViewProductController> _logger;
@@ -36,7 +37,7 @@ namespace App.Areas.Product.Controllers
 
         [HttpPost]
         [Route("product/filter")]
-        public IActionResult ListFilter ([Bind("selectFilters, selectCategories")] SelectFilters filters)
+        public IActionResult ListFilter ([Bind("selectFilters, selectCategories, SearchBar")] SelectFilters filters)
         {
             List<int> filterIDs = new List<int>();
             List<int> filterCateIDs = new List<int>();
@@ -49,11 +50,16 @@ namespace App.Areas.Product.Controllers
                 foreach (var filter in filters.selectFilters)
                     filterIDs.Add(Int32.Parse(filter));
 
-            return RedirectToAction(nameof(Index), new {f = filterIDs, fc = filterCateIDs});
+            return RedirectToAction(nameof(Index), new {f = filterIDs, fc = filterCateIDs, search = filters.SearchBar});
         }
 
         [Route("product/{categoryslug?}")]
-        public ActionResult Index(string categoryslug, [FromQuery(Name = "p")]int currentPage, [FromQuery(Name = "f")]List<int> filters, [FromQuery(Name = "fc")]List<int> filterCates)
+        public ActionResult Index(string categoryslug, 
+                                [FromQuery(Name = "p")]int currentPage, 
+                                [FromQuery(Name = "f")]List<int> filters, 
+                                [FromQuery(Name = "fc")]List<int> filterCates,
+                                [FromQuery(Name = "search")]string searchBar
+                                )
         {
             CategoryProductModel categoryChoosed = null; 
             // kiem tra neu url co query categoryslug thi thuc hien lay category 
@@ -72,6 +78,12 @@ namespace App.Areas.Product.Controllers
                                         .ThenInclude(pc => pc.CategoryProduct)
                                         .AsQueryable();   
 
+            // search bar
+            if (!string.IsNullOrEmpty(searchBar))
+            {
+                products = products.Where(p => p.Title.Contains(searchBar));
+            }
+
             // lay ra cac product co idcategory == id categorySelect
             if (categoryChoosed != null)
             {
@@ -82,7 +94,9 @@ namespace App.Areas.Product.Controllers
             }
 
             // custome filter and sort product
-            products = products.OrderByDescending(p => p.DateUpdated);
+            if (filters.Count == 0)
+                filters.Add(101); // neu khong co filters nao thi mac dinh filters them vao la dateUpdated
+            
             foreach(var f in filters)
             {
                 if (f == 101){
@@ -119,7 +133,7 @@ namespace App.Areas.Product.Controllers
             {
                 countpages = countPages,
                 currentpage = currentPage,
-                generateUrl = (pageNumber) => Url.Action("Index", new {p = pageNumber})
+                generateUrl = (pageNumber) => Url.Action("Index", new {p = pageNumber, f = filters, fc = filterCates, search = searchBar})
             };
 
             var productsInPage = products.Skip((currentPage - 1) * ITEMS_PER_PAGE)
@@ -133,10 +147,14 @@ namespace App.Areas.Product.Controllers
             ViewBag.pagingModel = pagingModel;
             ViewBag.totalProducts = totalProducts;
 
+            // save thong tin lua chon cac filters (neu co)
             var allcategories = _context.CategoryProducts.ToList();
-            ViewBag.MSLCategories = new MultiSelectList(allcategories, "Id", "Title");
+            ViewBag.MSLCategories = new MultiSelectList(allcategories, "Id", "Title", filterCates);
+            ViewBag.filterSelected = filters;
+
             ViewBag.categoryChoosed = categoryChoosed;
             ViewBag.productsInPage = productsInPage.ToList();
+            ViewBag.searchBar = searchBar;
 
             return View();
         }
@@ -178,18 +196,17 @@ namespace App.Areas.Product.Controllers
 
 
         /// Thêm sản phẩm vào cart
-        [Route ("addcart/{productid:int}", Name = "addcart")]
-        public IActionResult AddToCart ([FromRoute] int productid) {
-
+        [HttpPost]
+        public IActionResult AddToCart (int id) 
+        {
             var product = _context.Products
-                .Where (p => p.ProductId == productid)
+                .Where (p => p.ProductId == id)
                 .FirstOrDefault ();
-            if (product == null)
-                return NotFound ("Không có sản phẩm");
-
+            if (product == null) return NotFound();
+            
             // Xử lý đưa vào Cart ...
             var cart = _cartService.GetCartItems();
-            var cartitem = cart.Find (p => p.product.ProductId == productid);
+            var cartitem = cart.Find (p => p.product.ProductId == id);
             if (cartitem != null) {
                 // Đã tồn tại, tăng thêm 1
                 cartitem.quantity++;
@@ -200,8 +217,21 @@ namespace App.Areas.Product.Controllers
 
             // Lưu cart vào Session
             _cartService.SaveCartSession(cart);
-            // Chuyển đến trang hiện thị Cart
-            return RedirectToAction (nameof (Cart));
+            
+            return Json(new {
+                success = 1,
+                message = id
+            });
+        }
+
+        public IActionResult LoadCartCount ()
+        {
+            var cart = _cartService.GetCartItems();
+
+            return Json(new {
+                success = 1,
+                count = cart.Count
+            });
         }
 
         // Hiện thị giỏ hàng
