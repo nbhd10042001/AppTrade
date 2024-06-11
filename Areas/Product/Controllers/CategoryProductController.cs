@@ -134,7 +134,7 @@ namespace App.Areas.Product.Controllers
                 await _context.SaveChangesAsync();
 
                 StatusMessage = @$"Ban vua tao CMSP moi ""{CategoryProductModel.Title}""";
-                TypeStatusMessage = TypeName.Success;
+                TypeStatusMessage = TypeMessage.Success;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -235,7 +235,7 @@ namespace App.Areas.Product.Controllers
                 }
 
                 StatusMessage = @$"Ban vua cap nhat CMSP ""{categoryProduct.Title}""";
-                TypeStatusMessage = TypeName.Success;
+                TypeStatusMessage = TypeMessage.Success;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -282,7 +282,7 @@ namespace App.Areas.Product.Controllers
             await _context.SaveChangesAsync();
 
             StatusMessage = @$"Ban vua xoa CMSP ""{categoryProduct.Title}""";
-            TypeStatusMessage = TypeName.Danger;
+            TypeStatusMessage = TypeMessage.Danger;
             return RedirectToAction(nameof(Index));
         }
 

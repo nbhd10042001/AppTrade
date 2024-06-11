@@ -5,6 +5,7 @@ using App.Areas.Identity.Models.ManageViewModels;
 using App.ExtendMethods;
 using App.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,17 +23,20 @@ namespace App.Areas.Identity.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ManageController> _logger;
+        private readonly AppDbContext _context;
 
         public ManageController(
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
         IEmailSender emailSender,
-        ILogger<ManageController> logger)
+        ILogger<ManageController> logger,
+        AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _context = context;
         }
 
         //
@@ -58,13 +62,15 @@ namespace App.Areas.Identity.Controllers
                 Logins = await _userManager.GetLoginsAsync(user),
                 BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
                 AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user),
+                AvatarUser = _context.UserAvatars.Where(a => a.UserID == user.Id).FirstOrDefault(),
+
                 profile = new EditExtraProfileModel()
                 {
                     BirthDate = user.BirthDate,
                     HomeAdress = user.HomeAddress,
                     UserName = user.UserName,
                     UserEmail = user.Email,
-                    PhoneNumber = user.PhoneNumber,
+                    PhoneNumber = user.PhoneNumber
                 }
             };
             return View(model);
@@ -399,5 +405,57 @@ namespace App.Areas.Identity.Controllers
         }
 
 
+        // API for upload avatar User
+        [HttpPost]
+        public async Task<IActionResult> UploadAvatarAPI([Bind("FileUpload")] UploadOneFile fileUp)
+        {
+            var user = await GetCurrentUserAsync();
+            var fileAfterChange = "";
+            if(user != null)
+            {
+                var avatars = _context.UserAvatars.Where(a => a.UserID == user.Id);
+                if (avatars != null)
+                {
+                    foreach(var avatar in avatars)
+                    {
+                        _context.Remove(avatar);
+                        var filePath = "Uploads/AvatarUsers/" + avatar.AvatarName;
+                        System.IO.File.Delete(filePath);
+                    }
+                    _context.SaveChanges();
+
+                }
+
+                if( fileUp != null)
+                {
+                    // phat sinh ten file ngau nhien de tranh bi trung
+                    var fileNameRandom = Path.GetFileNameWithoutExtension(Path.GetRandomFileName())
+                                + Path.GetExtension(fileUp.FileUpload.FileName);
+                    
+                    // ~/Uploads/Products/img.png
+                    var filePath = Path.Combine("Uploads", "AvatarUsers", fileNameRandom);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await fileUp.FileUpload.CopyToAsync(fileStream);
+                    }
+
+                    _context.UserAvatars.Add(new UserAvatarModel(){
+                        UserID = user.Id,
+                        AvatarName = fileNameRandom
+                    });
+                    _context.SaveChanges();
+                    fileAfterChange = fileNameRandom;
+                }
+            }
+
+            var avtUser = new {
+                path = "/contents/AvatarUsers/" + fileAfterChange
+            };
+
+            return Json(new {
+                success = 1,
+                filename = avtUser
+            });
+        }
     }
 }

@@ -281,7 +281,7 @@ namespace App.Areas.Product.Controllers
             _cartService.ClearCart();
 
             StatusMessage = "Ban da gui don hang";
-            TypeStatusMessage = TypeName.Success;
+            TypeStatusMessage = TypeMessage.Success;
             return RedirectToAction(nameof(Cart));
         }
     }

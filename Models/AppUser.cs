@@ -3,8 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Identity;
 
-#nullable disable
-
 namespace App.Models;
 
 public class AppUser : IdentityUser
@@ -14,5 +12,8 @@ public class AppUser : IdentityUser
 
     [DataType(DataType.Date)]
     public DateTime? BirthDate {set; get;}
+
+    [Display(Name = "Avatar")]
+    public UserAvatarModel Avatar {set; get;}
 
 }

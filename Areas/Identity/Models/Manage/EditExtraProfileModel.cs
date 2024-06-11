@@ -17,7 +17,6 @@ namespace App.Areas.Identity.Models.ManageViewModels
       [StringLength(400)]
       public string HomeAdress { get; set; }
 
-
       [Display(Name = "Ngày sinh")]
       public DateTime? BirthDate { get; set; }
   }

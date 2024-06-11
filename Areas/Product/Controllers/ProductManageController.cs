@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using App.Utilities;
 using App.Areas.Product.Models;
 using App.Models.Product;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
 
 namespace App.Areas.Product.Controllers
 {
@@ -93,7 +91,7 @@ namespace App.Areas.Product.Controllers
         // POST: product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,Slug,Content,Published, CategoryIDs, Price")] CreateProductModel product)
+        public async Task<IActionResult> Create([Bind("Title,Description,Slug,Content,Published, CategoryIDs, Price, FileProductUpload")] CreateProductModel product)
         {
             var categories = await _context.CategoryProducts.ToListAsync();
             ViewData["categoriesSelect"] = new MultiSelectList(categories, "Id", "Title");
@@ -124,11 +122,30 @@ namespace App.Areas.Product.Controllers
                         });
                     }
                 }
+                await _context.SaveChangesAsync();
 
+                if(product.FileProductUpload != null)
+                {
+                    // phat sinh ten file ngau nhien de tranh bi trung
+                    var fileNameRandom = Path.GetFileNameWithoutExtension(Path.GetRandomFileName())
+                                + Path.GetExtension(product.FileProductUpload.FileName);
+                    
+                    // ~/Uploads/Products/img.png
+                    var filePath = Path.Combine("Uploads", "Products", fileNameRandom);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await product.FileProductUpload.CopyToAsync(fileStream);
+                    }
+
+                    _context.ProductPhotos.Add(new ProductPhotoModel(){
+                        ProductID = product.ProductId,
+                        FileName = fileNameRandom
+                    });
+                }
                 await _context.SaveChangesAsync();
 
                 StatusMessage = @$"Ban vua tao San pham moi: ""{product.Title}""";
-                TypeStatusMessage = TypeName.Success;
+                TypeStatusMessage = TypeMessage.Success;
 
                 return RedirectToAction(nameof(Index));
             }
@@ -217,7 +234,7 @@ namespace App.Areas.Product.Controllers
                     await _context.SaveChangesAsync();
 
                     StatusMessage = @$"Ban vua cap nhat San pham: ""{productUpdate.Title}""";
-                    TypeStatusMessage = TypeName.Success;
+                    TypeStatusMessage = TypeMessage.Success;
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -272,22 +289,13 @@ namespace App.Areas.Product.Controllers
             await _context.SaveChangesAsync();
 
             StatusMessage = @$"Ban da xoa San pham: ""{product.Title}""";
-            TypeStatusMessage = TypeName.Danger;
+            TypeStatusMessage = TypeMessage.Danger;
             return RedirectToAction(nameof(Index));
         }
 
         private bool PostExists(int id)
         {
             return _context.Products.Any(e => e.ProductId == id);
-        }
-
-        public class UploadOneFile
-        {
-            [Required(ErrorMessage = "Phai chon 1 file de upload")]
-            [DataType(DataType.Upload)]
-            [FileExtensions(Extensions = "png, jpg, jpeg, gif")]
-            [Display(Name = "Chon File Upload")]
-            public IFormFile FileUpload {set; get;}
         }
 
         [HttpGet]

@@ -1,6 +1,9 @@
 ﻿@model IndexViewModel
+@inject UserManager<AppUser> _userManager
+
 @{
     ViewData["Title"] = "Quản lý tài khoản của bạn";
+    var srcImg = "";
 }
 
 <h1>@ViewData["Title"].</h1>
@@ -10,6 +13,23 @@
     <h4>Cập nhật thông tin tài khoản</h4>
     <hr />
     <dl class="row">
+
+        <dt class="col-sm-4">Avatar:</dt>
+        <dd class="col-sm-6">
+            @if (Model.AvatarUser == null)
+                srcImg = "/contents/noUser.png";
+            else
+                srcImg = "/contents/AvatarUsers/" + Model.AvatarUser.AvatarName;
+
+            <img id="avatar-user" src=@srcImg class="w-25" alt="...">
+            
+            <input  class="collapse" type="file" 
+                    id="select-file-upload" onchange="AutoUploadPhoto()">
+        
+            <button class="btn btn-sm btn-success" onclick="ClickButtonUpload()">Upload</button>
+        </dd>
+
+
         <dt class="col-sm-4">Thông tin cơ bản:</dt>
         <dd class="col-sm-6"> 
             <dl class="row">
@@ -132,3 +152,46 @@
         </dd>
     </dl>
 </div>
+
+@* Xu li upload hinh anh *@
+<script>
+    function ClickButtonUpload()
+    {
+        $("#select-file-upload").click(); // khi click vao nut Uploads thi se hien muc Select file
+    }
+
+    function AutoUploadPhoto()
+    {
+        // xay dung form du lieu
+        var formData = new FormData();
+
+        var number_file = document.getElementById("select-file-upload").files.length;
+        if (number_file == 0) return;
+
+        var fileData = document.getElementById("select-file-upload").files[0];
+        formData.append("FileUpload", fileData);
+
+        var urlUpload = "@Url.Action("UploadAvatarAPI", "Manage")";
+
+        // ajax se thuc hien gui toan bo du lieu trong formData len url
+        $.ajax({
+            data: formData,
+            cache: false,
+            url: urlUpload,
+            type: "POST",
+            contentType: false,
+            processData: false,
+            success: function(data)
+            {
+                // xu li du lieu lay duoc
+                $("#avatar-user").attr("src", data.filename.path);
+                $("#login-avt-user").attr("src", data.filename.path);
+            }
+        });
+    }
+
+    // kiem tra da nap tat ca document can thiet thi thuc hien load photos cua product
+    $(document).ready(function() {
+        LoadPhotos();
+    });
+</script>

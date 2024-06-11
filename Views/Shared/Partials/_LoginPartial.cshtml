@@ -3,14 +3,28 @@
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+@inject AppDbContext _context
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var srcImg = "";
+    if (user != null)
+    {
+        var avtUser = _context.UserAvatars.Where(a => a.UserID == user.Id).FirstOrDefault();
+        if (avtUser != null)
+            srcImg = $"/contents/AvatarUsers/{avtUser.AvatarName}";
+        else
+            srcImg = "/contents/noUser.png";
+    }
+}
 
 @if (SignInManager.IsSignedIn(User))
 {
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li class="nav-item">
-                <a class="nav-link site-a-white" asp-area="Identity"  asp-controller="Manage" asp-action="Index" title="Manage">
-                    <i class="far fa-user"></i> 
+                <a class="navbar-brand navbar-link site-a-white" asp-area="Identity"  asp-controller="Manage" asp-action="Index" title="Manage">
+                    <img id="login-avt-user" src=@srcImg width="30" height="30" alt="...">
                     @UserManager.GetUserName(User)
                 </a>
             </li>

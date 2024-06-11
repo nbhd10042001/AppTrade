@@ -1,6 +1,6 @@
 namespace App.Data
 {
-    public class TypeName 
+    public class TypeMessage 
     {
         public const string Success = "success";
         public const string Warning = "warning";

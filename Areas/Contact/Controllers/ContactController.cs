@@ -73,7 +73,7 @@ namespace App.Areas.Contact.Controllers
                 await _context.SaveChangesAsync();
 
                 StatusMessage = "Lien he cua ban da duoc gui";
-                TypeStatusMessage = "success";
+                TypeStatusMessage = TypeMessage.Success;
 
                 return RedirectToAction("Index", "Home");
             }
@@ -108,7 +108,7 @@ namespace App.Areas.Contact.Controllers
             {
                 _context.Contacts.Remove(contactModel);
                 StatusMessage = $"Ban da xoa lien he \"{contactModel.Email}\"";
-                TypeStatusMessage = "warning";
+                TypeStatusMessage = TypeMessage.Warning;
             }
 
             await _context.SaveChangesAsync();

@@ -7,4 +7,7 @@ public class CreateProductModel : ProductModel
 {
     [Display(Name = "Chuyen muc")]
     public int[] CategoryIDs {set; get;}
+
+    [Display(Name = "Upload file Product")]
+    public IFormFile FileProductUpload {set; get;}
 }

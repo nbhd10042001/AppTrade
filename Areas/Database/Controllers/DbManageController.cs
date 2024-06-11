@@ -32,6 +32,7 @@ namespace App.Areas.Database.Controllers
         [TempData]
         public string TypeStatusMessage {set; get;}
 
+
         // GET: DbManageController
         public ActionResult Index()
         {
@@ -51,7 +52,7 @@ namespace App.Areas.Database.Controllers
         {
             var result = await _dbContext.Database.EnsureDeletedAsync();
             StatusMessage = result ? "Xoa database thanh cong" : "Khong xoa duoc";
-            TypeStatusMessage = result ? "warning" : "danger";
+            TypeStatusMessage = result ? TypeMessage.Warning : TypeMessage.Danger;
             return RedirectToAction(nameof(Index));
         }
 
@@ -59,7 +60,7 @@ namespace App.Areas.Database.Controllers
         public async Task<IActionResult> MigrateAsync()
         {
             await _dbContext.Database.MigrateAsync();
-            TypeStatusMessage = "success";
+            TypeStatusMessage = TypeMessage.Success;
             StatusMessage = "Da tao (cap nhat) database thanh cong";
 
             return RedirectToAction(nameof(Index));
@@ -113,6 +114,8 @@ namespace App.Areas.Database.Controllers
             SeedProducts();
 
             StatusMessage = "Ban vua seed database";
+            TypeStatusMessage = TypeMessage.Success;
+
             return RedirectToAction("Index");
         }
 
