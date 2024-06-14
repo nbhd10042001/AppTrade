@@ -10,6 +10,7 @@ namespace MyApp.Namespace
 {
     [Area("Files")]
     [Authorize(Roles = RoleName.Administrator + "," + RoleName.Editor)]
+    [Authorize]
     public class FileManagerController : Controller
     {
         // GET: FileManagerController
@@ -18,8 +19,6 @@ namespace MyApp.Namespace
         {
             return View();
         }
-
-        
 
         IWebHostEnvironment _env;
         public FileManagerController(IWebHostEnvironment env) => _env = env;

@@ -20,14 +20,17 @@ namespace App.Areas.Product.Controllers
         private readonly ILogger<ViewProductController> _logger;
         private readonly CartService _cartService;
         private readonly AppDbContext _context;
+        private readonly UrlHelperService urlHelperService;
 
         public ViewProductController(ILogger<ViewProductController> logger,
                                      AppDbContext context,
-                                     CartService cartService)
+                                     CartService cartService,
+                                     UrlHelperService _urlHelperService)
         {
             _logger = logger;
             _context = context;
             _cartService = cartService;
+            urlHelperService = _urlHelperService;
         }
 
         [TempData]
@@ -220,7 +223,8 @@ namespace App.Areas.Product.Controllers
             
             return Json(new {
                 success = 1,
-                message = id
+                message = id,
+                productname = product.Title
             });
         }
 
@@ -230,7 +234,8 @@ namespace App.Areas.Product.Controllers
 
             return Json(new {
                 success = 1,
-                count = cart.Count
+                count = cart.Count,
+                url = urlHelperService.GetLink("Cart", "ViewProduct", "Product")
             });
         }
 

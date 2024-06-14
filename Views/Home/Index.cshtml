@@ -12,7 +12,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome to <a class="text-info" style="text-decoration: none;"><strong>TradeGun</strong></a></h1>
-    <p>Trade or buy any weapons REALIZE from here!</p>
+    <p>Trade or buy any weapons from here!</p>
 
 </div>
 
@@ -22,8 +22,7 @@
         <br>
         <br>
         <br>
-        <h3 style="color: rgb(12, 118, 210);">Login now to get special Weapon !!!!!!!!</h3>
-        <br>
+        <h3 style="color: rgb(12, 118, 210);">Login now!<h3>
         <a class="btn btn-info w-25" asp-area="Identity" asp-controller="Account" asp-action="Login"><strong>LOGIN</strong></a>
         <br>
         <br>
@@ -39,7 +38,7 @@ else
     <br>
 }
 
-<h4 class="text-center"><strong>New Weapon Update!</strong></h4>
+<h4 class="text-center"><strong>New Update!</strong></h4>
 <br>
 
 <div id="card-product" class="d-flex flex-wrap">
@@ -70,11 +69,80 @@ else
 
             <div class="card-footer text-center">
                 <p>Price: <strong>@product.Price $</strong></p>
-                <a asp-area="Product" asp-controller="ViewProduct" asp-action="AddToCart" asp-route-productid="@product.ProductId" class="btn btn-success">
-                    Đặt hàng
-                </a>
+                <div id="box-cart">
+                    <span onclick="AddToCart(@product.ProductId)" class="btn btn-success mx-2">
+                        Đặt hàng
+                    </span>
+                </div>
             </div>
         </div>
     }
 </div>
 
+@section Scripts{
+    <script>
+        var timer;
+        function AddToCart (id)
+        {
+            var formData = new FormData();
+            formData.append("id", id);
+            var urlAction = "@Url.Action("AddToCart", "ViewProduct")";
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    clearTimeout(timer);
+                    ShowNotifCart(data.productname);
+                    UpdateQuantityCart();
+                }
+            });
+        };
+
+        function ShowNotifCart(productname)
+        {
+            $("#content-notif-cart").empty().append("Thêm " + "<strong>"+productname+"</strong>" + " vào giỏ hàng thành công!");
+            $("#liveToast").removeClass("hide");
+            $("#liveToast").addClass("show");
+            timer = setTimeout(() => {
+                $("#liveToast").removeClass("show");
+                $("#liveToast").addClass("hide");
+            }, 3000);
+        }
+
+        function UpdateQuantityCart ()
+        {
+            var box = $("#cart-partial");
+            box.empty();
+            var formData = new FormData();
+            var urlAction = "@Url.Action("LoadCartCount", "ViewProduct")";
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    console.log(data.count);
+                    // load cart
+                    var e = $(
+                        '<a class="link-danger mx-2" style="text-decoration: none;"'+
+                            'href=" '+ data.url +' " >'+
+                            '<i class="fas fa-shopping-cart"> Giỏ hàng('+ data.count +') </i>'+
+                        '</a>'
+                    );
+                    box.append(e);
+                }
+            });
+        }
+
+    </script>
+}

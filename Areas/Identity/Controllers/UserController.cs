@@ -28,19 +28,27 @@ namespace App.Areas.Identity.Controllers
         private readonly AppDbContext _context;
 
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public UserController(ILogger<RoleController> logger, RoleManager<IdentityRole> roleManager, AppDbContext context, UserManager<AppUser> userManager)
+        public UserController(  ILogger<RoleController> logger,
+                                RoleManager<IdentityRole> roleManager,
+                                AppDbContext context,
+                                UserManager<AppUser> userManager,
+                                SignInManager<AppUser> signInManager)
         {
             _logger = logger;
             _roleManager = roleManager;
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
 
 
         [TempData]
         public string StatusMessage { get; set; }
+        [TempData]
+        public string TypeStatusMessage {set; get;}
 
         //
         // GET: /ManageUser/Index
@@ -109,7 +117,7 @@ namespace App.Areas.Identity.Controllers
             return View(model);
         }
 
-        // GET: /ManageUser/AddRole/id
+        // POST: /ManageUser/AddRole/id
         [HttpPost("{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddRoleAsync(string id, [Bind("RoleNames")] AddUserRoleModel model)
@@ -137,6 +145,7 @@ namespace App.Areas.Identity.Controllers
             ViewBag.allRoles = new SelectList(roleNames);            
 
             var resultDelete = await _userManager.RemoveFromRolesAsync(model.user,deleteRoles);
+
             if (!resultDelete.Succeeded)
             {
                 ModelState.AddModelError(resultDelete);
@@ -149,9 +158,16 @@ namespace App.Areas.Identity.Controllers
                 ModelState.AddModelError(resultAdd);
                 return View(model);
             }
-
             
+            var resultUpdateSS = await _userManager.UpdateSecurityStampAsync(model.user);
+            if (!resultUpdateSS.Succeeded)
+            {
+                ModelState.AddModelError(resultUpdateSS);
+                return View(model);
+            }
+
             StatusMessage = $"Vừa cập nhật role cho user: {model.user.UserName}";
+            TypeStatusMessage = TypeMessage.Success;
 
             return RedirectToAction("Index");
         }

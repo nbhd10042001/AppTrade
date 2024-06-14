@@ -93,7 +93,9 @@ public class Program
             });
         });
 
-        
+        builder.Services.Configure<SecurityStampValidatorOptions>(o => 
+                   o.ValidationInterval = TimeSpan.FromMinutes(0));
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

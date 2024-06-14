@@ -145,12 +145,12 @@ else
     </script>
 
     <script>
+        var timer;
         function AddToCart (id)
         {
             var formData = new FormData();
             formData.append("id", id);
             var urlAction = "@Url.Action("AddToCart", "ViewProduct")";
-
             $.ajax({
                 data: formData,
                 cache: false,
@@ -160,12 +160,26 @@ else
                 processData: false,
                 success: function(data)
                 {
-                    LoadCart();
+                    @* clearInterval(timer); *@
+                    clearTimeout(timer);
+                    ShowNotifCart(data.productname);
+                    UpdateQuantityCart();
                 }
             });
         };
 
-        function LoadCart ()
+        function ShowNotifCart(productname)
+        {
+            $("#content-notif-cart").empty().append("Thêm " + "<strong>"+productname+"</strong>" + " vào giỏ hàng thành công!");
+            $("#liveToast").removeClass("hide");
+            $("#liveToast").addClass("show");
+            timer = setTimeout(() => {
+                $("#liveToast").removeClass("show");
+                $("#liveToast").addClass("hide");
+            }, 3000);
+        }
+
+        function UpdateQuantityCart ()
         {
             var box = $("#cart-partial");
             box.empty();
@@ -184,7 +198,8 @@ else
                     console.log(data.count);
                     // load cart
                     var e = $(
-                        '<a class="link-danger mx-2" style="text-decoration: none;" asp-route="cart">'+
+                        '<a class="link-danger mx-2" style="text-decoration: none;"'+
+                            'href=" '+ data.url +' " >'+
                             '<i class="fas fa-shopping-cart"> Giỏ hàng('+ data.count +') </i>'+
                         '</a>'
                     );
