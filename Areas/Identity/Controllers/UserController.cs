@@ -43,8 +43,6 @@ namespace App.Areas.Identity.Controllers
             _signInManager = signInManager;
         }
 
-
-
         [TempData]
         public string StatusMessage { get; set; }
         [TempData]
@@ -226,6 +224,7 @@ namespace App.Areas.Identity.Controllers
             }
 
             StatusMessage = $"Vừa cập nhật mật khẩu cho user: {user.UserName}";
+            TypeStatusMessage = TypeMessage.Success;
 
             return RedirectToAction("Index");
         }        
@@ -260,6 +259,7 @@ namespace App.Areas.Identity.Controllers
 
             await _userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
             StatusMessage = "Đã thêm đặc tính cho user";
+            TypeStatusMessage = TypeMessage.Success;
                         
             return RedirectToAction("AddRole", new {id = user.Id});
         }        
@@ -307,7 +307,7 @@ namespace App.Areas.Identity.Controllers
 
             await _context.SaveChangesAsync();
             StatusMessage = "Bạn vừa cập nhật claim";
-            
+            TypeStatusMessage = TypeMessage.Success;
 
             ViewBag.user = user;
             ViewBag.userclaim = userclaim;
@@ -325,6 +325,7 @@ namespace App.Areas.Identity.Controllers
             await _userManager.RemoveClaimAsync(user, new Claim(userclaim.ClaimType, userclaim.ClaimValue));
 
             StatusMessage = "Bạn đã xóa claim";
+            TypeStatusMessage = TypeMessage.Success;
             
             return RedirectToAction("AddRole", new {id = user.Id});
         }

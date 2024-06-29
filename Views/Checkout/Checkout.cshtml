@@ -1,0 +1,165 @@
+@model App.Models.Payment.CheckoutInforModel
+
+@{
+    var user = ViewBag.user;
+    var carts = ViewBag.carts as List<App.Areas.Product.Models.CartItem>;
+    decimal total = 0;
+    int stt = 1;
+}
+
+<h1>Checkout</h1>
+<div class="row">
+    <div class="col-8">
+        <strong>Information</strong>
+        <hr>
+        <form asp-controller="Checkout" asp-action="CompletedPayment" method="post">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input disabled value="@user.name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input disabled value="@user.email" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Phone" class="control-label"></label>
+                <input placeholder="Phone number" value="@user.phone" asp-for="@Model.Phone" class="form-control" />
+                <span asp-validation-for="@Model.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Address" class="control-label"></label>
+                <input placeholder="Address" value="@user.address" asp-for="@Model.Address" class="form-control" />
+                <span asp-validation-for="@Model.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input id="input-orderid" asp-for="@Model.OrderId" class="form-control" hidden="true" />
+                <span asp-validation-for="@Model.OrderId" class="text-danger"></span>
+            </div>
+            <button id="completed-payment" hidden="true" type="submit" class="btn btn-sm">Submit</button>
+        </form>
+
+    </div>
+    <div class="col-4">
+        <strong>Order</strong>
+        <hr>
+        <table class="table" id="cart-table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var cartitem in carts)
+                {
+                    var totalMoney = cartitem.quantity * cartitem.product.Price;
+                    total += totalMoney;
+                    <tr>
+                        <th scope="row">@(stt++)</th>
+                        <td>@cartitem.product.Title</td>
+                        <td>@cartitem.quantity</td>
+                        <td>@(totalMoney.ToString("n0"))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>Total: @total</div>
+        <hr>
+        <div class="w-50" id="paypal-button-container"></div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PaypalClientId"></script>
+    <script>
+        $(function () {
+            paypal.Buttons({
+            
+            createOrder : (data, actions) => {
+                return fetch("/checkout/create-paypal-order", {
+                    method: "POST"
+                })
+                .then(response => {
+                    if(!response.ok){
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
+                .then(order => order.id)
+                .catch(err => alert(err.message));
+            },
+
+            onApprove : (data, actions) => {
+                return fetch(`/checkout/capture-paypal-order?orderId=${data.orderID}`, {
+                    method: "POST",
+                })
+                .then(response => {
+                    if(!response.ok){
+                        return response.json().then(err => { throw err; });
+                    }
+                    document.getElementById("input-orderid").setAttribute('value',data.orderID);
+                    $("#completed-payment").click();
+                })
+                .catch(err => alert(err.message));
+            },
+
+            @* createOrder: function(data, action){
+                return action.order.create({
+                    "purchase_units": [
+                        {
+                            "amount": {
+                                "currency_code": "USD",
+                                "value": @total
+                            },
+                            "items": []
+                        }
+                    ],
+                })
+            },
+            onApprove: function(data, action) {
+                return action.order.capture().then(function (response){
+                    console.log(response);
+                    console.log(data);
+                    if(response?.status === "COMPLETED"){
+                        CompletedPayment();
+                    }
+                })
+            }, *@
+
+            style: {
+                layout: 'vertical',
+                color:  'blue',
+                shape:  'rect',
+                label:  'paypal'
+            }
+            }).render('#paypal-button-container');
+        });
+
+        function CompletedPayment()
+        {
+            var formData = new FormData();
+            var urlAction = "@Url.Action("CompletedPayment", "Checkout")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    window.location.replace(data.url);
+                }
+            });
+        };
+    </script>
+}
+
+
+

@@ -5,6 +5,7 @@ using App.Data;
 using Microsoft.AspNetCore.Identity;
 using App.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppTrade.Controllers;
 
@@ -26,6 +27,38 @@ public class HomeController : Controller
         _roleManager = roleManager;
         _context = context;
 
+    }
+
+    // [Authorize(Roles = RoleName.Member)]
+    public IActionResult TestAPI ()
+    {
+        var userid = _userManager.GetUserId(User);
+        var roles = _context.UserRoles.Where(r => r.UserId == userid).ToList();
+        var allRoles = _context.Roles.ToList();
+        var isAccess = false;
+
+        if(roles.Count > 0)
+        {
+            foreach (var role in roles)
+            {
+                foreach(var nameR in allRoles)
+                {
+                    if(role.RoleId == nameR.Id)
+                    {
+                        if(nameR.Name == RoleName.Vip)
+                            isAccess = true;
+                        else if(nameR.Name == RoleName.Member)
+                            isAccess = true;
+                    }
+                }
+            }
+
+            if(isAccess)
+                return Content("Success");   
+            else
+                return Content("Khong duoc truy cap");         
+        }
+        return BadRequest();
     }
 
     public IActionResult Index()

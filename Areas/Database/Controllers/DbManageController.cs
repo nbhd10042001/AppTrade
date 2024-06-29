@@ -163,7 +163,7 @@ namespace App.Areas.Database.Controllers
                     AuthorId = user.Id,
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
-                    Price = rand.Next(10000),
+                    Price = rand.Next(500),
                     Slug = AppUtilities.GenerateSlug(name),
                 };
                 products.Add(product);

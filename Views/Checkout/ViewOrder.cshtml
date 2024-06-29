@@ -1,0 +1,37 @@
+@{
+    var orders = ViewBag.orders as List<App.Models.Payment.OrderModel>;
+    var stt = 0;
+}
+
+<strong>My Order</strong>
+<hr>
+<table class="table" id="cart-table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Code</th>
+            <th scope="col">Product</th>
+            <th scope="col">Date Create</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in orders)
+        {
+            var price = item.UnitPrice * item.Quantity;
+            <tr>
+                <th scope="row">@(stt++)</th>
+                <td>@item.Code</td>
+                <td>@item.ProductName</td>
+                <td>@item.DateCreate</td>
+                <td>@item.Quantity</td>
+                <td>@(price.ToString("n0"))</td>
+                <td>@item.Phone</td>
+                <td>@item.Address</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,4 @@
+- Tạo tài khoản Developer Paypal
+- Tích hợp thêm PaypalOptions trong appsettings.json
+- Tạo file service PaypalClient.cs 
+- Đăng ký dịch vụ PaypalClient bên Program.cs

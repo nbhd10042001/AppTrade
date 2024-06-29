@@ -23,7 +23,7 @@ $(document).ready(function () {
        }
        else
        {
-            localStorage.setItem('isDarkMode', 'true');
+            localStorage.setItem('isDarkMode', 'false');
        }
     });
 

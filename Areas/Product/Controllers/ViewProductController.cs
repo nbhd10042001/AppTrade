@@ -6,6 +6,8 @@ using App.Models;
 using App.Models.Product;
 using App.Services;
 using Google.Protobuf;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,17 +22,20 @@ namespace App.Areas.Product.Controllers
         private readonly ILogger<ViewProductController> _logger;
         private readonly CartService _cartService;
         private readonly AppDbContext _context;
-        private readonly UrlHelperService urlHelperService;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly UrlHelperService _urlHelperService;
 
         public ViewProductController(ILogger<ViewProductController> logger,
                                      AppDbContext context,
                                      CartService cartService,
-                                     UrlHelperService _urlHelperService)
+                                     UrlHelperService urlHelperService,
+                                     UserManager<AppUser> userManager)
         {
             _logger = logger;
             _context = context;
             _cartService = cartService;
-            urlHelperService = _urlHelperService;
+            _urlHelperService = urlHelperService;
+            _userManager = userManager;
         }
 
         [TempData]
@@ -38,6 +43,7 @@ namespace App.Areas.Product.Controllers
         [TempData]
         public string TypeStatusMessage{set; get;}
 
+        #region View Product
         [HttpPost]
         [Route("product/filter")]
         public IActionResult ListFilter ([Bind("selectFilters, selectCategories, SearchBar")] SelectFilters filters)
@@ -183,7 +189,7 @@ namespace App.Areas.Product.Controllers
             
             return View(product);
         }
-
+        #endregion
 
         // other method -------------------------------------------------
         private List<CategoryProductModel> GetCategories()
@@ -197,7 +203,7 @@ namespace App.Areas.Product.Controllers
             return categories;
         }
 
-
+        #region Cart
         /// Thêm sản phẩm vào cart
         [HttpPost]
         public IActionResult AddToCart (int id) 
@@ -235,7 +241,7 @@ namespace App.Areas.Product.Controllers
             return Json(new {
                 success = 1,
                 count = cart.Count,
-                url = urlHelperService.GetLink("Cart", "ViewProduct", "Product")
+                url = _urlHelperService.GetLink("Cart", "ViewProduct", "Product")
             });
         }
 
@@ -275,19 +281,6 @@ namespace App.Areas.Product.Controllers
             // Trả về mã thành công (không có nội dung gì - chỉ để Ajax gọi)
             return Ok();
         }
-
-        // gui don hang
-        [Route ("/checkout")]
-        public IActionResult Checkout ()
-        {
-            var cart = _cartService.GetCartItems();
-            // .... code xu li du lieu gui don hang
-
-            _cartService.ClearCart();
-
-            StatusMessage = "Ban da gui don hang";
-            TypeStatusMessage = TypeMessage.Success;
-            return RedirectToAction(nameof(Cart));
-        }
+        #endregion
     }
 }

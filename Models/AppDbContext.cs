@@ -1,6 +1,6 @@
 
-
 using App.Models.Contacts;
+using App.Models.Payment;
 using App.Models.Product;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -56,4 +56,5 @@ public class AppDbContext : IdentityDbContext<AppUser> //DbContext
     public DbSet<ProductCategoryProduct> ProductCategoryProducts {set; get;}
     public DbSet<ProductPhotoModel> ProductPhotos {set; get;}
     public DbSet<UserAvatarModel> UserAvatars {set; get;}
+    public DbSet<OrderModel> Orders {set; get;}
 }

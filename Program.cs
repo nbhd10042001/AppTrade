@@ -18,13 +18,13 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        // connection string MySQL
+        /* connection string MySQL */
         var connectionString = builder.Configuration.GetConnectionString("MySQLConnectionString");
         builder.Services.AddDbContext<AppDbContext>(options => {
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
-        // cau hinh connect string trong appsettings.json (MSSQL)
+        /* cau hinh connect string trong appsettings.json (MSSQL) */
         // var connectionString = builder.Configuration.GetConnectionString("AppMVCConnectionString");
         // builder.Services.AddDbContext<AppDbContext>(options => {
         //     options.UseSqlServer(connectionString);
@@ -39,12 +39,19 @@ public class Program
         builder.Services.AddTransient<CartService>();
         builder.Services.AddTransient<UrlHelperService>();
 
+        // Dang ky PaypalClient 
+        builder.Services.AddSingleton(p => new PaypalClient(
+            clientId : builder.Configuration["PaypalOptions:AppId"],
+            clientSecret : builder.Configuration["PaypalOptions:AppSecret"],
+            mode : builder.Configuration["PaypalOptions:Mode"]
+        ));
+
+        // session for cart 
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(cfg => {
             cfg.Cookie.Name = "appMVC";
             cfg.IdleTimeout = new TimeSpan(0, 30, 0); // thoi gian ton tai session (30p)
         });
-
 
         //dang ky Identity
         builder.Services.AddIdentity<AppUser, IdentityRole>()

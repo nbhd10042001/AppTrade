@@ -16,7 +16,12 @@
     </a>
 
     <div>
-        <i>Update: @Model.DateUpdated</i> / Author: <strong>@Model.Author.UserName</strong>
+        <i>Update: @Model.DateUpdated</i>
+    </div>
+    <div>
+        Author: <a asp-area="Community" asp-controller="ViewUser" asp-action="Index" asp-route-name="@Model.Author.UserName">
+            <strong>@Model.Author.UserName</strong>
+        </a>
     </div>
 
     @if(Model.Photos.Any())

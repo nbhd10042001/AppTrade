@@ -1,8 +1,18 @@
+<style>
+  .cart-link{
+    text-decoration: none;
+    color: white;
+    &:hover{
+      color: rgb(162, 162, 162);
+    }
+  }
+</style>
+
 <div class="position-fixed bottom-0 end-0 p-3 " style="z-index: 11">
   <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header bg-success text-white">
       <strong class="me-auto">Thông báo</strong>
-      <small>3 seconds to close</small>
+      <a class="cart-link" href="/cart">Go to Cart</a>
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body" id="content-notif-cart">

@@ -1,0 +1,69 @@
+@using App.Areas.Community.Models;
+
+@model ViewUserModel    
+
+@{
+    ViewData["Title"] = "Thông tin người dùng";
+    var srcImg = "";
+}
+
+<h1>@ViewData["Title"] @Model.UserName.</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">Avatar:</dt>
+        <dd class="col-sm-6">
+            @if (Model.AvatarUser == null)
+                srcImg = "/contents/noUser.png";
+            else
+                srcImg = "/contents/AvatarUsers/" + Model.AvatarUser.AvatarName;
+            
+            <img id="avatar-user" src=@srcImg class="w-25" alt="...">
+        </dd>
+
+        <dt class="col-sm-4">Thông tin cơ bản:</dt>
+        <dd class="col-sm-6"> 
+            <dl class="row">
+                 <dt class = "col-sm-6">
+                    @Html.DisplayNameFor(m => Model.UserName)
+                 </dt>   
+                 <dd class = "col-sm-6">
+                    @Html.DisplayFor(m => Model.UserName)
+                 </dd>
+            </dl>
+             <dl class="row">
+                 <dt class = "col-sm-6">
+                    @Html.DisplayNameFor(m => Model.UserEmail)
+                 </dt>   
+                 <dd class = "col-sm-6">
+                    @Html.DisplayFor(m => Model.UserEmail)
+                 </dd>
+            </dl>
+              <dl class="row">
+                 <dt class = "col-sm-6">
+                    @Html.DisplayNameFor(m => Model.PhoneNumber)
+                 </dt>   
+                 <dd class = "col-sm-6">
+                    @Html.DisplayFor(m => Model.PhoneNumber)
+                 </dd>
+            </dl>
+               <dl class="row">
+                 <dt class = "col-sm-6">
+                    @Html.DisplayNameFor(m => Model.HomeAdress)
+                 </dt>   
+                 <dd class = "col-sm-6">
+                    @Html.DisplayFor(m => Model.HomeAdress)
+                 </dd>
+            </dl>                   
+                <dl class="row">
+                 <dt class = "col-sm-6">
+                    @Html.DisplayNameFor(m => Model.BirthDate)
+                 </dt>   
+                 <dd class = "col-sm-6">
+                    @Html.DisplayFor(m => Model.BirthDate)
+                 </dd>
+            </dl>      
+        </dd>
+    </dl>
+</div>
