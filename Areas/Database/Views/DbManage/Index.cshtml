@@ -21,18 +21,18 @@
 
 <partial name="_AlertMessage"></partial>
 
-<h1>Thong tin co so du lieu</h1>
+<h1>Database Information</h1>
 <p> - Database: @dbname</p>
 <p> - Source: @connect.DataSource</p>
 <p> - State: @connect.State</p>
 <p> - Can Connect: @canConnect</p>
 @if(userAdmin == null)
 {
-    <p> - Admin: Chua co Admin... <a asp-controller="DbManage" asp-action="SeedAdmin">Create Admin</a></p>
+    <p> - Admin: No admin account! <a asp-controller="DbManage" asp-action="SeedAdmin">Create Admin</a></p>
 }
 else
 {
-    <p> - Admin: Da co Admin</p>
+    <p> - Admin: Had Admin!</p>
 }
 
 <hr>

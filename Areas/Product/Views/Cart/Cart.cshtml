@@ -47,7 +47,8 @@
       </tr>
   </table>
 
-  <a asp-controller="Checkout" asp-action="Checkout" class="btn btn-success">Gửi đơn hàng</a>
+  <a asp-area="Order" asp-controller="Checkout" asp-action="Checkout" class="btn btn-success">Gửi đơn hàng</a>
+  <a asp-area="Product" asp-controller="Cart" asp-action="ClearCart" class="btn btn-danger">Clear All!</a>
 
   @section Scripts {
     <script>

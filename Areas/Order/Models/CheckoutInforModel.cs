@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace App.Models.Payment;
+namespace App.Areas.Order.Models;
 
 public class CheckoutInforModel
 {
     public string UserName {set; get;}
     public string Email {set; get;}
     public string OrderId {set; get;}
+    public string PaymentMethod {set; get;}
 
     [Required]
     [Phone]

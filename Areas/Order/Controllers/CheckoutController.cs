@@ -1,14 +1,15 @@
+using App.Areas.Order.Models;
 using App.Areas.Product.Models.Services;
 using App.Data;
 using App.Models;
-using App.Models.Payment;
 using App.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Controllers;
+namespace App.Areas.Order.Controllers;
 
+[Area("Order")]
 [Authorize]
 public class CheckoutController : Controller
 {
@@ -38,17 +39,6 @@ public class CheckoutController : Controller
     [TempData]
     public string TypeStatusMessage{set; get;}
 
-    [HttpGet("/viewmyorder")]
-    public async Task<IActionResult> ViewOrder ()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null) return Content("Not found user!");
-        
-        var orders = _context.Orders.Where(o => o.UserId == user.Id).ToList();
-        ViewBag.orders = orders;
-        return View();
-    }
-
     // gui don hang
     [Route ("/checkout")]
     public async Task<IActionResult> Checkout ()
@@ -77,16 +67,24 @@ public class CheckoutController : Controller
         var carts = _cartService.GetCartItems();
         foreach (var item in carts)
         {
+            var status = StatusOrder.Pending;
+            if(model.PaymentMethod == PaymentMethod.Paypal)
+                status = StatusOrder.Shipping;
+                
             _context.Orders.Add(new OrderModel {
+                OrderId = Guid.NewGuid().ToString(),
                 UserId = user.Id,
+                UserName = user.UserName,
                 ProductId = item.product.ProductId,
                 ProductName = item.product.Title,
                 Quantity = item.quantity,
                 UnitPrice = item.product.Price,
                 DateCreate = DateTime.Now,
-                Code = model.OrderId,
+                CodePayment = model.OrderId,
+                PaymentMethod = model.PaymentMethod,
                 Phone = model.Phone,
-                Address = model.Address
+                Address = model.Address,
+                Status = status
             });
         }
         await _context.SaveChangesAsync();

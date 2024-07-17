@@ -1,0 +1,59 @@
+@using App.Data
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Order";
+    var orders = ViewBag.orders as List<App.Models.OrderModel>;
+}
+
+<style>
+    .order-view{
+        &:hover{
+            opacity: 0.5;
+            @* color: red; *@
+            cursor: pointer;
+        }
+    }
+</style>
+
+<partial name="_AlertMessage"></partial>
+
+<strong>All Orders</strong>
+<hr>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">User</th>
+            <th scope="col">Product</th>
+            <th scope="col">Date Create</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">PaymentMethod</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in orders)
+        {
+            var price = item.UnitPrice * item.Quantity;
+            <tr class="border order-view" onclick="ViewDetailOrder(@item.Id)">
+                <th scope="row">@item.Id</th>
+                <td>@item.UserName</td>
+                <td>@item.ProductName</td>
+                <td>@item.DateCreate</td>
+                <td>@item.Quantity</td>
+                <td>@(price.ToString("n0"))</td>
+                <td>@item.PaymentMethod</td>
+                <td>@item.Status</td>
+                <td><a id="order-detail-@item.Id" hidden="true" asp-area="Order" asp-action="ManagerDetailOrder" asp-controller="Order" asp-route-id="@item.OrderId"></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function ViewDetailOrder(id)
+    {
+        document.getElementById(`order-detail-${id}`).click();
+    }
+</script>

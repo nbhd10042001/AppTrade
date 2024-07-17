@@ -1,0 +1,18 @@
+@using App.Data
+@model App.Areas.Order.Models.CheckoutInforModel
+
+@{
+    ViewData["Title"] = "Completed Payment";
+}
+
+@if(Model.PaymentMethod == PaymentMethod.Paypal){
+    <h1>Completed Payment</h1>
+    <h2>Success!</h2>
+}
+else if (Model.PaymentMethod == PaymentMethod.Cash){
+    <h1>Completed!</h1>
+    <h2>Please check and confirm your Order!</h2>
+}
+
+<a asp-controller="Home" asp-action="Index">Home</a>
+

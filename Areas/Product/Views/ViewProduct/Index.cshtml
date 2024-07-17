@@ -5,7 +5,7 @@
 
 @{
     CategoryProductModel categoryChoosed = ViewBag.categoryChoosed as CategoryProductModel;
-    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Products";
+    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Shop";
 
     List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
     List<ProductModel> Products = ViewBag.productsInPage as List<ProductModel>;
@@ -44,7 +44,7 @@
 }
 else
 {
-    <p>Toàn bộ Product</p>
+    <p>All Product</p>
 }
 
 
@@ -66,14 +66,14 @@ else
             <label asp-for="selectCategories" class="control-label"></label>
             <select  asp-for="selectCategories" id="MSLCategories" asp-items="MSLCategories" multiple="multiple" class="w-100"></select>
         </div>
-        <hr>
-        <i class="fas fa-search"></i> Search
+        <br>
+        @* <i class="fas fa-search"></i> Search *@
         <div class="form-group">
-            <input asp-for="SearchBar" value="@seachBar" class="w-75">
+            <input asp-for="SearchBar" value="@seachBar" class="w-75 form-control me-2" type="search" placeholder="Search" aria-label="Search">
         </div>
         
         <div class="form-group">
-            <input type="submit" value="Done" class="btn btn-sm btn-primary  my-2" />
+            <input type="submit" value="Search" class="btn btn-sm btn-outline-success  my-2" />
         </div>
     </form>
 </div>
@@ -114,7 +114,7 @@ else
                 <hr>
                 <div id="box-cart">
                     <span onclick="AddToCart(@product.ProductId)" class="btn btn-success mx-2">
-                        Đặt hàng
+                        Add to cart
                     </span>
                 </div>
                 
@@ -150,7 +150,7 @@ else
         {
             var formData = new FormData();
             formData.append("id", id);
-            var urlAction = "@Url.Action("AddToCart", "ViewProduct")";
+            var urlAction = "@Url.Action("AddToCart", "Cart")";
             $.ajax({
                 data: formData,
                 cache: false,
@@ -160,10 +160,18 @@ else
                 processData: false,
                 success: function(data)
                 {
-                    @* clearInterval(timer); *@
-                    clearTimeout(timer);
-                    ShowNotifCart(data.productname);
-                    UpdateQuantityCart();
+                    if(data.success === 1)
+                    {
+                        @* clearInterval(timer); *@
+                        clearTimeout(timer);
+                        ShowNotifCart(data.productname);
+                        UpdateQuantityCart();
+                    }
+                    else if (data.success === 0)
+                    {
+                        window.location.replace(data.url);
+                        @* alert("Login!"); *@
+                    }
                 }
             });
         };
@@ -184,7 +192,7 @@ else
             var box = $("#cart-partial");
             box.empty();
             var formData = new FormData();
-            var urlAction = "@Url.Action("LoadCartCount", "ViewProduct")";
+            var urlAction = "@Url.Action("LoadCartCount", "Cart")";
 
             $.ajax({
                 data: formData,

@@ -33,6 +33,8 @@ public class HomeController : Controller
     public IActionResult TestAPI ()
     {
         var userid = _userManager.GetUserId(User);
+        if(userid == null) return Content("yeu cau login");
+        
         var roles = _context.UserRoles.Where(r => r.UserId == userid).ToList();
         var allRoles = _context.Roles.ToList();
         var isAccess = false;
@@ -69,7 +71,7 @@ public class HomeController : Controller
                                         .ThenInclude(pc => pc.CategoryProduct)
                                         .AsQueryable(); 
 
-        products = products.OrderByDescending(p => p.DateUpdated).Take(5);
+        products = products.OrderByDescending(p => p.DateCreated).Take(5);
         ViewBag.products = products;
 
         return View();

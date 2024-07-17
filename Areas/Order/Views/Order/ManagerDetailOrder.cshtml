@@ -1,0 +1,158 @@
+@using App.Data
+@model App.Models.OrderModel
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Detail";
+    var filename = ViewBag.filename;
+    var srcImg = "";
+    if (string.IsNullOrEmpty(filename))
+        srcImg = $"/contents/noImg.png";
+    else
+        srcImg = $"/contents/Products/{filename}";
+}
+
+<style>
+    .button-circle{
+        background-color: rgba(255, 255, 255, 0);
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 50%;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-4">
+        <strong class="text-uppercase" style="font-size: 25px;">Information Order</strong>
+        <div>
+            <img src=@srcImg class="w-50" alt="...">
+        </div>
+
+        <div><strong>Id:</strong> @Model.Id </div> <hr>
+        <div><strong>Order Id:</strong> @Model.OrderId </div> <hr>
+        <div><strong>Product Name:</strong> @Model.ProductName </div> <hr>
+        <div><strong>Product Id:</strong> @Model.ProductId </div> <hr>
+        <div><strong>Price:</strong> @Model.UnitPrice </div> <hr>
+        <div><strong>Quantity:</strong> @Model.Quantity </div> <hr>
+        <div><strong>Total:</strong> @(Model.UnitPrice * Model.Quantity) </div> <hr>
+        <div><strong>Date Order:</strong> @Model.DateCreate </div> <hr>
+    </div>
+    <div class="col-8">
+        <strong class="text-uppercase" style="font-size: 25px;">Information User</strong><br><br>
+        <div><strong>User:</strong> @Model.UserName </div> <hr>
+        <div><strong>User Id:</strong> @Model.UserId </div> <hr>
+
+        <div style="position: relative; display: flex; align-items: center;">
+            <strong>Phone: </strong>
+            <input value="@Model.Phone" disabled id="input-edit-phone" type="text" class="form-control w-75" style="margin-left: 10px;">
+            <span class="btn" id="span-edit-phone" onclick="OpenEditInput(`phone`)" style="right: 0; position: absolute"><i class="fas fa-edit"></i> </span>
+            <div hidden="true" id="btn-edit-phone">
+                <button onclick="UpdateButtonEdit(`phone`)" class="button-circle"><i class="fas fa-check" style="color: green;"></i></button>
+                <button onclick="CloseButtonEdit(`phone`)" class="button-circle"><i class="fas fa-times" style="color: red;"></i></button>
+            </div>
+        </div> <hr>
+
+        <div style="position: relative; display: flex; align-items: center;">
+            <strong>Address: </strong>
+            <input value="@Model.Address" disabled id="input-edit-address" type="text" class="form-control w-75" style="margin-left: 10px;">
+            <span class="btn" id="span-edit-address" onclick="OpenEditInput(`address`)" style="right: 0; position: absolute"><i class="fas fa-edit"></i> </span>
+            <div hidden="true" id="btn-edit-address">
+                <button onclick="UpdateButtonEdit(`address`)" class="button-circle"><i class="fas fa-check" style="color: green;"></i></button>
+                <button onclick="CloseButtonEdit(`address`)" class="button-circle"><i class="fas fa-times" style="color: red;"></i></button>
+            </div>
+        </div> <hr>
+
+        <div><strong>PaymentMethod: </strong>@Model.PaymentMethod</div> <hr>
+        <div><strong>CodePayment: </strong>@Model.CodePayment</div> <hr>
+        <div><strong>Status: </strong><span id="status-order">@Model.Status</span></div> <hr>
+
+        @if(Model.Status == StatusOrder.Pending){
+            <div>
+                <button id="order-confirm" onclick="OrderConfirmClick()" class="btn btn-primary">
+                    Xác nhận đơn hàng</button>
+            </div>
+        }
+        <div style="margin-top: 10px;">
+            <form asp-area="Order" asp-controller="Order" asp-action="ManagerDeleteOrder" asp-route-id="@Model.OrderId" method="post">
+                <button class="btn btn-danger">Hủy đơn hàng</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var phone = `@Model.Phone`;
+        var address = `@Model.Address`;
+
+        function OrderConfirmClick()
+        {
+            var formData = new FormData();
+            var urlAction = "@Url.Action("OrderConfirmation", "Order")";
+            formData.append("id", "@Model.OrderId");
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    document.getElementById(`order-confirm`).setAttribute("hidden", "true");
+                    $(`#status-order`).empty().append("Shipping");
+                }
+            });
+        };
+
+        function OpenEditInput(name)
+        {
+            document.getElementById(`input-edit-${name}`).removeAttribute("disabled");
+            document.getElementById(`span-edit-${name}`).setAttribute("hidden", "true");
+            document.getElementById(`btn-edit-${name}`).hidden = false;
+
+        }
+
+        function CloseButtonEdit(name)
+        {
+            $(`#input-edit-${name}`).attr("disabled", true);
+
+            if(name === "phone")
+                document.getElementById(`input-edit-${name}`).value = phone;
+            else
+                document.getElementById(`input-edit-${name}`).value = address;
+
+            document.getElementById(`btn-edit-${name}`).hidden = true;
+            document.getElementById(`span-edit-${name}`).removeAttribute("hidden");
+
+        }
+
+        function UpdateButtonEdit(name)
+        {
+            var formData = new FormData();
+            var urlAction = "@Url.Action("UpdateInformOrderAPI", "Order")";
+
+            var value = document.getElementById(`input-edit-${name}`).value;
+            var inform = `${"@Model.OrderId"}+${name}+${value}`;
+            formData.append("inform", inform);
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    document.getElementById(`input-edit-${data.name}`).value = data.value;
+                    if(data.name === "phone") phone = data.value;
+                    else if (data.name === "address") address = data.value;
+                    CloseButtonEdit(data.name);
+                }
+            });
+        }
+    </script>
+}

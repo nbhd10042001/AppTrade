@@ -11,9 +11,9 @@
 
     <div><p>Price: <strong>@Model.Price</strong></p></div>
 
-    <a asp-action="AddToCart" asp-route-productid="@Model.ProductId" class="btn btn-success">
-        Dat hang
-    </a>
+    <span onclick="AddToCart(@Model.ProductId)" class="btn btn-success mx-2">
+        Add to cart
+    </span>
 
     <div>
         <i>Update: @Model.DateUpdated</i>
@@ -40,3 +40,79 @@
         <a class="site-a-blue" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">Back to list</a>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        var timer;
+        function AddToCart (id)
+        {
+            var formData = new FormData();
+            formData.append("id", id);
+            var urlAction = "@Url.Action("AddToCart", "Cart")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    if(data.success === 1)
+                    {
+                        @* clearInterval(timer); *@
+                        clearTimeout(timer);
+                        ShowNotifCart(data.productname);
+                        UpdateQuantityCart();
+                    }
+                    else if (data.success === 0)
+                    {
+                        window.location.replace(data.url);
+                        @* alert("Login!"); *@
+                    }
+                }
+            });
+        };
+
+        function ShowNotifCart(productname)
+        {
+            $("#content-notif-cart").empty().append("Thêm " + "<strong>"+productname+"</strong>" + " vào giỏ hàng thành công!");
+            $("#liveToast").removeClass("hide");
+            $("#liveToast").addClass("show");
+            timer = setTimeout(() => {
+                $("#liveToast").removeClass("show");
+                $("#liveToast").addClass("hide");
+            }, 3000);
+        }
+
+        function UpdateQuantityCart ()
+        {
+            var box = $("#cart-partial");
+            box.empty();
+            var formData = new FormData();
+            var urlAction = "@Url.Action("LoadCartCount", "Cart")";
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    console.log(data.count);
+                    // load cart
+                    var e = $(
+                        '<a class="link-danger mx-2" style="text-decoration: none;"'+
+                            'href=" '+ data.url +' " >'+
+                            '<i class="fas fa-shopping-cart"> Giỏ hàng('+ data.count +') </i>'+
+                        '</a>'
+                    );
+                    box.append(e);
+                }
+            });
+        }
+
+    </script>
+}

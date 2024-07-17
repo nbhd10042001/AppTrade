@@ -60,7 +60,6 @@
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Đăng nhập</button>
                             </form>
 
-                            <hr>
                             @{
                                 var schemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
                                 var loginProviders = schemes.ToList();

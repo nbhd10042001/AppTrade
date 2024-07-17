@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppTrade.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240629194758_addOrder")]
+    [Migration("20240702153840_addOrder")]
     partial class addOrder
     {
         /// <inheritdoc />
@@ -140,11 +140,17 @@ namespace AppTrade.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Code")
+                    b.Property<string>("CodePayment")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("OrderId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Phone")
                         .HasColumnType("longtext");
@@ -158,10 +164,16 @@ namespace AppTrade.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("longtext");
+
                     b.Property<double>("UnitPrice")
                         .HasColumnType("double");
 
                     b.Property<string>("UserId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");

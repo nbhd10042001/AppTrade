@@ -1,0 +1,58 @@
+@using App.Data
+@{
+    ViewData["Title"] = "MyOrder";
+    var orders = ViewBag.orders as List<App.Models.OrderModel>;
+    var stt = 0;
+}
+
+<style>
+    .order-view{
+        &:hover{
+            opacity: 0.5;
+            @* color: red; *@
+            cursor: pointer;
+        }
+    }
+</style>
+
+<partial name="_AlertMessage"></partial>
+
+<strong>My Order</strong>
+<hr>
+<table class="table text-center" id="cart-table">
+    <thead>
+        <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total</th>
+            <th scope="col">Date Create</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in orders)
+        {
+            stt = stt + 1;
+            var totalmoney = item.UnitPrice * item.Quantity;
+            <tr class="border order-view" onclick="ViewDetailOrder(@stt)">
+                <th scope="row">@stt</th>
+                <td>@item.ProductName</td>
+                <td>@(item.UnitPrice.ToString("n0"))</td>
+                <td>@item.Quantity</td>
+                <td>@(totalmoney.ToString("n0"))</td>
+                <td>@item.DateCreate</td>
+                <td>@item.Status</td>
+                <td><a id="order-detail-@stt" hidden="true" asp-area="Order" asp-action="DetailOrder" asp-controller="Order" asp-route-id="@item.OrderId"></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function ViewDetailOrder(id)
+    {
+        document.getElementById(`order-detail-${id}`).click();
+    }
+</script>

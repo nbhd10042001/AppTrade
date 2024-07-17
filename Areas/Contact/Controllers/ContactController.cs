@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.Models;
-using App.Models.Contacts;
+using App.Models.Contact;
 using Microsoft.AspNetCore.Authorization;
 using App.Data;
 
@@ -15,7 +15,6 @@ using App.Data;
 namespace App.Areas.Contact.Controllers
 {
     [Area("Contact")]
-    [Authorize(Roles = RoleName.Administrator)]
     public class ContactController : Controller
     {
         private readonly AppDbContext _context;
@@ -31,12 +30,14 @@ namespace App.Areas.Contact.Controllers
         [TempData]
         public string TypeStatusMessage {set; get;}
         
+        [Authorize(Roles = RoleName.Administrator)]
         [HttpGet("/admin/contact")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Contacts.ToListAsync());
         }
 
+        [Authorize(Roles = RoleName.Administrator)]
         [HttpGet("/admin/contact/detail/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -54,13 +55,6 @@ namespace App.Areas.Contact.Controllers
 
             return View(contactModel);
         }
-
-        [HttpGet("/contact")] [AllowAnonymous]
-        public IActionResult SendContact()
-        {
-            return View();
-        }
-
         
         [HttpPost("/contact")] [AllowAnonymous]
         [ValidateAntiForgeryToken]

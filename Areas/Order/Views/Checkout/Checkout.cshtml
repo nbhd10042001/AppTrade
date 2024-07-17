@@ -1,6 +1,7 @@
-@model App.Models.Payment.CheckoutInforModel
+@model App.Areas.Order.Models.CheckoutInforModel
 
 @{
+    ViewData["Title"] = "Checkout";
     var user = ViewBag.user;
     var carts = ViewBag.carts as List<App.Areas.Product.Models.CartItem>;
     decimal total = 0;
@@ -12,7 +13,7 @@
     <div class="col-8">
         <strong>Information</strong>
         <hr>
-        <form asp-controller="Checkout" asp-action="CompletedPayment" method="post">
+        <form asp-area="Order" asp-controller="Checkout" asp-action="CompletedPayment" method="post">
             <div class="form-group">
                 <label class="control-label">Name</label>
                 <input disabled value="@user.name" class="form-control" />
@@ -34,7 +35,9 @@
             </div>
             <div class="form-group">
                 <input id="input-orderid" asp-for="@Model.OrderId" class="form-control" hidden="true" />
-                <span asp-validation-for="@Model.OrderId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input id="input-payment" asp-for="@Model.PaymentMethod" class="form-control" hidden="true" />
             </div>
             <button id="completed-payment" hidden="true" type="submit" class="btn btn-sm">Submit</button>
         </form>
@@ -69,6 +72,11 @@
         <div>Total: @total</div>
         <hr>
         <div class="w-50" id="paypal-button-container"></div>
+        <div class="w-50">
+            <button onclick="CashPayment()">
+                Cash
+            </button>
+        </div>
     </div>
 </div>
 
@@ -104,6 +112,7 @@
                         return response.json().then(err => { throw err; });
                     }
                     document.getElementById("input-orderid").setAttribute('value',data.orderID);
+                    document.getElementById("input-payment").setAttribute('value', "Paypal");
                     $("#completed-payment").click();
                 })
                 .catch(err => alert(err.message));
@@ -158,6 +167,13 @@
                 }
             });
         };
+
+        function CashPayment()
+        {
+            document.getElementById("input-orderid").setAttribute('value', "Cash");
+            document.getElementById("input-payment").setAttribute('value', "Cash");
+            $("#completed-payment").click();
+        }
     </script>
 }
 

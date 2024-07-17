@@ -43,7 +43,6 @@ namespace App.Areas.Product.Controllers
         [TempData]
         public string TypeStatusMessage{set; get;}
 
-        #region View Product
         [HttpPost]
         [Route("product/filter")]
         public IActionResult ListFilter ([Bind("selectFilters, selectCategories, SearchBar")] SelectFilters filters)
@@ -189,7 +188,6 @@ namespace App.Areas.Product.Controllers
             
             return View(product);
         }
-        #endregion
 
         // other method -------------------------------------------------
         private List<CategoryProductModel> GetCategories()
@@ -202,85 +200,5 @@ namespace App.Areas.Product.Controllers
 
             return categories;
         }
-
-        #region Cart
-        /// Thêm sản phẩm vào cart
-        [HttpPost]
-        public IActionResult AddToCart (int id) 
-        {
-            var product = _context.Products
-                .Where (p => p.ProductId == id)
-                .FirstOrDefault ();
-            if (product == null) return NotFound();
-            
-            // Xử lý đưa vào Cart ...
-            var cart = _cartService.GetCartItems();
-            var cartitem = cart.Find (p => p.product.ProductId == id);
-            if (cartitem != null) {
-                // Đã tồn tại, tăng thêm 1
-                cartitem.quantity++;
-            } else {
-                //  Thêm mới
-                cart.Add (new CartItem() { quantity = 1, product = product });
-            }
-
-            // Lưu cart vào Session
-            _cartService.SaveCartSession(cart);
-            
-            return Json(new {
-                success = 1,
-                message = id,
-                productname = product.Title
-            });
-        }
-
-        public IActionResult LoadCartCount ()
-        {
-            var cart = _cartService.GetCartItems();
-
-            return Json(new {
-                success = 1,
-                count = cart.Count,
-                url = _urlHelperService.GetLink("Cart", "ViewProduct", "Product")
-            });
-        }
-
-        // Hiện thị giỏ hàng
-        [Route ("/cart", Name = "cart")]
-        public IActionResult Cart () 
-        {
-            return View (_cartService.GetCartItems());
-        }
-
-        /// xóa item trong cart
-        [Route ("/removecart/{productid:int}", Name = "removecart")]
-        public IActionResult RemoveCart ([FromRoute] int productid) {
-            var cart = _cartService.GetCartItems ();
-            var cartitem = cart.Find (p => p.product.ProductId == productid);
-            if (cartitem != null) {
-                // Đã tồn tại, tăng thêm 1
-                cart.Remove(cartitem);
-            }
-
-            _cartService.SaveCartSession(cart);
-            return RedirectToAction (nameof (Cart));
-        }
-
-        /// Cập nhật
-        [Route ("/updatecart", Name = "updatecart")]
-        [HttpPost]
-        public IActionResult UpdateCart ([FromForm] int productid, [FromForm] int quantity) {
-            // Cập nhật Cart thay đổi số lượng quantity ...
-            var cart = _cartService.GetCartItems ();
-            var cartitem = cart.Find (p => p.product.ProductId == productid);
-            if (cartitem != null) {
-                // Đã tồn tại, tăng thêm 1
-                cartitem.quantity = quantity;
-            }
-            _cartService.SaveCartSession (cart);
-            // Trả về mã thành công (không có nội dung gì - chỉ để Ajax gọi)
-            return Ok();
-        }
-        #endregion
     }
 }

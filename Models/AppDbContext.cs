@@ -1,6 +1,6 @@
 
-using App.Models.Contacts;
-using App.Models.Payment;
+using App.Models.Contact;
+using App.Models;
 using App.Models.Product;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -18,7 +18,7 @@
             @if(cart.Count > 0)
             {   
                 <a class="link-danger mx-2" style="text-decoration: none;"
-                    asp-area="Product" asp-controller="ViewProduct" asp-action="Cart">
+                    asp-area="Product" asp-controller="Cart" asp-action="Cart">
                     <i class="fas fa-shopping-cart"> Giỏ hàng(@cart.Count) </i>
                 </a>
             }

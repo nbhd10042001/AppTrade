@@ -1,7 +1,7 @@
 ﻿@using App.Models
 @using Microsoft.AspNetCore.Identity
-@inject UserManager<AppUser> UserManager
 
+@inject UserManager<AppUser> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,11 +27,11 @@
     <link rel="stylesheet" href="~/css/_product.css" />
 </head>
 
-<body id="body-layout">
-    <header id="header-layout">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
+<body id="body-layout" style="padding-top: 70px;">
+    <header>
+        <nav id="header-layout" class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeGun</a>
+                <a class="navbar-brand text-info" asp-controller="Home" asp-action="Index">TradeShop</a>
                 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -40,26 +40,18 @@
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
+                                <i class="fas fa-shopping-cart"></i> Shop
+                            </a>
+                        </li>
                         @if(string.IsNullOrEmpty(UserManager.GetUserName(User)) == false)
                         {
                             <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="fas fa-home"></i> Home
-                            </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
-                                    <i class="fas fa-shopping-cart"></i> Shop
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Checkout" asp-action="ViewOrder">
+                                <a class="nav-link" asp-area="Order" asp-controller="Order" asp-action="ViewOrder">
                                     <i class="fas fa-archive"></i> My Order
                                 </a>
                             </li>
-                        
                         }
 
                         <li class="nav-item">
@@ -76,7 +68,7 @@
             </div>
         </nav>
     </header>
-
+  
     <div id="container-layout" class="container">
         <main role="main" class="pb-3">
             @RenderBody()

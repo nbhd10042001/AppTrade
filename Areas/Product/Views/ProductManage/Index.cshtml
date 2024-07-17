@@ -6,7 +6,7 @@
 
 }
 
-<h1>Danh sach San pham</h1>
+<h1>Product Manager</h1>
 
 <partial name="_AlertMessage"></partial>
 
@@ -14,12 +14,12 @@
     <a class="btn btn-primary btn-sm" asp-action="Create">Create New</a>
 </p>
 
-<p>Tong so San pham: @ViewBag.totalproducts</p>
+<p>Total Product: @ViewBag.totalproducts</p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>STT</th>
+            <th>#</th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
