@@ -57,4 +57,5 @@ public class AppDbContext : IdentityDbContext<AppUser> //DbContext
     public DbSet<ProductPhotoModel> ProductPhotos {set; get;}
     public DbSet<UserAvatarModel> UserAvatars {set; get;}
     public DbSet<OrderModel> Orders {set; get;}
+    public DbSet<NotificationModel> Notification {set; get;}
 }

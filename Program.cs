@@ -38,6 +38,7 @@ public class Program
         builder.Services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
         builder.Services.AddTransient<CartService>();
         builder.Services.AddTransient<UrlHelperService>();
+        builder.Services.AddTransient<NotificationService>();
 
         // Dang ky PaypalClient 
         builder.Services.AddSingleton(p => new PaypalClient(
@@ -97,6 +98,12 @@ public class Program
             options.AddPolicy("ViewManageMenu", builder => {
                 builder.RequireAuthenticatedUser(); // yeu cau user login
                 builder.RequireRole(RoleName.Administrator);
+            });
+            options.AddPolicy("ViewCart", builder => {
+                builder.RequireAuthenticatedUser(); // yeu cau user login
+            });
+            options.AddPolicy("ViewNotif", builder => {
+                builder.RequireAuthenticatedUser(); // yeu cau user login
             });
         });
 

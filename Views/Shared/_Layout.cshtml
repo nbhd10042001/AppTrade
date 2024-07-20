@@ -41,6 +41,11 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
+                            <a class="nav-link" id="dark-mode-button">
+                                <i id="icon-dark-mode" class="fas"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Index">
                                 <i class="fas fa-shopping-cart"></i> Shop
                             </a>
@@ -53,17 +58,15 @@
                                 </a>
                             </li>
                         }
-
                         <li class="nav-item">
-                            <a class="nav-link" id="dark-mode-button">
-                                <i id="icon-dark-mode" class="fas"></i>
-                            </a>
+                            @await Html.PartialAsync("/Views/Shared/Partials/_CartPartial.cshtml")
                         </li>
-                        
                     </ul>
-                    @await Html.PartialAsync("/Views/Shared/Partials/_CartPartial.cshtml")
+
+                    <partial name="/Views/Shared/Partials/_BellPartial.cshtml"></partial>
                     <partial name="/Views/Shared/Partials/_MenuManagePartial.cshtml"></partial>
                     <partial name="/Views/Shared/Partials/_LoginPartial.cshtml"></partial>
+                    
                 </div>
             </div>
         </nav>

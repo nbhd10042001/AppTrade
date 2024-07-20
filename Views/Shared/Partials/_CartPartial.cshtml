@@ -9,20 +9,19 @@
 @inject CartService _cartService
 
 @{
-    var result = await authorizationService.AuthorizeAsync(this.User, "ViewManageMenu");
+    var result = await authorizationService.AuthorizeAsync(this.User, "ViewCart");
     @if (result.Succeeded)
     {
         var cart = _cartService.GetCartItems();
         @* asp-route="cart" thuc hien action Cart trong ViewProductController.cs *@
-        <div id="cart-partial" class="nav-item">
+        <div id="cart-partial">
             @if(cart.Count > 0)
             {   
-                <a class="link-danger mx-2" style="text-decoration: none;"
+                <a class="link-danger nav-link" style="text-decoration: none;"
                     asp-area="Product" asp-controller="Cart" asp-action="Cart">
-                    <i class="fas fa-shopping-cart"> Giỏ hàng(@cart.Count) </i>
+                    <i class="fas fa-shopping-cart"> Cart(@cart.Count)</i>
                 </a>
             }
-            
         </div> 
     }
 }

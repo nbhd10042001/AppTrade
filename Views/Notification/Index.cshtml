@@ -1,0 +1,41 @@
+@using App.Models;
+@model List<NotificationModel>
+
+@{
+    ViewData["Title"] = "Notification";
+}
+
+<style>
+    .notif-view{
+        &:hover{
+            opacity: 0.7;
+            @* color: red; *@
+            cursor: pointer;
+        }
+    }
+</style>
+
+<h1>Notification</h1><hr>
+
+@foreach(var item in Model)
+{
+    var isWatched = "alert-dark";
+    if(item.IsWatched == false) isWatched = "alert-light shadow";
+
+    <div class= "alert @isWatched notif-view border" role="alert" onclick="ViewDetailNotif(@item.Id)">
+        <h4 class="alert-heading">@item.Title</h4>
+        <p>@item.Content</p>
+        <small>@item.DateCreated</small>
+        <a id="notif-@item.Id" asp-controller="Notification" asp-action="Detail" asp-route-id="@item.Id" hidden="true"></a>
+    </div>
+}
+
+@section Scripts
+{
+    <script>
+        function ViewDetailNotif(id)
+        {
+            document.getElementById(`notif-${id}`).click();
+        }
+    </script>
+}

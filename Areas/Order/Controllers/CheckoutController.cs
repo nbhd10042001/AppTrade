@@ -18,19 +18,22 @@ public class CheckoutController : Controller
     private readonly UserManager<AppUser> _userManager;
     private readonly UrlHelperService _urlHelperService;
     private readonly PaypalClient _paypalClient;
+    private readonly NotificationService _notifService;
 
     public CheckoutController(
                             AppDbContext context,
                             CartService cartService,
                             UrlHelperService urlHelperService,
                             UserManager<AppUser> userManager,
-                            PaypalClient paypalClient )
+                            PaypalClient paypalClient,
+                            NotificationService notifService )
     {
         _context = context;
         _cartService = cartService;
         _urlHelperService = urlHelperService;
         _userManager = userManager;
         _paypalClient = paypalClient;
+        _notifService = notifService;
     }
 
 
@@ -86,13 +89,16 @@ public class CheckoutController : Controller
                 Address = model.Address,
                 Status = status
             });
+            string message = $@"Bạn đã thanh toán thanh công đơn hàng <{item.product.Title}>
+                                với số lượng {item.quantity} và tổng tiền {item.quantity*item.product.Price}    
+                            ";
+            _notifService.CreateNotification(TypeNotification.Order, message, user.Id, user.UserName);
+
         }
         await _context.SaveChangesAsync();
 
         _cartService.ClearCart();
-
         return View(model);
-
         // return Json(new {
         //     url = _urlHelperService.GetLink("Cart", "ViewProduct", "Product")
         // });

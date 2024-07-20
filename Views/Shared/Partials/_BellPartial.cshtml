@@ -1,0 +1,61 @@
+@using App.Models
+@using App.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+
+@inject IAuthorizationService authorizationService
+
+@inject NotificationService _notifService
+@inject UserManager<AppUser> _userManager
+
+<style>
+    .cursor-change:hover{
+        cursor: pointer;
+        opacity: 0.8;
+    }
+</style>
+
+@{
+    var result = await authorizationService.AuthorizeAsync(this.User, "ViewNotif");
+    @if (result.Succeeded)
+    {
+        var userid = _userManager.GetUserId(this.User);
+        var list_recentNotif = _notifService.GetRecentNotificationItem(userid);
+        var list_otherNotifNotSeen = _notifService.GetOtherNotificationNotSeen(userid);
+        var list_allNotifNotSeen = _notifService.GetAllNotificationNotSeen(userid);
+
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell"></i> Notification <span class="text-danger">(@(@list_allNotifNotSeen.Count))</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    @foreach(var item in list_recentNotif)
+                    {
+                        var notSeen = "";
+                        if(item.IsWatched == true) notSeen = "background-color: rgb(200, 200, 200);";
+                        <li>
+                            <a class="dropdown-item border cursor-change @notSeen" style="@notSeen"
+                                asp-controller="Notification" asp-action="Detail" asp-route-id="@item.Id">
+                                @item.Title
+                                <div><small style="font-style: italic;">@item.DateCreated</small></div>
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <a class="dropdown-item text-center cursor-change"
+                            asp-controller="Notification" asp-action="Index">
+                            View more... 
+                            @if(list_otherNotifNotSeen.Count > 0)
+                            {
+                                <span class="text-danger">(@list_otherNotifNotSeen.Count)</span>
+                            }
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+    }
+}
+

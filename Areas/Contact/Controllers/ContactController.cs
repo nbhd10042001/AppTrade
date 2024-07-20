@@ -66,7 +66,7 @@ namespace App.Areas.Contact.Controllers
                 _context.Add(contactModel);
                 await _context.SaveChangesAsync();
 
-                StatusMessage = "Lien he cua ban da duoc gui";
+                StatusMessage = "Your contact is sended!";
                 TypeStatusMessage = TypeMessage.Success;
 
                 return RedirectToAction("Index", "Home");

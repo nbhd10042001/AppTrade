@@ -20,16 +20,18 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
+    <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
+        <ul class="nav navbar-nav navbar-right d-flex align-items-center">
             <li class="nav-item">
-                <a class="navbar-brand navbar-link site-a-white" asp-area="Identity"  asp-controller="Manage" asp-action="Index" title="Manage">
-                    <img id="login-avt-user" src=@srcImg width="30" height="30" alt="...">
-                    @UserManager.GetUserName(User)
+                <img id="login-avt-user" src=@srcImg width="30" height="30" alt="...">
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Identity"  asp-controller="Manage" asp-action="Index" title="Manage">
+                    <span>@UserManager.GetUserName(User)</span>
                 </a>
             </li>
             <li class="nav-item">
-                <button title="Đăng xuất" type="submit" class="btn btn-link btn-danger navbar-btn navbar-link">
+                <button title="Đăng xuất" type="submit" class="btn btn-sm btn-danger nav-btn">
                     <i class="fas fa-sign-out-alt" style="color: white;"></i>
                 </button>
             </li>
