@@ -11,7 +11,6 @@ public class ContactModel
     [Required(ErrorMessage = "Required Full Name")]
     [Column(TypeName ="nvarchar")] [StringLength(50)]
     [Display(Name = "Full Name")]
-
     public string FullName {set; get;}
 
     [Required(ErrorMessage = "Required {0}")]
@@ -25,5 +24,6 @@ public class ContactModel
 
     public DateTime DateSent {set; get;}
 
+    [Required]
     public string Message {set; get;}
 }

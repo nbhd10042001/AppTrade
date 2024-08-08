@@ -89,7 +89,7 @@ public class CheckoutController : Controller
                 Address = model.Address,
                 Status = status
             });
-            string message = $@"Bạn đã thanh toán thanh công đơn hàng <{item.product.Title}>
+            string message = $@"Bạn đã thanh toán thanh công đơn hàng *{item.product.Title}*
                                 với số lượng {item.quantity} và tổng tiền {item.quantity*item.product.Price}    
                             ";
             _notifService.CreateNotification(TypeNotification.Order, message, user.Id, user.UserName);

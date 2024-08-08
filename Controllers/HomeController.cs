@@ -71,7 +71,7 @@ public class HomeController : Controller
                                         .ThenInclude(pc => pc.CategoryProduct)
                                         .AsQueryable(); 
 
-        products = products.OrderByDescending(p => p.DateCreated).Take(5);
+        products = products.OrderByDescending(p => p.DateCreated).Take(10);
         ViewBag.products = products;
 
         return View();

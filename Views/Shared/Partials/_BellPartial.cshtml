@@ -33,12 +33,20 @@
                     @foreach(var item in list_recentNotif)
                     {
                         var notSeen = "";
-                        if(item.IsWatched == true) notSeen = "background-color: rgb(200, 200, 200);";
+                        var icon = "";
+                        if(item.IsWatched == true){
+                            notSeen = "background-color: rgb(200, 200, 200);";
+                            icon = "fas fa-check";
+                        } 
+
                         <li>
                             <a class="dropdown-item border cursor-change @notSeen" style="@notSeen"
                                 asp-controller="Notification" asp-action="Detail" asp-route-id="@item.Id">
                                 @item.Title
-                                <div><small style="font-style: italic;">@item.DateCreated</small></div>
+                                <div style="position: relative;">
+                                    <small style="font-style: italic;">@item.DateCreated</small>
+                                    <i class="@icon" style="right: 0; position: absolute; color: green;"></i>
+                                </div>
                             </a>
                         </li>
                     }

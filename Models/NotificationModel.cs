@@ -33,6 +33,12 @@ public class NotificationModel
             this.Title = $"You have successfully confirmed your order!";
             this.Content = $"{message}";
         }
+        else if(typeNotif == TypeNotification.CancelOrder)
+        {
+            this.TypeNotif = typeNotif;
+            this.Title = $"You have cancel your order!";
+            this.Content = $"{message}";
+        }
         else if(typeNotif == TypeNotification.Account)
         {
             this.TypeNotif = typeNotif;

@@ -1,23 +1,49 @@
 @using App.Models;
+@using Microsoft.AspNetCore.Identity
 @model List<NotificationModel>
 
 @{
     ViewData["Title"] = "Notification";
+    var userId = ViewBag.userid;
+    var totalNoti = Model.Count;
 }
 
 <style>
     .notif-view{
+        width: 90%;
+        margin-right: 5px;
         &:hover{
             opacity: 0.7;
             @* color: red; *@
             cursor: pointer;
         }
     }
+    .right-positon{
+        right: 0;
+        position: absolute;
+    }
+    .trash-icon{
+        flex-grow: 1;
+        color: red;
+        font-size: 200%;
+        margin-bottom: 16px; margin-right: 2px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        border: solid;
+        border-color: red; border-radius: 7%;
+        opacity: 0.5;
+        &:hover{
+            cursor: pointer;
+            opacity: 1;
+        }
+    }
 </style>
 
 <h1>Notification</h1><hr>
+<h3>Total: @totalNoti</h3>
 
-@foreach(var item in Model)
+@* @foreach(var item in Model)
 {
     var isWatched = "alert-dark";
     if(item.IsWatched == false) isWatched = "alert-light shadow";
@@ -28,14 +54,180 @@
         <small>@item.DateCreated</small>
         <a id="notif-@item.Id" asp-controller="Notification" asp-action="Detail" asp-route-id="@item.Id" hidden="true"></a>
     </div>
-}
+} *@
+
+
+<div id="test">scroll to understand</div>
+<div id="wrapper" style="height: 500px; overflow: auto;">
+  <div id="content" class="d-flex flex-column">
+  </div>
+</div>
 
 @section Scripts
 {
     <script>
-        function ViewDetailNotif(id)
-        {
+        // reset count api-call in localStorage
+        if (performance.navigation.type == 0 || performance.navigation.type == 1) {
+            console.info( "This page is reloaded" );
+            localStorage.setItem("api-call", 1);
+            localStorage.setItem("scrollTop", 0);
+        } 
+
+
+        @* //check for Navigation Timing API support
+        if (window.performance) {
+            console.info("window.performance works fine on this browser");
+        }
+        console.info(performance.navigation.type); 
+        // 0 => the user just typed in an URL
+        // 1 => the page reloaded
+        // 2 => the back button is clicked *@ 
+    </script>
+
+    <script>
+        var count = 0;
+        var notisRender = 0;
+        // we will add this content, replace for anything you want to add
+        var wrapper = document.getElementById("wrapper");
+        var content = document.getElementById("content");
+        var test = document.getElementById("test");
+
+        if (performance.navigation.type == 2) {
+            console.info( "This page is not reloaded");
+            var apiCalls = localStorage.getItem("api-call");
+            apiCalls = parseInt(apiCalls, 10);
+            for(let i = 0; i < apiCalls; i++){
+                GetNoti_API(`@userId`, i);
+            }
+        }
+        else if (performance.navigation.type == 0 || performance.navigation.type == 1){
+            GetNoti_API(`@userId`, 0);
+        }
+
+        // if back to view, scroll to point that save in localStorage
+        var scrollTop = localStorage.getItem("scrollTop");
+        scrollTop = parseInt(scrollTop, 10);
+        wrapper.scrollTo(0, scrollTop);
+
+        // cross browser addEvent, today you can safely use just addEventListener
+        function addEvent(obj, ev, fn) {
+            if (obj.addEventListener) obj.addEventListener(ev, fn, false);
+            else if (obj.attachEvent) obj.attachEvent("on" + ev, fn);    
+        }
+
+        // this is the scroll event handler
+        function scroller() {
+            // print relevant scroll info
+            test.innerHTML = wrapper.scrollTop + "+" + wrapper.offsetHeight + "+10>" + content.offsetHeight;
+            localStorage.setItem("scrollTop", wrapper.scrollTop);
+
+            // add more contents if user scrolled down enough
+            if((wrapper.scrollTop + wrapper.offsetHeight + 10) > content.offsetHeight) {
+                // set count api-call in localStorage 
+                var apiCall = localStorage.getItem("api-call");
+                apiCall = parseInt(apiCall, 10);
+
+                // if maximun noti, dont call API
+                if(count < @totalNoti && notisRender < @totalNoti){
+                    localStorage.setItem("api-call", apiCall+1);
+                    GetNoti_API(`@userId`, apiCall);
+                }
+                else{ console.log("no noti"); }
+            }
+        }
+        // hook the scroll handler to scroll event
+        addEvent(wrapper,"scroll",scroller);
+
+        function ViewDetailNotif(id){
             document.getElementById(`notif-${id}`).click();
+        }
+
+        function GetNoti_API(userid, currCall)
+        {
+            var urlAction = "@Url.Action("GetNotificationItem_API", "Notification")";
+            var formData = new FormData();
+            var message = `${userid}+${currCall}`;
+            formData.append("message", message);
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                async: false,
+                success: function (data) {
+                    if(data.success === 1)
+                    {
+                        // increase count and noti had render on View
+                        count += data.list.length;
+                        notisRender += data.list.length;
+                        console.log("count:" + count);
+                        console.log(data.list);
+                        var content = document.getElementById(`content`);
+
+                        // render notis
+                        for (let i = 0; i < data.list.length; i++){
+                            var isWatched = "alert-dark";
+                            var icon = "fas fa-check";
+                            if(data.list[i].iswatch == false) {
+                                isWatched = "alert shadow";
+                                icon = "";
+                            }
+
+                            content.innerHTML +=
+                            `<div style="position: relative; display: flex;">` +
+                                `<div class= "alert ${isWatched} notif-view border" role="alert" onclick="ViewDetailNotif(${data.list[i].id})">` +
+                                    `<h4 class="alert-heading" style="position: relative;">${data.list[i].title} <i class="${icon} right-positon text-success"></i> </h4>` +
+                                    `<p>${data.list[i].content}</p>` +
+                                    `<small>${data.list[i].date}</small>` +
+                                    `<a id="notif-${data.list[i].id}" href="/notification/Detail?id=${data.list[i].id}" hidden="true"></a> </div>` +
+                                `<i class="far fa-trash-alt trash-icon" onclick="DeleteNoti(${data.list[i].id})"></i>` +
+                            `</div>`
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        }
+
+        function DeleteNoti (id)
+        {
+            var urlAction = "@Url.Action("DeleteAPI", "Notification")";
+            var formData = new FormData();
+            formData.append("id", id);
+
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                async: true,
+                success: function (data) {
+                    if(data.success === 1)
+                    {
+                        // -1 count when delete noti, if count < 4 and notisRender < totalNoti then call API 
+                        document.getElementById(`notif-${id}`).parentNode.parentElement.setAttribute("hidden", "true");
+                        count -= 1;
+                        console.log("count: "+count);
+                        if(count <= 4 && notisRender < @totalNoti){
+                            var apiCall = localStorage.getItem("api-call");
+                            apiCall = parseInt(apiCall, 10);
+
+                            localStorage.setItem("api-call", apiCall+1);
+                            GetNoti_API(`@userId`, apiCall);
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
         }
     </script>
 }

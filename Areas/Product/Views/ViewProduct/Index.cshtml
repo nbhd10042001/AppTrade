@@ -80,7 +80,7 @@ else
 
 <hr>
 
-<div id="card-product" class="d-flex flex-wrap">
+<div id="card-product" class="container-view-product">
     @* <div id="box-product" >
     </div> *@
 
@@ -92,7 +92,7 @@ else
             srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
         }
 
-        <div class="card mb-2">
+        <div class="item-view-product card">
             <img src="@srcImg" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">@product.Title</h5>
@@ -124,7 +124,9 @@ else
 
 </div>
 
-<partial name="_PagingXTL" model="@ViewBag.pagingmodel" />
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+    <partial name="_PagingXTL" model="@ViewBag.pagingmodel" />
+</div>
 
 @section Scripts
 {

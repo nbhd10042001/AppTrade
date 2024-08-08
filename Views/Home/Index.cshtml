@@ -75,42 +75,44 @@
 
 <h2 class="text-center">New Update!</h2><br>
 
-<div id="card-product" class="d-flex flex-wrap">
-    @foreach(var product in products)
-    {
-        var srcImg = "/contents/noImg.png";
-        if (product.Photos.Any())
+<div class="horizontal-scroll">
+    <div id="card-product" class="container-product">
+        @foreach(var product in products)
         {
-            srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
-        }
+            var srcImg = "/contents/noImg.png";
+            if (product.Photos.Any())
+            {
+                srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
+            }
 
-        <div class="card mb-2">
-            <img src="@srcImg" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">@product.Title</h5>
-                <p class="card-text text-truncation">@product.Description</p>
-                <p>
-                    <i>
-                        <small>
-                            @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
-                        </small>
-                    </i>
-                </p>
-                <a class="card-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug" style="text-decoration:none;">
-                    Detail
-                </a>
-            </div>
+            <div class="item-product card">
+                <img src="@srcImg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Title</h5>
+                    <p class="card-text text-truncation">@product.Description</p>
+                    <p>
+                        <i>
+                            <small>
+                                @string.Join(", " , product.ProductCategoryProducts.Select(pc => pc.CategoryProduct.Title))
+                            </small>
+                        </i>
+                    </p>
+                    <a class="card-link" asp-area="Product" asp-controller="ViewProduct" asp-action="Detail" asp-route-productslug="@product.Slug" style="text-decoration:none;">
+                        Detail
+                    </a>
+                </div>
 
-            <div class="card-footer text-center">
-                <p>Price: <strong>@product.Price $</strong></p>
-                <div id="box-cart">
-                    <span onclick="AddToCart(@product.ProductId)" class="btn btn-success mx-2">
-                        Add to cart
-                    </span>
+                <div class="card-footer text-center">
+                    <p>Price: <strong>@product.Price $</strong></p>
+                    <div id="box-cart">
+                        <span onclick="AddToCart(@product.ProductId)" class="btn btn-success mx-2">
+                            Add to cart
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
 <section id="contact-scroll">
@@ -120,27 +122,29 @@
 <h2 class="text-center">Contact</h2>
 <div class="d-flex justify-content-center">
     <div class="w-50">
-        <form asp-controller="Contact" asp-area="Contact" asp-action="SendContact" method="post">
+        <form>
             <div class="form-group mb-2">
-                <input placeholder="Your Full Name" asp-for="@Model.FullName" class="form-control" />
+                <input id="input-fullname" placeholder="Your Full Name" asp-for="@Model.FullName" class="form-control" />
                 <span asp-validation-for="@Model.FullName" class="text-danger"></span>
             </div>
             <div class="form-group mb-2">
-                <input placeholder="Email" asp-for="@Model.Email" class="form-control" />
+                <input id="input-email" placeholder="Email" asp-for="@Model.Email" class="form-control" />
                 <span asp-validation-for="@Model.Email" class="text-danger"></span>
             </div>
             <div class="form-group mb-2">
-                <input placeholder="Phone" asp-for="@Model.Phone" class="form-control" />
+                <input id="input-phone" placeholder="Phone" asp-for="@Model.Phone" class="form-control" />
                 <span asp-validation-for="@Model.Phone" class="text-danger"></span>
             </div>
             <div class="form-group mb-2">
-                <textarea rows="4" placeholder="Message..." asp-for="@Model.Message" class="form-control" ></textarea>
+                <textarea id="input-message" rows="4" placeholder="Message..." asp-for="@Model.Message" class="form-control" ></textarea>
                 <span asp-validation-for="@Model.Message" class="text-danger"></span>
             </div>
             <br>
-            <button type="submit" class="btn btn-primary btn-user btn-block">Send Contact</button>
         </form>
     </div>
+</div>
+<div style="position: relative; display: flex; justify-content: center;">
+    <button onclick="AlertForSendContact()" class="btn btn-primary btn-user btn-block">Send Contact</button>
 </div>
 
 <section id="about-scroll">
@@ -243,6 +247,46 @@
                         '</a>'
                     );
                     box.append(e);
+                }
+            });
+        }
+
+        function AlertForSendContact()
+        {
+            var value_fullname = document.getElementById("input-fullname").value;
+            var value_email = document.getElementById("input-email").value;
+            var value_phone = document.getElementById("input-phone").value;
+            var value_message = document.getElementById("input-message").value;
+            var json = {
+                FullName: value_fullname,
+                Email: value_email,
+                Phone: value_phone,
+                Message: value_message,
+            };
+            
+            var urlAction = "@Url.Action("SendContact", "Contact")";
+
+            $.ajax({
+                url: urlAction,
+                dataType: "json",
+                type: "POST",
+                data: JSON.stringify(json),
+                contentType: 'application/json',
+                async: true,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    if(data.success === 1)
+                    {
+                        document.getElementById("input-fullname").value = "";
+                        document.getElementById("input-email").value = "";
+                        document.getElementById("input-phone").value = "";
+                        document.getElementById("input-message").value = "";
+                    }
+                    alert(data.alert);
+                },
+                error: function (xhr) {
+                    alert('error');
                 }
             });
         }

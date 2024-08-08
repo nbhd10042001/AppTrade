@@ -17,20 +17,44 @@
 .card-product-dark .card{
   background-color: rgb(45, 45, 45);
   color: white;
-  width: 20%;
-}
-
-.card-product-dark .card .card-img-top{
-  height: 25%;
 }
 
 .card-product-light .card{
   background-color: rgb(235, 235, 235);
   color: black;
-  width: 20%;
 }
 
-.card-product-light .card .card-img-top{
+.card-img-top{
   height: 25%;
 }
 
+.container-product {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+}
+
+.item-product {
+  width: 200px;
+  height: 400px;
+  border-style: ridge;
+}
+
+.container-view-product {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  row-gap: 25px;
+}
+
+.item-view-product {
+  width: 250px;
+  height: 400px;
+  border-style: ridge;
+}
+
+.horizontal-scroll{
+  width: 100%;
+  overflow-x: scroll;
+}

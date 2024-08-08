@@ -20,19 +20,22 @@ public class OrderController : Controller
     private readonly UserManager<AppUser> _userManager;
     private readonly UrlHelperService _urlHelperService;
     private readonly PaypalClient _paypalClient;
+    private readonly NotificationService _notifService;
 
     public OrderController(
                             AppDbContext context,
                             CartService cartService,
                             UrlHelperService urlHelperService,
                             UserManager<AppUser> userManager,
-                            PaypalClient paypalClient )
+                            PaypalClient paypalClient,
+                            NotificationService notifService  )
     {
         _context = context;
         _cartService = cartService;
         _urlHelperService = urlHelperService;
         _userManager = userManager;
         _paypalClient = paypalClient;
+        _notifService = notifService;
     }
 
 
@@ -101,7 +104,9 @@ public class OrderController : Controller
     [HttpPost("/my-order/delete")]
     public async Task<IActionResult> DeleteOrder (string id)
     {
-        Console.WriteLine(id);
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return BadRequest("User not found!");
+
         var order = _context.Orders.Where(o => o.OrderId == id).FirstOrDefault();
         if(order == null) return Content("Order Not Found!");
 
@@ -110,6 +115,9 @@ public class OrderController : Controller
 
         StatusMessage = $@"Bạn vừa hủy đơn hàng: {order.OrderId} - {order.ProductName}";
         TypeStatusMessage = TypeMessage.Success;
+
+        string message = $@"Bạn đã hủy thành công đơn hàng *{order.ProductName}*";
+        _notifService.CreateNotification(TypeNotification.CancelOrder, message, user.Id, user.UserName);
 
         return RedirectToAction(nameof(ViewOrder));
     }

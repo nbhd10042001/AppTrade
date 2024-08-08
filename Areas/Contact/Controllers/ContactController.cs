@@ -10,11 +10,13 @@ using App.Models.Contact;
 using Microsoft.AspNetCore.Authorization;
 using App.Data;
 
+
 #nullable disable
 
 namespace App.Areas.Contact.Controllers
 {
     [Area("Contact")]
+    [Route("/contact/{action}")]
     public class ContactController : Controller
     {
         private readonly AppDbContext _context;
@@ -56,24 +58,34 @@ namespace App.Areas.Contact.Controllers
             return View(contactModel);
         }
         
-        [HttpPost("/contact")] [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendContact([Bind("FullName,Email,Phone,Message")] ContactModel contactModel)
+        [HttpPost] [AllowAnonymous]
+        public async Task<ActionResult> SendContact([FromBody] ContactModel model)
         {
-            if (ModelState.IsValid)
-            {
-                contactModel.DateSent = DateTime.Now;
-                _context.Add(contactModel);
-                await _context.SaveChangesAsync();
+            if (string.IsNullOrEmpty(model.FullName)
+                || string.IsNullOrEmpty(model.Email)
+                || string.IsNullOrEmpty(model.Message))
+                return Json(new {
+                    success = 0,
+                    alert = "Error! Please complete all information !"
+                });
 
-                StatusMessage = "Your contact is sended!";
-                TypeStatusMessage = TypeMessage.Success;
+            Console.WriteLine(model.FullName);
+            Console.WriteLine(model.Message);
+            model.DateSent = DateTime.Now;
+            _context.Add(model);
+            await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index", "Home");
-            }
-            return View(contactModel);
+            return Json(new {
+                success = 1,
+                alert = "Success! Your contact has been sent!"
+            });
         }
 
+        [HttpPost]
+        public JsonResult Post(int id)
+        {
+            return Json("Response from Get");
+        }
 
         [HttpGet("/admin/contact/delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
