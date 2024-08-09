@@ -81,14 +81,14 @@
         {
             var srcImg = "/contents/noImg.png";
             if (product.Photos.Any())
-            {
-                srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
-            }
+                srcImg = product.Photos.FirstOrDefault().FileName;
 
             <div class="item-product card">
-                <img src="@srcImg" class="card-img-top" alt="...">
+                <div style="height: 25%;  align-items: center; justify-content: center; display: flex;">
+                    <img src="@srcImg" style="height: auto; width: auto; max-width: 200px; max-height: 100px;" alt="...">
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">@product.Title</h5>
+                    <h5 class="card-title text-truncation">@product.Title</h5>
                     <p class="card-text text-truncation">@product.Description</p>
                     <p>
                         <i>
@@ -105,7 +105,7 @@
                 <div class="card-footer text-center">
                     <p>Price: <strong>@product.Price $</strong></p>
                     <div id="box-cart">
-                        <span onclick="AddToCart(@product.ProductId)" class="btn btn-success mx-2">
+                        <span onclick="AddToCart(@product.ProductId)" class="btn btn-success">
                             Add to cart
                         </span>
                     </div>

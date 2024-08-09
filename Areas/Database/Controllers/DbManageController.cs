@@ -127,68 +127,96 @@ namespace App.Areas.Database.Controllers
             _dbContext.SaveChanges();
 
             // create seed data categories
-            List<string> NameCategories = new List<string>(){"snip", "shotgun", "pistol", "rifl", "smg"};
-            var categories = new List<CategoryProductModel>();
-            foreach(var name in NameCategories)
-            {
-                var CPmodel = new CategoryProductModel(){
-                    Title = name,
-                    Content = $"Description for category {name} [fakeData]",
-                    Slug = AppUtilities.GenerateSlug(name)
-                };
-                categories.Add(CPmodel);
-            }
-            _dbContext.CategoryProducts.AddRange(categories);
+            var pathProduct = Path.Combine("Uploads", "Products");
+            var pathProductWeapon = Path.Combine(pathProduct, "weapon");
+            var ipadPath = Path.Combine(pathProduct, "ipad");
+            var laptopPath = Path.Combine(pathProduct, "laptop");
+            var watchPath = Path.Combine(pathProduct, "watch");
+            var phonePath = Path.Combine(pathProduct, "phone");
+            var wp_mg_Path = Path.Combine(pathProductWeapon, "mg");
+            var wp_rifle_Path = Path.Combine(pathProductWeapon, "rifle");
+            var wp_smg_Path = Path.Combine(pathProductWeapon, "smg");
+            var wp_snip_Path = Path.Combine(pathProductWeapon, "snip");
 
-            // create seed data products
-            var productPath = Path.Combine("Uploads", "Products");
-            DirectoryInfo di = new DirectoryInfo(productPath);
-            FileInfo[] Images = di.GetFiles("*.*");
-            List<string> FileNames = new List<string>();
-
-            foreach (var img in Images)
-                FileNames.Add(img.Name);
+            Dictionary<string, string> dictPath = new Dictionary<string, string>();
+            dictPath.Add("wp_mg", wp_mg_Path);
+            dictPath.Add("wp_rifle", wp_rifle_Path);
+            dictPath.Add("wp_smg", wp_smg_Path);
+            dictPath.Add("wp_snip", wp_snip_Path);
+            dictPath.Add("ipad", ipadPath);
+            dictPath.Add("laptop", laptopPath);
+            dictPath.Add("watch", watchPath);
+            dictPath.Add("phone", phonePath);
 
             var user = _userManager.GetUserAsync(this.User).Result;
+            Random rand = new Random();
             List<ProductModel> products = new List<ProductModel>();
             List<ProductCategoryProduct> product_categories = new List<ProductCategoryProduct>();
-            Random rand = new Random();
+            List<string> FileNames = new List<string>();
 
-            foreach(var filename in FileNames)
+            foreach( KeyValuePair<string, string> kvp in dictPath )
             {
-                var name = Path.GetFileNameWithoutExtension(filename);
-                var product = new ProductModel(){
-                    Title = name,
-                    Description = $"description for weapon: {name} [fakeData]",
-                    AuthorId = user.Id,
-                    DateCreated = DateTime.Now,
-                    DateUpdated = DateTime.Now,
-                    Price = rand.Next(500),
-                    Slug = AppUtilities.GenerateSlug(name),
+                // add category in database
+                var CPmodel = new CategoryProductModel(){
+                    Title = kvp.Key,
+                    Content = $"Description for category {kvp.Key} [fakeData]",
+                    Slug = AppUtilities.GenerateSlug(kvp.Key)
                 };
-                products.Add(product);
-                product_categories.Add(new ProductCategoryProduct(){
-                    Product = product,
-                    CategoryProduct = categories[rand.Next(categories.Count - 1)] // random ngau nhien 1 trong cac categories duoc phat sinh
-                });
-            }
-            _dbContext.AddRange(products);
-            _dbContext.AddRange(product_categories);
-            _dbContext.SaveChanges();
+                _dbContext.CategoryProducts.Add(CPmodel);
 
-            foreach(var filename in FileNames)
-            {
-                var name = Path.GetFileNameWithoutExtension(filename);
-                var product = _dbContext.Products.Where(p => p.Title == name)
-                                            .Include(p => p.Photos)
-                                            .FirstOrDefault();
+                // initial varible
+                DirectoryInfo di = new DirectoryInfo(kvp.Value);
+                FileInfo[] Images = di.GetFiles("*.*");
+                FileNames.Clear();
+                foreach (var img in Images)
+                {
+                    Console.WriteLine("img"+img);
+                    FileNames.Add(img.Name);
+                }
 
-                _dbContext.ProductPhotos.Add(new ProductPhotoModel(){
-                    ProductID = product.ProductId,
-                    FileName = filename
-                });
-            }
-            _dbContext.SaveChanges();
+                // create seed data products
+                products.Clear();
+                product_categories.Clear();
+
+                foreach(var filename in FileNames)
+                {
+                    var name = Path.GetFileNameWithoutExtension(filename);
+                    var product = new ProductModel(){
+                        Title = name,
+                        Description = $"description for : {name} [fakeData]",
+                        AuthorId = user.Id,
+                        DateCreated = DateTime.Now,
+                        DateUpdated = DateTime.Now,
+                        Price = rand.Next(500),
+                        Slug = AppUtilities.GenerateSlug(name),
+                    };
+                    products.Add(product);
+                    product_categories.Add(new ProductCategoryProduct(){
+                        Product = product,
+                        CategoryProduct = CPmodel
+                    });
+                }
+                _dbContext.AddRange(products);
+                _dbContext.AddRange(product_categories);
+                _dbContext.SaveChanges();
+
+                foreach(var filename in FileNames)
+                {
+                    var name = Path.GetFileNameWithoutExtension(filename);
+                    var product = _dbContext.Products.Where(p => p.Title == name)
+                                                .Include(p => p.Photos)
+                                                .FirstOrDefault();
+
+                    var changePath = kvp.Value.Replace("Uploads", "/contents");
+                    var path = Path.Combine(changePath, filename);
+
+                    _dbContext.ProductPhotos.Add(new ProductPhotoModel(){
+                        ProductID = product.ProductId,
+                        FileName = path
+                    });
+                }
+                _dbContext.SaveChanges();
+            }   
         }
 
         private void SeedProductCategory()

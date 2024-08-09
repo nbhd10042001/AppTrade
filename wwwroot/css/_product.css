@@ -24,10 +24,6 @@
   color: black;
 }
 
-.card-img-top{
-  height: 25%;
-}
-
 .container-product {
   display: flex;
   width: max-content;
@@ -50,7 +46,6 @@
 
 .item-view-product {
   width: 250px;
-  height: 400px;
   border-style: ridge;
 }
 

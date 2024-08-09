@@ -5,6 +5,7 @@ using App.Data;
 using App.Models;
 using App.Models.Product;
 using App.Services;
+using App.Utilities;
 using Google.Protobuf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -69,10 +70,11 @@ namespace App.Areas.Product.Controllers
                                 [FromQuery(Name = "search")]string searchBar
                                 )
         {
+            var allcategories = _context.CategoryProducts.ToList();
             CategoryProductModel categoryChoosed = null; 
+
             // kiem tra neu url co query categoryslug thi thuc hien lay category 
-            if (!string.IsNullOrEmpty(categoryslug))
-            {
+            if (!string.IsNullOrEmpty(categoryslug)){
                 categoryChoosed = _context.CategoryProducts.Where(c => c.Slug == categoryslug)
                                             .Include(c => c.ChildrenCategory)
                                             .FirstOrDefault();
@@ -85,16 +87,13 @@ namespace App.Areas.Product.Controllers
                                         .Include(p => p.ProductCategoryProducts)
                                         .ThenInclude(pc => pc.CategoryProduct)
                                         .AsQueryable();   
-
             // search bar
             if (!string.IsNullOrEmpty(searchBar))
-            {
                 products = products.Where(p => p.Title.Contains(searchBar));
-            }
+
 
             // lay ra cac product co idcategory == id categorySelect
-            if (categoryChoosed != null)
-            {
+            if (categoryChoosed != null){
                 var ids = new List<int>();
                 categoryChoosed.GetChildCategoryIDs(ids, null);
                 ids.Add(categoryChoosed.Id);
@@ -128,6 +127,11 @@ namespace App.Areas.Product.Controllers
             // sort by category
             if(filterCates.Count > 0)
                 products = products.Where(p => p.ProductCategoryProducts.Where(pc => filterCates.Contains(pc.CategoryProductID)).Any());
+            else if(filterCates.Count == 0){
+                foreach(var cate in allcategories)
+                    filterCates.Add(cate.Id);
+                products = products.Where(p => p.ProductCategoryProducts.Where(pc => filterCates.Contains(pc.CategoryProductID)).Any());
+            }
 
             // pagingModel------------------------------------------------------------
             const int ITEMS_PER_PAGE = 10;
@@ -156,12 +160,11 @@ namespace App.Areas.Product.Controllers
             ViewBag.totalProducts = totalProducts;
 
             // save thong tin lua chon cac filters (neu co)
-            var allcategories = _context.CategoryProducts.ToList();
             ViewBag.MSLCategories = new MultiSelectList(allcategories, "Id", "Title", filterCates);
             ViewBag.filterSelected = filters;
 
             ViewBag.categoryChoosed = categoryChoosed;
-            ViewBag.productsInPage = productsInPage.ToList();
+            ViewBag.productsInPage = productsInPage;
             ViewBag.searchBar = searchBar;
 
             return View();

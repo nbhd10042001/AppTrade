@@ -8,7 +8,7 @@
     ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Shop";
 
     List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
-    List<ProductModel> Products = ViewBag.productsInPage as List<ProductModel>;
+    var Products = ViewBag.productsInPage as IQueryable<ProductModel>;
     var MSLCategories = ViewBag.MSLCategories as MultiSelectList;
     var filterSelected = ViewBag.filterSelected as List<int>;
     var seachBar = ViewBag.searchBar as string;
@@ -42,11 +42,6 @@
 @if (categoryChoosed != null){
     <p>@categoryChoosed.Content</p>
 }
-else
-{
-    <p>All Product</p>
-}
-
 
 @* Filter *@
 <div class="shadow w-50">
@@ -64,7 +59,7 @@ else
 
         <div class="form-group w-25">
             <label asp-for="selectCategories" class="control-label"></label>
-            <select  asp-for="selectCategories" id="MSLCategories" asp-items="MSLCategories" multiple="multiple" class="w-100"></select>
+            <select asp-for="selectCategories" id="MSLCategories" asp-items="MSLCategories" multiple="multiple" class="w-100"></select>
         </div>
         <br>
         @* <i class="fas fa-search"></i> Search *@
@@ -88,14 +83,14 @@ else
     {
         var srcImg = "/contents/noImg.png";
         if (product.Photos.Any())
-        {
-            srcImg = $"/contents/Products/{product.Photos.FirstOrDefault().FileName}";
-        }
+            srcImg = product.Photos.FirstOrDefault().FileName;
 
         <div class="item-view-product card">
-            <img src="@srcImg" class="card-img-top" alt="...">
+            <div style="height: 25%; align-items: center; justify-content: center; display: flex;">
+                <img src="@srcImg" style="height: auto; width: auto; max-width: 200px; max-height: 100px;" alt="...">
+            </div>
             <div class="card-body">
-                <h5 class="card-title">@product.Title</h5>
+                <h5 class="card-title text-truncation">@product.Title</h5>
                 <p class="card-text text-truncation">@product.Description</p>
                 <p>
                     <i>
@@ -109,15 +104,13 @@ else
                 </a>
             </div>
 
-            <div class="card-footer text-center">
-                <p class="">Price: <strong>@product.Price $</strong></p>
-                <hr>
+            <div class="text-center card-footer">
+                <p class="">Price: <strong>@product.Price $</strong></p><hr>
                 <div id="box-cart">
-                    <span onclick="AddToCart(@product.ProductId)" class="btn btn-success mx-2">
+                    <span onclick="AddToCart(@product.ProductId)" class="btn btn-success">
                         Add to cart
                     </span>
                 </div>
-                
             </div>
         </div>
     }
@@ -134,16 +127,17 @@ else
     <script src="~/lib/multiple-select/multiple-select.min.js"></script>
 
     <script>
-        $("#MSLFilter").multipleSelect({
-            single: true,
-        });
+        $(function(){
+            $("#MSLFilter").multipleSelect({
+                single: true,
+            });
 
-        $("#MSLCategories").multipleSelect({
-            placeholder: "none",
-            selectAll: false,
-            keepOpen: false,
-            isOpen: false,
-        });
+            $("#MSLCategories").multipleSelect({
+                selectAll: true,
+                keepOpen: false,
+                isOpen: false,
+            });
+        })
     </script>
 
     <script>

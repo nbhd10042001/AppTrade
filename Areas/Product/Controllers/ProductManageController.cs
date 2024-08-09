@@ -137,9 +137,10 @@ namespace App.Areas.Product.Controllers
                         await product.FileProductUpload.CopyToAsync(fileStream);
                     }
 
+                    var pathFile = Path.Combine("/contents/Products", fileNameRandom);
                     _context.ProductPhotos.Add(new ProductPhotoModel(){
                         ProductID = product.ProductId,
-                        FileName = fileNameRandom
+                        FileName = pathFile
                     });
                 }
                 await _context.SaveChangesAsync();
@@ -281,13 +282,21 @@ namespace App.Areas.Product.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            if (product == null) return NotFound();
+
+            _context.Products.Remove(product);
+
+            // delete all photo of product
+            var photos = _context.ProductPhotos.Where(p => p.ProductID == product.ProductId).ToList();
+            _context.ProductPhotos.RemoveRange(photos);
+            foreach(var photo in photos)
             {
-                _context.Products.Remove(product);
+                var filePath = photo.FileName;
+                filePath = filePath.Replace("/contents", "Uploads");
+                System.IO.File.Delete(filePath);
             }
 
             await _context.SaveChangesAsync();
-
             StatusMessage = @$"Ban da xoa San pham: ""{product.Title}""";
             TypeStatusMessage = TypeMessage.Danger;
             return RedirectToAction(nameof(Index));
@@ -304,11 +313,9 @@ namespace App.Areas.Product.Controllers
             var product = _context.Products.Where(p => p.ProductId == id)
                                             .Include(p => p.Photos)
                                             .FirstOrDefault();
-
             if (product == null) return NotFound("Khong tim thay san pham");
 
             ViewBag.product = product;
-
             return View(new UploadOneFile());
         }
 
@@ -318,10 +325,7 @@ namespace App.Areas.Product.Controllers
             var product = _context.Products.Where(p => p.ProductId == id)
                                             .Include(p => p.Photos)
                                             .FirstOrDefault();
-
             if (product == null) return NotFound("Khong tim thay san pham");
-
-            ViewBag.product = product;
 
             if( fileUp != null)
             {
@@ -336,13 +340,15 @@ namespace App.Areas.Product.Controllers
                     await fileUp.FileUpload.CopyToAsync(fileStream);
                 }
 
+                var pathFile = Path.Combine("/contents/Products", fileNameRandom);
                 _context.ProductPhotos.Add(new ProductPhotoModel(){
                     ProductID = product.ProductId,
-                    FileName = fileNameRandom
+                    FileName = pathFile
                 });
                 await _context.SaveChangesAsync();
             }
 
+            ViewBag.product = product;
             return View(fileUp);
         }
 
@@ -352,7 +358,6 @@ namespace App.Areas.Product.Controllers
             var product = _context.Products.Where(p => p.ProductId == id)
                                             .Include(p => p.Photos)
                                             .FirstOrDefault();
-
             if (product == null) return NotFound("Khong tim thay san pham");
 
             if( fileUp != null)
@@ -368,13 +373,13 @@ namespace App.Areas.Product.Controllers
                     await fileUp.FileUpload.CopyToAsync(fileStream);
                 }
 
+                var pathFile = Path.Combine("/contents/Products", fileNameRandom);
                 _context.ProductPhotos.Add(new ProductPhotoModel(){
                     ProductID = product.ProductId,
-                    FileName = fileNameRandom
+                    FileName = pathFile
                 });
                 await _context.SaveChangesAsync();
             }
-
             return Ok();
         }
 
@@ -394,7 +399,7 @@ namespace App.Areas.Product.Controllers
 
             var listPhotos = product.Photos.Select(photo => new {
                 id = photo.Id,
-                path = "/contents/Products/" + photo.FileName
+                path = photo.FileName
             });
 
             return Json(
@@ -409,16 +414,15 @@ namespace App.Areas.Product.Controllers
         public IActionResult DeletePhoto (int id)
         {
             var photo = _context.ProductPhotos.Where(p => p.Id == id).FirstOrDefault();
-
             if (photo != null)
             {
                 _context.Remove(photo);
                 _context.SaveChanges();
-
-                var filePath = "Uploads/Products/" + photo.FileName;
+                // var filePath = "Uploads/Products/" + photo.FileName;
+                var filePath = photo.FileName;
+                filePath = filePath.Replace("/contents", "Uploads");
                 System.IO.File.Delete(filePath);
             }
-
             return Ok();
         }
     }

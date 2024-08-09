@@ -6,6 +6,7 @@ namespace App.Areas.Product.Models;
 public class CreateProductModel : ProductModel
 {
     [Display(Name = "Chuyen muc")]
+    [Required(ErrorMessage = "Select your categories!")]
     public int[] CategoryIDs {set; get;}
 
     [Display(Name = "Upload file Product")]
