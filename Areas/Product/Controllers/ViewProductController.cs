@@ -62,6 +62,33 @@ namespace App.Areas.Product.Controllers
             return RedirectToAction(nameof(Index), new {f = filterIDs, fc = filterCateIDs, search = filters.SearchBar});
         }
 
+        [HttpGet("/viewproduct/clear")]
+        public ActionResult ClearButton()
+        {
+            var URL = _urlHelperService.GetLink("Index", "ViewProduct", "Product");
+            return Json(new{
+                success = 1,
+                url = URL
+            });
+        }
+
+        [HttpPost("api/get-products-search")]
+        public async Task<ActionResult> GetListProductsFromSearch(string inputValue)
+        {
+            var products = await _context.Products.Where(p => p.Title.Replace("-"," ").Contains(inputValue)).OrderBy(p => p.Title).ToListAsync();
+            
+            var listTitle = products.Select(p => new {
+                name = p.Title.Replace("-", " "),
+                slug = p.Slug,
+                img = _context.ProductPhotos.Where(photo => photo.ProductID == p.ProductId).FirstOrDefault().FileName
+            });
+
+            return Json(new{
+                success = 1,
+                list = listTitle
+            });
+        }
+
         [Route("product/{categoryslug?}")]
         public ActionResult Index(string categoryslug, 
                                 [FromQuery(Name = "p")]int currentPage, 
@@ -78,10 +105,8 @@ namespace App.Areas.Product.Controllers
                 categoryChoosed = _context.CategoryProducts.Where(c => c.Slug == categoryslug)
                                             .Include(c => c.ChildrenCategory)
                                             .FirstOrDefault();
-
                 if (categoryChoosed == null) return NotFound("Khong tim thay chuyen muc");
             }
-
             var products = _context.Products.Include(p => p.Author)
                                         .Include(p => p.Photos)
                                         .Include(p => p.ProductCategoryProducts)
@@ -89,8 +114,7 @@ namespace App.Areas.Product.Controllers
                                         .AsQueryable();   
             // search bar
             if (!string.IsNullOrEmpty(searchBar))
-                products = products.Where(p => p.Title.Contains(searchBar));
-
+                products = products.Where(p => p.Title.Replace("-", " ").Contains(searchBar));
 
             // lay ra cac product co idcategory == id categorySelect
             if (categoryChoosed != null){
@@ -103,7 +127,6 @@ namespace App.Areas.Product.Controllers
             // custome filter and sort product
             if (filters.Count == 0)
                 filters.Add(101); // neu khong co filters nao thi mac dinh filters them vao la dateUpdated
-            
             foreach(var f in filters)
             {
                 if (f == 101){
@@ -128,8 +151,8 @@ namespace App.Areas.Product.Controllers
             if(filterCates.Count > 0)
                 products = products.Where(p => p.ProductCategoryProducts.Where(pc => filterCates.Contains(pc.CategoryProductID)).Any());
             else if(filterCates.Count == 0){
-                foreach(var cate in allcategories)
-                    filterCates.Add(cate.Id);
+                filterCates.Add(allcategories.Find(c => c.Title == "Weapon").Id);
+                filterCates.Add(allcategories.Find(c => c.Title == "Electronic Product").Id);
                 products = products.Where(p => p.ProductCategoryProducts.Where(pc => filterCates.Contains(pc.CategoryProductID)).Any());
             }
 

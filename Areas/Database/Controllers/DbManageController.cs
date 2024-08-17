@@ -154,13 +154,32 @@ namespace App.Areas.Database.Controllers
             List<ProductCategoryProduct> product_categories = new List<ProductCategoryProduct>();
             List<string> FileNames = new List<string>();
 
-            foreach( KeyValuePair<string, string> kvp in dictPath )
+            // add category in database
+            var CPmodel_weapon = new CategoryProductModel(){
+                Title = "Weapon",
+                Content = $"Description for category {"Weapon"} [fakeData]",
+                Slug = AppUtilities.GenerateSlug("Weapon")
+            };
+            var CPmodel_EP = new CategoryProductModel(){
+                Title = "Electronic Product",
+                Content = $"Description for category {"Electronic Product"} [fakeData]",
+                Slug = AppUtilities.GenerateSlug("Electronic Product")
+            };
+            _dbContext.CategoryProducts.Add(CPmodel_weapon);
+            _dbContext.CategoryProducts.Add(CPmodel_EP);
+
+            foreach( KeyValuePair<string, string> kvp in dictPath)
             {
                 // add category in database
+                var parentCate = CPmodel_EP;
+                if(kvp.Key.Contains("wp")){
+                    parentCate = CPmodel_weapon;
+                }
                 var CPmodel = new CategoryProductModel(){
                     Title = kvp.Key,
                     Content = $"Description for category {kvp.Key} [fakeData]",
-                    Slug = AppUtilities.GenerateSlug(kvp.Key)
+                    Slug = AppUtilities.GenerateSlug(kvp.Key),
+                    ParentCategory = parentCate
                 };
                 _dbContext.CategoryProducts.Add(CPmodel);
 
@@ -195,6 +214,20 @@ namespace App.Areas.Database.Controllers
                         Product = product,
                         CategoryProduct = CPmodel
                     });
+
+                    // add general category for product
+                    if(kvp.Key.Contains("wp")){
+                        product_categories.Add(new ProductCategoryProduct(){
+                            Product = product,
+                            CategoryProduct = CPmodel_weapon
+                        });
+                    }
+                    else{
+                        product_categories.Add(new ProductCategoryProduct(){
+                            Product = product,
+                            CategoryProduct = CPmodel_EP
+                        });
+                    }
                 }
                 _dbContext.AddRange(products);
                 _dbContext.AddRange(product_categories);

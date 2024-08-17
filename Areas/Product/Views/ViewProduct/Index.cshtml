@@ -5,7 +5,7 @@
 
 @{
     CategoryProductModel categoryChoosed = ViewBag.categoryChoosed as CategoryProductModel;
-    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "Shop";
+    ViewData["Title"] = (categoryChoosed != null) ? categoryChoosed.Title : "SHOP";
 
     List<CategoryProductModel> categories = ViewBag.categories as List<CategoryProductModel>;
     var Products = ViewBag.productsInPage as IQueryable<ProductModel>;
@@ -15,7 +15,7 @@
 }
 
 @* List Products *@
-<h1>@ViewData["Title"]</h1>
+<h1 class="text-center">@ViewData["Title"]</h1> <hr>
 
 @* Kiem tra danh sach lua chon fiters de save thong tin lua chon *@
 @{
@@ -43,12 +43,44 @@
     <p>@categoryChoosed.Content</p>
 }
 
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        max-height: 150px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1;
+    }
+    .vertical-scroll{
+        overflow-y: scroll;
+        min-height: 150px;
+        height: 100%;
+    }
+    .img-result-search{
+        width: 20px;
+        height: 20px;
+    }
+    .custom-result-search{
+        align-items: center;
+        &:hover{
+            opacity: 0.8;
+            background-color: #e6e6e6;
+        }
+    }
+</style>
+
 @* Filter *@
-<div class="shadow w-50">
+<div class="w-100 shadow" style="border: 2px groove; border-radius: 7px; ">
     <form method="post" asp-action="ListFilter" asp-area="Product" asp-controller="ViewProduct" class="mx-1 my-1">
-        <i class="fas fa-filter"></i> Filter
+        <div class="text-center"><i class="fas fa-filter"></i>Filter Products</div>
         <div class="form-group w-25">
-            <label asp-for="selectFilters" class="control-label"></label>
+            <label asp-for="selectFilters" class="control-label">Sort by</label>
             <select asp-for="selectFilters" id="MSLFilter" class="w-100">
                 <option selected="@fs1" value="101">Last</option>
                 <option selected="@fs2" value="102">Old Update</option>
@@ -63,17 +95,21 @@
         </div>
         <br>
         @* <i class="fas fa-search"></i> Search *@
-        <div class="form-group">
-            <input asp-for="SearchBar" value="@seachBar" class="w-75 form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        </div>
-        
-        <div class="form-group">
-            <input type="submit" value="Search" class="btn btn-sm btn-outline-success  my-2" />
+        <div class="form-group d-flex align-items-center">
+            <div class=" w-75 dropdown">
+                <input id="input-search-bar" asp-for="SearchBar" value="@seachBar" class="form-control" type="search" oninput="CheckValueInput(this)" placeholder="Search" aria-label="Search">
+                <div class="dropdown-content w-100" id="result-box">
+                    
+                </div>
+            </div>
+
+            <input type="submit" value="Search" class="btn btn-outline-success mx-1"/>
+            <span onclick="ClickClearButton()" class="btn btn btn-outline-danger">Clear</span>
         </div>
     </form>
+    <br>
 </div>
-
-<hr>
+<br>
 
 <div id="card-product" class="container-view-product">
     @* <div id="box-product" >
@@ -90,7 +126,7 @@
                 <img src="@srcImg" style="height: auto; width: auto; max-width: 200px; max-height: 100px;" alt="...">
             </div>
             <div class="card-body">
-                <h5 class="card-title text-truncation">@product.Title</h5>
+                <h5 class="card-title text-truncation">@product.Title.Replace("-", " ")</h5>
                 <p class="card-text text-truncation">@product.Description</p>
                 <p>
                     <i>
@@ -114,7 +150,6 @@
             </div>
         </div>
     }
-
 </div>
 
 <div style="display: flex; justify-content: center; margin-top: 20px;">
@@ -125,6 +160,83 @@
 {
     <link rel="stylesheet" href="~/lib/multiple-select/multiple-select.min.css" />
     <script src="~/lib/multiple-select/multiple-select.min.js"></script>
+
+    <script>
+        var timer;
+        var inputSearch = document.getElementById("input-search-bar");
+        var resultBox = document.getElementById("result-box");
+
+        //handle input search and show box result if inputSearch value not empty or hide box result if value empty
+        function CheckValueInput(e) {
+            if (e.value == ""){
+                resultBox.style.display = "none";
+            }
+            else{
+                resultBox.style.display = "block";
+                clearTimeout(timer);
+                timer = setTimeout(() => { ShowResultValueInputSearch() }, 300);
+            }
+        }
+
+        function ShowResultValueInputSearch(){
+            var formData = new FormData();
+            var valueInput = document.getElementById("input-search-bar").value;
+            var urlAction = "@Url.Action("GetListProductsFromSearch", "ViewProduct")";
+            formData.append("inputValue", valueInput);
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                async: true,
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    if(data.success === 1)
+                    {
+                        console.log("Ok");
+                        var resultBox = $("#result-box");
+                        resultBox.empty();
+
+                        if(data.list.length > 5){
+                            resultBox.addClass("vertical-scroll");
+                        }
+                        else{
+                            resultBox.removeClass("vertical-scroll");
+                        }
+
+                        for (let i = 0; i < data.list.length; i++){
+                            var e = $(` <div class="custom-result-search">
+                                            <a href="/viewproduct/Detail/product/${data.list[i].slug}.html" style="text-decoration: none;">${data.list[i].name}</a>
+                                            <img src="${data.list[i].img}" class="img-result-search" alt="...">
+                                        </div> `
+                                    );
+                            resultBox.append(e);
+                        }
+                    }
+                }
+            });
+        }
+
+        // event handle click outside inputSearch
+        document.addEventListener("click", function (event){
+            inputRect = inputSearch.getBoundingClientRect();
+            if(inputRect.y < event.clientY && event.clientY < (inputRect.y+inputRect.height)
+                && inputRect.x < event.clientX && event.clientX < (inputRect.x+inputRect.width))
+            {
+                if(window.getComputedStyle(resultBox, null).display === "none" && inputSearch.value != ""){
+                    resultBox.style.display = "block";
+                    ShowResultValueInputSearch();
+                }
+            }
+            else{
+                if(window.getComputedStyle(resultBox, null).display === "block"){
+                    resultBox.style.display = "none";
+                }
+            }
+        });
+    </script>
 
     <script>
         $(function(){
@@ -138,6 +250,27 @@
                 isOpen: false,
             });
         })
+
+        function ClickClearButton()
+        {
+            var formData = new FormData();
+            var urlAction = "@Url.Action("ClearButton", "ViewProduct")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "GET",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    if(data.success === 1)
+                    {
+                        window.location.replace(data.url);
+                    }
+                }
+            });
+        }
     </script>
 
     <script>
@@ -211,6 +344,5 @@
                 }
             });
         }
-
     </script>
 }

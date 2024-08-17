@@ -2,7 +2,7 @@
 
 @model RegisterViewModel
 @{
-    ViewData["Title"] = "Đăng ký tài khoản";
+    ViewData["Title"] = "Register";
     Layout = "_LayoutLogin";
 }
 
@@ -30,7 +30,7 @@
                     <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 mb-4">Đăng ký!</h1>
+                                <h1 class="h4 mb-4">Register!</h1>
                             </div>
                             <form class="user" asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
                                 <div asp-validation-summary="All" class="text-danger"></div>
@@ -55,7 +55,7 @@
                                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary btn-user btn-block">Đăng ký</button>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">Register</button>
                             </form>
 
                             <hr>
@@ -95,10 +95,10 @@
 
                             <hr>
                             <div class="text-center">
-                                <a class="small site-a-white" asp-action="ForgotPassword">Quên mật khẩu?</a>
+                                <a class="small site-a-white" asp-action="ForgotPassword">Forgot Password?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small site-a-white" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Có tài khoản? Đăng nhập</a>
+                                <a class="small site-a-white" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Have account? Login now!</a>
                             </div>
 
                         </div>

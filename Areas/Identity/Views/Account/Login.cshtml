@@ -5,7 +5,7 @@
 @inject SignInManager<AppUser> SignInManager
 
 @{
-    ViewData["Title"] = "Đăng nhập";
+    ViewData["Title"] = "Login";
     Layout = "_LayoutLogin";
 }
 
@@ -33,7 +33,7 @@
                     <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 mb-4">Đăng nhập!</h1>
+                                <h1 class="h4 mb-4">Login!</h1>
                             </div>
                             <form class="user" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
                                 <div asp-validation-summary="All" class="text-danger"></div>
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary btn-user btn-block">Đăng nhập</button>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
                             </form>
 
                             @{
@@ -96,10 +96,10 @@
 
                             <hr>
                             <div class="text-center">
-                                <a class="small site-a-white" asp-action="ForgotPassword">Quên mật khẩu?</a>
+                                <a class="small site-a-white" asp-action="ForgotPassword">Forgot Password?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small site-a-white" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Chưa có tài khoản? Đăng ký</a>
+                                <a class="small site-a-white" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Have not account? Register here!</a>
                             </div>
 
                         </div>

@@ -10,38 +10,39 @@
     <meta name="author" content="">
 
     <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AppTrade.styles.css" asp-append-version="true" />
 
     <partial name="/Views/Shared/Partials/LoadLibrary/_Lib_Css_AdminCP_Partial.cshtml"></partial>
     <partial name="/Views/Shared/Partials/LoadLibrary/_Lib_Js_AdminCP_Partial.cshtml"></partial>
 </head>
 
 
-<body id="body-layout">
-    <header id="header-layout">
-        <div>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
-                <div class="container-fluid">
-                        <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">TradeGun</a>
-                        
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+<body id="body-layout" style="padding-top: 70px;">
+    <header>
+        <nav id="header-layout" class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
+            <div class="container-fluid">
+                    <a class="navbar-brand text-info" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i></a>
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                            <ul class="navbar-nav flex-grow-1">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
-                                        Privacy
-                                    </a>
-                                </li>
-                            </ul>
-                            <partial name="/Views/Shared/Partials/_LoginPartial.cshtml"></partial>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link" id="dark-mode-button">
+                                    <i id="icon-dark-mode" class="fas"></i>
+                                </a>
+                            </li>
                         </ul>
-                    </div>
+                        <partial name="/Views/Shared/Partials/_LoginPartial.cshtml"></partial>
+                    </ul>
                 </div>
-            </nav>
-        </div>
+            </div>
+        </nav>
     </header>
 
     <div class="container" >

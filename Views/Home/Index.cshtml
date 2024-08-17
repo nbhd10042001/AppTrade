@@ -14,12 +14,12 @@
     .sidebar-left{
         background-color: rgb(255, 255, 255);
         opacity: 0.5;
-        width: 5%;
-        height: 25%;
+        width: 50px;
         position: fixed;
         border-radius: 5%;
         left: 0;
         bottom: 50%;
+        z-index: 1;
         &:hover{
             opacity: 1;
         }
@@ -29,7 +29,7 @@
     }
 </style>
 
-<div class="sidebar-left navbar-collapse collapse d-sm-inline-flex justify-content-center">
+<div id="side-bar-home" class="sidebar-left d-flex justify-content-center align-items-center">
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="sbl-item nav-link" href="#home-scroll">
@@ -174,10 +174,23 @@
 
 <a asp-controller="Home" asp-action="TestAPI">testapi</a>
 
-
-
-
 @section Scripts{
+    <script>
+        var sidebarhome = document.getElementById("side-bar-home");
+        HiddenSidebarHome();
+        window.addEventListener("resize", HiddenSidebarHome());
+
+        function HiddenSidebarHome(){
+            var widthDoc = $(document).width();
+            if(widthDoc < 800){
+                sidebarhome.style.left = "-500px";
+            }
+            else if (widthDoc > 800){
+                sidebarhome.style.left = "0";
+            }
+        }
+    </script>
+
     <script>
         var timer;
         function AddToCart (id)
@@ -263,9 +276,7 @@
                 Phone: value_phone,
                 Message: value_message,
             };
-            
             var urlAction = "@Url.Action("SendContact", "Contact")";
-
             $.ajax({
                 url: urlAction,
                 dataType: "json",
@@ -290,7 +301,6 @@
                 }
             });
         }
-
     </script>
 
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

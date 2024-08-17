@@ -9,24 +9,24 @@ namespace App.Areas.Identity.Models.AccountViewModels
     {
         [Required(ErrorMessage = "Phải nhập {0}")]
         [EmailAddress(ErrorMessage = "Sai định dạng Email")]
-        [Display(Name = "Email", Prompt = "Địa chỉ email")]
+        [Display(Name = "Email", Prompt = "Email Address")]
         public string Email { get; set; }
 
 
         [Required(ErrorMessage = "Phải nhập {0}")]
         [StringLength(100, ErrorMessage = "{0} phải dài từ {2} đến {1} ký tự.", MinimumLength = 2)]
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu", Prompt = "Mật khẩu")]
+        [Display(Name = "Password", Prompt = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Lặp lại mật khẩu", Prompt = "Lặp lại Mật khẩu")]
+        [Display(Name = "Password Repeat", Prompt = "Password Repeat")]
         [Compare("Password", ErrorMessage = "Mật khẩu lặp lại không chính xác.")]
         public string ConfirmPassword { get; set; }
 
 
         [DataType(DataType.Text)]
-        [Display(Name = "Tên tài khoản", Prompt ="Tên tài khoản")]
+        [Display(Name = "User Name", Prompt ="User Name")]
         [Required(ErrorMessage = "Phải nhập {0}")]
         [StringLength(100, ErrorMessage = "{0} phải dài từ {2} đến {1} ký tự.", MinimumLength = 3)]
         public string UserName { get; set; }
