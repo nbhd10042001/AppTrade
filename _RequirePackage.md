@@ -56,6 +56,10 @@ dotnet add package Microsoft.AspNetCore.Authentication.oAuth
 dotnet add package Microsoft.AspNetCore.Authentication.OpenIDConnect
 dotnet add package Microsoft.AspNetCore.Authentication.Twitter
 
+## SignalR
+dotnet add package Microsoft.AspNetCore.SignalR.Common --version 8.0.0
+dotnet add package Microsoft.AspNetCore.SignalR.Client --version 8.0.0
+
 ## Package elFinder
 dotnet add package elFinder.NetCore
  

@@ -178,8 +178,7 @@
     <script>
         var sidebarhome = document.getElementById("side-bar-home");
         HiddenSidebarHome();
-        window.addEventListener("resize", HiddenSidebarHome());
-
+        window.addEventListener("resize", HiddenSidebarHome);
         function HiddenSidebarHome(){
             var widthDoc = $(document).width();
             if(widthDoc < 800){

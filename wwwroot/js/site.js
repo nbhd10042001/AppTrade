@@ -41,8 +41,8 @@ $(document).ready(function () {
     }
     else
     {
-        localStorage.setItem('isDarkMode', 'true');
-        toggleDarkMode();
+        localStorage.setItem('isDarkMode', 'false');
+        toggleLightMode();
     }
        
 
@@ -70,6 +70,8 @@ $(document).ready(function () {
         $("#card-product").addClass("card-product-dark");
         $("#cart-table").addClass("text-white");
         $("#cart-table").removeClass("text-dark");
+        $("#cart-table-phone").addClass("text-white");
+        $("#cart-table-phone").removeClass("text-dark");
 
         // layout login
         $("#card-login").removeClass("card-login-light");
@@ -105,6 +107,8 @@ $(document).ready(function () {
         $("#card-product").addClass("card-product-light");
         $("#cart-table").addClass("text-dark");
         $("#cart-table").removeClass("text-white");
+        $("#cart-table-phone").addClass("text-dark");
+        $("#cart-table-phone").removeClass("text-white");
 
         // layout login
         $("#card-login").addClass("card-login-light");

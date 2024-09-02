@@ -1,0 +1,15 @@
+@using App.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Community" asp-controller="ChatUser" asp-action="Index">
+                <i class="far fa-comment-dots"></i> Chat 
+                <i id="layout-icon-chat"  hidden="true" class="far fa-comment-alt" style="color:red;"></i>
+            </a>
+        </li>
+    </ul>
+}

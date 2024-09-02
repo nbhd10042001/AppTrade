@@ -50,11 +50,12 @@
                                 <i class="fas fa-shopping-cart"></i> Shop
                             </a>
                         </li>
+                        
                         @if(string.IsNullOrEmpty(UserManager.GetUserName(User)) == false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="Order" asp-controller="Order" asp-action="ViewOrder">
-                                    <i class="fas fa-archive"></i> My Order
+                                <a class="nav-link" asp-area="Community" asp-controller="ViewUser" asp-action="ViewAllUsers">
+                                    <i class="fas fa-users"></i> People
                                 </a>
                             </li>
                         }
@@ -63,8 +64,9 @@
                         </li>
                     </ul>
 
+                    <partial name="/Views/Shared/Partials/_ChatPartial.cshtml"></partial>
                     <partial name="/Views/Shared/Partials/_BellPartial.cshtml"></partial>
-                    <partial name="/Views/Shared/Partials/_MenuManagePartial.cshtml"></partial>
+                    @* <partial name="/Views/Shared/Partials/_MenuManagePartial.cshtml"></partial> *@
                     <partial name="/Views/Shared/Partials/_LoginPartial.cshtml"></partial>
                     
                 </div>
@@ -87,6 +89,8 @@
     </footer>
 
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/microsoft/signalr/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
 
 </body>
     

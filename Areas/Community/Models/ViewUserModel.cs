@@ -5,6 +5,8 @@ namespace App.Areas.Community.Models;
 
 public class ViewUserModel
 {
+    public string UserId {set; get;}
+    
     [Display(Name = "Tên tài khoản")]
     public string UserName { get; set; }
 

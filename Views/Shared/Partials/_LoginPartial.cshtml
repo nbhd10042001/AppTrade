@@ -1,6 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using App.Models
 
+@using Microsoft.AspNetCore.Authorization;
+@inject IAuthorizationService authorizationService
+
+
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject AppDbContext _context
@@ -16,22 +20,41 @@
         else
             srcImg = "/contents/noUser.png";
     }
+
+    var result = await authorizationService.AuthorizeAsync(this.User, "ViewManageMenu");
 }
 
 @if (SignInManager.IsSignedIn(User))
 {
     <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
-        <ul class="nav navbar-nav navbar-right d-flex align-items-center">
-            <li class="nav-item">
-                <img id="login-avt-user" src=@srcImg width="30" height="30" alt="...">
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Identity"  asp-controller="Manage" asp-action="Index" title="Manage">
+        <ul class="navbar-nav align-items-center">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img id="login-avt-user" src=@srcImg width="30" height="30" alt="...">
                     <span>@UserManager.GetUserName(User)</span>
                 </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item text-center cursor-change border" 
+                            asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">Profile </a>
+                    </li>
+                    <li>
+                        @if (result.Succeeded){
+                            <a class="dropdown-item text-center cursor-change border" 
+                                asp-controller="AdminCP" asp-action="Index" asp-area="AdminControlPanel">
+                                    <i class="fas fa-cog"></i> Manager</a>
+                        }
+                    </li>
+                    <li>
+                        <a class="dropdown-item text-center cursor-change border"
+                            asp-area="Order" asp-controller="Order" asp-action="ViewOrder">
+                                <i class="fas fa-archive"></i> My Order</a>
+                    </li>
+                </ul>
             </li>
+
             <li class="nav-item">
-                <button title="Đăng xuất" type="submit" class="btn btn-sm btn-danger nav-btn">
+                <button id="btn-logoff-layout" title="Đăng xuất" type="submit" class="btn btn-sm btn-danger nav-btn">
                     <i class="fas fa-sign-out-alt" style="color: white;"></i>
                 </button>
             </li>

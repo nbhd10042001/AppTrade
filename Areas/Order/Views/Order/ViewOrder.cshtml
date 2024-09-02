@@ -50,9 +50,51 @@
     </tbody>
 </table>
 
+<table class="table text-center" id="cart-table-phone">
+    <thead>
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in orders)
+        {
+            stt = stt + 1;
+            var totalmoney = item.UnitPrice * item.Quantity;
+            <tr class="border order-view" onclick="ViewDetailOrder(@stt)">
+                <td>@item.ProductName</td>
+                <td>@item.Quantity</td>
+                <td>@(totalmoney.ToString("n0"))</td>
+                <td>@item.Status</td>
+                <td><a id="order-detail-@stt" hidden="true" asp-area="Order" asp-action="DetailOrder" asp-controller="Order" asp-route-id="@item.OrderId"></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 <script>
     function ViewDetailOrder(id)
     {
         document.getElementById(`order-detail-${id}`).click();
     }
+
+    window.addEventListener("resize", ResizeViewOrder);
+    function ResizeViewOrder(){
+        var widthDoc = $(document).width();
+        if(widthDoc < 500){
+            document.getElementById("cart-table").hidden = true;
+            document.getElementById("cart-table-phone").hidden = false;
+        }
+        else if (widthDoc > 500){
+            document.getElementById("cart-table").hidden = false;
+            document.getElementById("cart-table-phone").hidden = true;
+        }
+    }
+
+    $(document).ready(function(){
+        ResizeViewOrder();
+    });
 </script>

@@ -1,6 +1,6 @@
 @using App.Areas.Community.Models;
 
-@model ViewUserModel    
+@model ViewUserModel
 
 @{
     ViewData["Title"] = "Thông tin người dùng";
@@ -8,6 +8,14 @@
 }
 
 <h1>@ViewData["Title"] @Model.UserName.</h1>
+
+<form asp-controller="ChatUser" asp-action="Index" asp-area="Community" hidden="true">
+   <div class="form-group">
+      <input asp-for="UserId" class="form-control"/>
+   </div>
+   <input id="submit-chat" type="submit"/>
+</form>
+<a onclick="document.getElementById(`submit-chat`).click()" class=" btn btn-secondary"><i class="far fa-comment-dots"></i> Chat</a>
 
 <div>
     <hr />
@@ -19,7 +27,7 @@
             else
                 srcImg = "/contents/AvatarUsers/" + Model.AvatarUser.AvatarName;
             
-            <img id="avatar-user" src=@srcImg class="w-25" alt="...">
+            <img src=@srcImg class="w-25" alt="...">
         </dd>
 
         <dt class="col-sm-4">Thông tin cơ bản:</dt>

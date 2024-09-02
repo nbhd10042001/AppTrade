@@ -1,0 +1,91 @@
+@using App.Areas.Community.Models;
+
+@model ViewUserModel
+@{
+    ViewData["Title"] = "People";
+    var users = ViewBag.users;
+}
+
+<style>
+    .avatar-user{
+        max-height: 50px;
+        max-width: 70px;
+        margin-top: 5px;
+    }
+    .card{
+        margin-right: 8px;
+        margin-bottom: 8px;
+        height: 250px;
+    }
+</style>
+
+<h1>@ViewData["Title"]</h1> <br> <br>
+
+<div id="card-product" class="d-flex flex-wrap justify-content-center">
+    @foreach(var user in users)
+    {
+        var srcImg = "";
+        @if(user.AvatarName == null)
+            srcImg = "/contents/noUser.png";
+        else
+            srcImg = "/contents/AvatarUsers/" + user.AvatarName;
+        
+        <form asp-controller="ChatUser" asp-action="Index" asp-area="Community" class="card text-center border-info" style="width: 15rem;">
+            <div>
+                <img class="avatar-user card-img-top" src=@srcImg alt="...">
+            </div>
+            <div class="card-body">
+                <h5 class=" card-title">@user.UserName</h5>
+                <p id="status-@user.UserName" class="card-text"> 
+                    <i style="color: red;" class="fas fa-dot-circle"></i>
+                    <span>Offline</span>
+                </p>
+                <div class="" hidden="true">
+                    <input asp-for="UserId" value="@user.Id" class="form-control"/>
+                </div> 
+            </div>
+            <div class="card-footer">
+                <button id="submit-chat" class="btn btn-outline-secondary" type="submit"><i class="far fa-comment-dots"></i> Chat</button>
+                <button class="btn btn-outline-primary" asp-area="Community" 
+                    asp-controller="ViewUser" asp-action="Index" 
+                    asp-route-name="@user.UserName">View Profile
+                </button>
+            </div>
+        </form>
+    }
+</div>
+
+@section Scripts{
+    <script>
+        var timer;
+        function UpdateStatusUserViewAllUser()
+        {
+            fetch("/api/get-user-connect-chat", {method: "POST"})
+            .then(response => response.json())
+            .then(function (data){
+                for(let i = 0; i < data.listOff.length; i++){
+                    document.getElementById(`status-${data.listOff[i].userName}`).firstElementChild.style.color = "red";
+                    document.getElementById(`status-${data.listOff[i].userName}`).lastElementChild.textContent = "Offline";
+                }
+                
+                for(let i = 0; i < data.listOnl.length; i++){
+                    document.getElementById(`status-${data.listOnl[i].userName}`).firstElementChild.style.color = "green";
+                    document.getElementById(`status-${data.listOnl[i].userName}`).lastElementChild.textContent = "Online";
+
+                }
+            })
+            .catch(error => console.error(error));
+        }
+
+        function ReloadViewUser()
+        {
+            timer = setTimeout(() => {
+                UpdateStatusUserViewAllUser();
+                ReloadViewUser();
+            }, 10000);
+        }
+
+        UpdateStatusUserViewAllUser();
+        ReloadViewUser();
+    </script>
+}

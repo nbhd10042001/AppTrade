@@ -57,7 +57,7 @@
 } *@
 
 
-<div id="test">scroll to understand</div>
+@* <div id="test">scroll to understand</div> *@
 <div id="wrapper" style="height: 500px; overflow: auto;">
   <div id="content" class="d-flex flex-column">
   </div>
@@ -90,7 +90,7 @@
         // we will add this content, replace for anything you want to add
         var wrapper = document.getElementById("wrapper");
         var content = document.getElementById("content");
-        var test = document.getElementById("test");
+        @* var test = document.getElementById("test"); *@
 
         if (performance.navigation.type == 2) {
             console.info( "This page is not reloaded");
@@ -118,7 +118,7 @@
         // this is the scroll event handler
         function scroller() {
             // print relevant scroll info
-            test.innerHTML = wrapper.scrollTop + "+" + wrapper.offsetHeight + "+10>" + content.offsetHeight;
+            @* test.innerHTML = wrapper.scrollTop + "+" + wrapper.offsetHeight + "+10>" + content.offsetHeight; *@
             localStorage.setItem("scrollTop", wrapper.scrollTop);
 
             // add more contents if user scrolled down enough

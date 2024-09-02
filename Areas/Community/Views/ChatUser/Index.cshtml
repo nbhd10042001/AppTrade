@@ -1,0 +1,264 @@
+@using Hubs.SignalRChatMVC
+@using System.Collections
+@using Microsoft.AspNetCore.Identity
+
+@{
+    ViewData["Title"] = "Chat";
+    string FromId = ViewBag.FromId;
+    string ToId = ViewBag.ToId;
+    string userReceiveName = ViewBag.UserReceiveName;
+    string currUserName = ViewBag.CurrUserName;
+}
+
+<h1>@ViewData["Title"]</h1> <br>
+
+<style>
+    .vertical-box-chat{
+        overflow-y: scroll;
+        overflow-x: hidden;
+        min-height: 150px;
+        height: 350px;
+    }
+
+    .style-element-user{
+        position: relative;
+        display: flex;
+        margin-bottom: 5px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    .style-dot-circle{
+        position: absolute;
+        left: 0;
+        padding-left: 2px;
+    }
+    .style-comment{
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding-top: 2px;
+        padding-right: 2px;
+        color: red;
+    }
+
+    #messageList > li {
+        margin-bottom: 5px;
+    }
+    #messageList > li > span{
+        padding-left: 15px;
+    }
+    #messageList > li > div > span{
+        font-weight: bold;
+    }
+    #messageList > li > div > small{
+        font-style: italic;
+        font-size: small;
+        opacity: 0.7;
+    }
+</style>
+
+<div id="is-online">
+
+</div>
+
+<div class="row">
+    <div class="col-3 d-flex flex-column" id="list-users">
+        List Friends
+        <hr>
+    </div>
+    
+    <div class="container col-8">
+        <input type="text" id="fromid-input" value="@FromId" hidden="true">
+        <input type="text" id="toid-input" value="@ToId" hidden="true">
+        <div>
+            <div>User</div>
+            <div><input type="text" id="current-user" value="@currUserName" hidden="true"></div>
+            <div><input type="text" id="userName" disabled></div>
+        </div>
+
+        <div>
+            <hr>
+            <div class="vertical-box-chat" id="box-chat-user">
+                <ul id="messageList" style="list-style-type: none;">
+                </ul>
+            </div>
+        </div>
+
+        <div>Message</div>
+        <div class="form-group d-flex align-items-center">
+            <div style="width: 85%;">
+                <input class="form-control w-100" type="search" id="messageInput" placeholder="Message" aria-label="Message" autocomplete="off">
+            </div>
+            <input id="sendButton" class="text-end btn btn-outline-success" style="margin-left: 5px;" type="button" value="Send">
+        </div>
+    </div>
+    
+</div>
+
+@section Scripts
+{
+    <script>
+        // api to get all list users in database
+        function ShowAllUsers_API()
+        {
+            var formData = new FormData();
+            var urlAction = "@Url.Action("GetListAllUsers_API", "ChatUser")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                async: true,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    var element = document.getElementById("list-users");
+                    for(let i = 0; i < data.users.length; i++){
+                        element.innerHTML += `<div class="style-element-user btn btn-outline-primary" onclick="ShowMessagesUser('${data.users[i].id}', '@FromId', '${data.users[i].userName}')">
+                            <i id="username-${data.users[i].userName}" style="color: red;" class="style-dot-circle fas fa-dot-circle"></i> 
+                            ${data.users[i].userName}
+                            <i id="have-mess-${data.users[i].userName}" hidden="true" class="style-comment far fa-comment-alt"></i>
+                        </div>`;
+                    }
+
+                    for(let i = 0; i < data.userHaveMessages.length; i++){
+                        document.getElementById(`have-mess-${data.userHaveMessages[i]}`).hidden = false;
+                    }
+
+                    UpdateUserConnectionChat();
+                    if(`@ToId` != ""){
+                        ShowMessagesUser(`@ToId`, `@FromId`, `@userReceiveName`);
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        };
+
+        // show all messages user
+        function ShowMessagesUser(idTo, idFrom, name)
+        {
+            document.getElementById("fromid-input").value = idFrom;
+            document.getElementById("toid-input").value = idTo;
+            document.getElementById("userName").value = name;
+
+            var urlAction = "@Url.Action("GetMessageUser_API", "ChatUser")";
+            document.getElementById("messageList").innerHTML = ""; // clear chat box
+            var formData = new FormData();
+            formData.append("idFrom", idFrom);
+            formData.append("idTo", idTo);
+            
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    if(data.success === true){
+                        for(let i = 0; i < data.messages.length; i++){
+                            var color = "";
+                            var mess = data.messages[i].message;
+                            var datetime = data.messages[i].dateShow;
+                            var name = data.messages[i].userSend;
+                            if(name === `@currUserName`){ color = "blue" }
+                            CreateElementLiMessage(name, datetime, mess, color);
+                        }
+                        ScrollTopListMessage();
+                        UpdateUserHaveMessageNotRead();
+                        var nameUser = document.getElementById("userName").value;
+                        document.getElementById(`have-mess-${nameUser}`).hidden = true;
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        }
+
+        function UpdateUserHaveMessageNotRead()
+        {
+            var urlAction = "/api/check-user-have-message";
+            $.ajax({
+                cache: false,
+                async: true,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    if(data.havemess === true){
+                        document.getElementById("layout-icon-chat").hidden = false;
+                    }
+                    else{
+                        document.getElementById("layout-icon-chat").hidden = true;
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        }
+
+        function UpdateUserConnectionChat()
+        {
+            var urlAction = "@Url.Action("GetUserConnectionChat_API", "ChatUser")";
+            $.ajax({
+                cache: false,
+                url: urlAction,
+                async: true,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    for(let i = 0; i < data.listOff.length; i++){
+                        document.getElementById(`username-${data.listOff[i].userName}`).style.color = "red";
+                    }
+                    
+                    for(let i = 0; i < data.listOnl.length; i++){
+                        document.getElementById(`username-${data.listOnl[i].userName}`).style.color = "green";
+                    }
+                },
+                error: function (xhr) {
+                    console.log('error');
+                }
+            });
+        }
+
+        function ScrollTopListMessage()
+        {
+            var elementListMessage = document.getElementById("box-chat-user");
+            elementListMessage.scrollTop = elementListMessage.scrollHeight;
+        }
+
+        function CreateElementLiMessage(userSend, datetime, message, color)
+        {
+            var element = document.getElementById("messageList");
+            var li = document.createElement("li");
+            li.innerHTML = `<div>
+                                <span style="color: ${color}">${userSend}</span>
+                                <small> at ${datetime}</small> :
+                            </div>
+                            <span>${message}</span>`;
+            element.appendChild(li);
+        }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            ShowAllUsers_API();
+            document.getElementById("messageInput").addEventListener("keypress", (event)=>{
+                if(event.key === "Enter"){
+                    document.getElementById("sendButton").click();
+                }
+            });
+        });
+    </script>
+}

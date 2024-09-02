@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using App.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using App.Areas.Community.Models;
 
 namespace AppTrade.Controllers;
 
@@ -15,18 +16,69 @@ public class HomeController : Controller
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly AppDbContext _context;
+    private readonly  IAuthorizationService _authorizationService;
 
 
     public HomeController(AppDbContext context, 
                             ILogger<HomeController> logger, 
                             UserManager<AppUser> userManager, 
-                            RoleManager<IdentityRole> roleManager)
+                            RoleManager<IdentityRole> roleManager,
+                            IAuthorizationService authorizationService)
     {
         _logger = logger;
         _userManager = userManager;
         _roleManager = roleManager;
         _context = context;
+        _authorizationService = authorizationService;
+    }
 
+    [HttpGet("/api/get-user-is-login")]
+    public async Task<ActionResult> GetUserLogin_API ()
+    {
+        var result = await _authorizationService.AuthorizeAsync(this.User, "ConnectChat");
+        if (result.Succeeded){
+            return Json(new {
+                login = true
+            });
+        }
+        else{
+            return Json(new {
+                login = false
+            });
+        }
+    }
+
+    [HttpPost("/api/check-user-have-message")]
+    [Authorize]
+    public async Task<ActionResult> CheckUserHaveMessageNotRead ()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if(user == null) return Json(new{
+            success = false,
+        });
+        
+        var filename = Path.Combine("Uploads", $"Chat/{user.Id}.json");
+        var haveMess = false;
+        List<DataChatUserModel> datas = new List<DataChatUserModel>();
+        // if have exist file chat between user1 and user2
+        if (System.IO.File.Exists(filename))
+        {
+            using (StreamReader r = new StreamReader(filename))
+            {
+                string json = r.ReadToEnd();
+                datas = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DataChatUserModel>>(json);
+            }
+            foreach(var data in datas){
+                if(data.HaveMessage == true){
+                    haveMess = true;
+                    break;
+                }
+            }
+        }
+        return Json(new{
+            success = true,
+            havemess = haveMess
+        });
     }
 
     // [Authorize(Roles = RoleName.Member)]

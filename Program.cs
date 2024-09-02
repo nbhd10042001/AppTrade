@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using MySqlConnector;
+using Hubs.SignalRChatMVC;
+using App.Areas.Community.Models;
 
 namespace AppTrade;
 
@@ -33,12 +35,26 @@ public class Program
         //send mail
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSetting"));
         builder.Services.AddSingleton<IEmailSender, SendMailService>();
-
         builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
         builder.Services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
         builder.Services.AddTransient<CartService>();
         builder.Services.AddTransient<UrlHelperService>();
         builder.Services.AddTransient<NotificationService>();
+
+        // signalR chat
+        builder.Services.AddSignalR();
+        builder.Services.AddSingleton<IDictionary<string, UserConnection>>(opts => new Dictionary<string, UserConnection>());
+        // builder.Services.AddCors(options =>
+        // {
+        //     options.AddDefaultPolicy(
+        //         builder =>
+        //         {
+        //             builder.WithOrigins("https://example.com")
+        //                 .AllowAnyHeader()
+        //                 .WithMethods("GET", "POST")
+        //                 .AllowCredentials();
+        //         });
+        // });
 
         // Dang ky PaypalClient 
         builder.Services.AddSingleton(p => new PaypalClient(
@@ -105,6 +121,9 @@ public class Program
             options.AddPolicy("ViewNotif", builder => {
                 builder.RequireAuthenticatedUser(); // yeu cau user login
             });
+            options.AddPolicy("ConnectChat", builder => {
+                builder.RequireAuthenticatedUser(); // yeu cau user login
+            });
         });
 
         builder.Services.Configure<SecurityStampValidatorOptions>(o => 
@@ -142,6 +161,9 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         
+        // UseCors must be called before MapHub.
+        //app.UseCors();
+        app.MapHub<ChatHub>("/chatHub");
 
         app.Run();
     }
