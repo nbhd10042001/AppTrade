@@ -139,13 +139,39 @@ public class OrderController : Controller
 
     #region Manager Order For Admin
     [HttpGet("/manager-order")]
-    public async Task<IActionResult> ManagerOrder ()
+    public IActionResult ManagerOrder ()
     {
-        var orders = await _context.Orders.ToListAsync();
+        var orders = _context.Orders.ToList();
         if(orders == null) return Content("List Order Not Found!");
 
         ViewBag.orders = orders;
         return View();
+    }
+
+    [HttpPost("/api/get-orders")]
+    public ActionResult GetOrders_API (string sort)
+    {
+        var orders = _context.Orders.ToList();
+        if(orders == null){
+            return Json(new {
+                success = false
+            });
+        }
+
+        if(sort == "Pending"){
+            orders = orders.Where(o => o.Status == StatusOrder.Pending).ToList();
+        }
+        else if(sort == "Shipping"){
+            orders = orders.Where(o => o.Status == StatusOrder.Shipping).ToList();
+        }
+        else if(sort == "Success"){
+            orders = orders.Where(o => o.Status == StatusOrder.Success).ToList();
+        }
+
+        return Json(new {
+            success = true,
+            orders = orders
+        });
     }
 
     [HttpGet("/manager-order/detail")]
@@ -173,6 +199,21 @@ public class OrderController : Controller
         TypeStatusMessage = TypeMessage.Success;
 
         return RedirectToAction(nameof(ManagerOrder));
+    }
+
+    [HttpPost("/manager-order/success")]
+    public async Task<ActionResult> ManagerOrderSuccess(string id)
+    {
+        var order = _context.Orders.Where(o => o.OrderId == id).FirstOrDefault();
+        if(order == null) return Content("Order Not Found!");
+
+        order.Status = StatusOrder.Success;
+        _context.Orders.Update(order);
+        await _context.SaveChangesAsync();
+        
+        return Json(new {
+            success = true
+        });
     }
     #endregion
 }   

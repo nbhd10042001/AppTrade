@@ -15,7 +15,8 @@
    </div>
    <input id="submit-chat" type="submit"/>
 </form>
-<a onclick="document.getElementById(`submit-chat`).click()" class=" btn btn-secondary"><i class="far fa-comment-dots"></i> Chat</a>
+<a id="btn-chat-user" onclick="document.getElementById(`submit-chat`).click()" class=" btn btn-outline-secondary">
+   <i class="far fa-comment-dots"></i> Chat</a>
 
 <div>
     <hr />
@@ -75,3 +76,21 @@
         </dd>
     </dl>
 </div>
+
+@section Scripts{
+   <script>
+      fetch("/api/get-current-user-login", {method: "GET"})
+      .then(response => response.json())
+      .then(data => {
+         if(data.success === true){
+            if("@Model.UserId" == data.id){
+               document.getElementById("btn-chat-user").hidden = true;
+            }
+            else{
+               document.getElementById("btn-chat-user").hidden = false;
+            }
+         }
+      })
+      .catch(error => console.error(error));
+   </script>
+}

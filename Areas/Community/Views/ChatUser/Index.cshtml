@@ -93,12 +93,13 @@
             <input id="sendButton" class="text-end btn btn-outline-success" style="margin-left: 5px;" type="button" value="Send">
         </div>
     </div>
-    
 </div>
 
 @section Scripts
 {
     <script>
+        var lastSelectUser = "";
+
         // api to get all list users in database
         function ShowAllUsers_API()
         {
@@ -116,8 +117,8 @@
                 {
                     var element = document.getElementById("list-users");
                     for(let i = 0; i < data.users.length; i++){
-                        element.innerHTML += `<div class="style-element-user btn btn-outline-primary" onclick="ShowMessagesUser('${data.users[i].id}', '@FromId', '${data.users[i].userName}')">
-                            <i id="username-${data.users[i].userName}" style="color: red;" class="style-dot-circle fas fa-dot-circle"></i> 
+                        element.innerHTML += `<div id="username-${data.users[i].userName}" class="style-element-user btn btn-outline-secondary" onclick="ShowMessagesUser('${data.users[i].id}', '@FromId', '${data.users[i].userName}')">
+                            <i class="style-dot-circle fas fa-dot-circle"></i> 
                             ${data.users[i].userName}
                             <i id="have-mess-${data.users[i].userName}" hidden="true" class="style-comment far fa-comment-alt"></i>
                         </div>`;
@@ -133,7 +134,7 @@
                     }
                 },
                 error: function (xhr) {
-                    alert('error');
+                    console.error('error');
                 }
             });
         };
@@ -141,6 +142,15 @@
         // show all messages user
         function ShowMessagesUser(idTo, idFrom, name)
         {
+            if(lastSelectUser != ""){
+                $(`#username-${lastSelectUser}`).removeClass("btn-outline-primary");
+                $(`#username-${lastSelectUser}`).addClass("btn-outline-secondary");
+            }
+
+            $(`#username-${name}`).removeClass("btn-outline-secondary");
+            $(`#username-${name}`).addClass("btn-outline-primary");
+            lastSelectUser = name;
+
             document.getElementById("fromid-input").value = idFrom;
             document.getElementById("toid-input").value = idTo;
             document.getElementById("userName").value = name;
@@ -176,7 +186,7 @@
                     }
                 },
                 error: function (xhr) {
-                    alert('error');
+                    console.error('error');
                 }
             });
         }
@@ -201,7 +211,7 @@
                     }
                 },
                 error: function (xhr) {
-                    alert('error');
+                    console.error('error');
                 }
             });
         }
@@ -219,11 +229,11 @@
                 success: function(data)
                 {
                     for(let i = 0; i < data.listOff.length; i++){
-                        document.getElementById(`username-${data.listOff[i].userName}`).style.color = "red";
+                        document.getElementById(`username-${data.listOff[i].userName}`).firstElementChild.style.color = "red";
                     }
                     
                     for(let i = 0; i < data.listOnl.length; i++){
-                        document.getElementById(`username-${data.listOnl[i].userName}`).style.color = "green";
+                        document.getElementById(`username-${data.listOnl[i].userName}`).firstElementChild.style.color = "green";
                     }
                 },
                 error: function (xhr) {

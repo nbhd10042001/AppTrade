@@ -343,4 +343,24 @@
             });
         }
     </script>
+
+    <script>
+        window.addEventListener("resize", ResizeViewOrder);
+        function ResizeViewOrder(){
+            var widthDoc = $(document).width();
+            var collection = document.getElementsByClassName("item-view-product");
+            if(widthDoc < 600){
+                for(let i=0;i<collection.length;i++){
+                    collection[i].style.width = "150px";
+                }
+            }
+            else if (widthDoc > 600){
+                for(let i=0;i<collection.length;i++){
+                    collection[i].style.width = "250px";
+                }
+            }
+        }
+
+
+    </script>
 }

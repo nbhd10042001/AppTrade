@@ -74,11 +74,19 @@
                     Xác nhận đơn hàng</button>
             </div>
         }
-        <div style="margin-top: 10px;">
-            <form asp-area="Order" asp-controller="Order" asp-action="ManagerDeleteOrder" asp-route-id="@Model.OrderId" method="post">
-                <button class="btn btn-danger">Hủy đơn hàng</button>
-            </form>
-        </div>
+        @if(Model.Status == StatusOrder.Shipping){
+            <div>
+                <button id="order-success" onclick="OrderSuccessClick()" class="btn btn-success">
+                    Hoàn tất</button>
+            </div>
+        }
+        @if(Model.Status != StatusOrder.Success){
+            <div style="margin-top: 10px;">
+                <form id="order-cancel" asp-area="Order" asp-controller="Order" asp-action="ManagerDeleteOrder" asp-route-id="@Model.OrderId" method="post">
+                    <button class="btn btn-danger">Hủy đơn hàng</button>
+                </form>
+            </div>
+        }
     </div>
 </div>
 
@@ -103,6 +111,27 @@
                 {
                     document.getElementById(`order-confirm`).setAttribute("hidden", "true");
                     $(`#status-order`).empty().append("Shipping");
+                }
+            });
+        };
+
+        function OrderSuccessClick()
+        {
+            var formData = new FormData();
+            var urlAction = "@Url.Action("ManagerOrderSuccess", "Order")";
+            formData.append("id", "@Model.OrderId");
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    document.getElementById(`order-success`).setAttribute("hidden", "true");
+                    document.getElementById(`order-cancel`).setAttribute("hidden", "true");
+                    $(`#status-order`).empty().append("Success");
                 }
             });
         };

@@ -72,11 +72,14 @@
                     Xác nhận đơn hàng</button>
             </div>
         }
-        <div style="margin-top: 10px;">
-            <form asp-area="Order" asp-controller="Order" asp-action="DeleteOrder" asp-route-id="@Model.OrderId" method="post">
-                <button class="btn btn-danger">Hủy đơn hàng</button>
-            </form>
-        </div>
+
+        @if(Model.Status != StatusOrder.Success){
+            <div style="margin-top: 10px;">
+                <form asp-area="Order" asp-controller="Order" asp-action="DeleteOrder" asp-route-id="@Model.OrderId" method="post">
+                    <button class="btn btn-danger">Hủy đơn hàng</button>
+                </form>
+            </div>
+        }
     </div>
 </div>
 

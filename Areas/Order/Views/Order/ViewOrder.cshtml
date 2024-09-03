@@ -36,7 +36,7 @@
         {
             stt = stt + 1;
             var totalmoney = item.UnitPrice * item.Quantity;
-            <tr class="border order-view" onclick="ViewDetailOrder(@stt)">
+            <tr id="order-@item.Id" class="border order-view" onclick="ViewDetailOrder(@stt)">
                 <th scope="row">@stt</th>
                 <td>@item.ProductName</td>
                 <td>@(item.UnitPrice.ToString("n0"))</td>
@@ -46,6 +46,13 @@
                 <td>@item.Status</td>
                 <td><a id="order-detail-@stt" hidden="true" asp-area="Order" asp-action="DetailOrder" asp-controller="Order" asp-route-id="@item.OrderId"></a></td>
             </tr>
+
+            if(item.Status == StatusOrder.Success){
+                <script>
+                    document.getElementById("order-@item.Id").style.color = "green";
+                    document.getElementById("order-@item.Id").style.fontWeight = "bold";
+                </script>
+            }
         }
     </tbody>
 </table>
@@ -64,13 +71,20 @@
         {
             stt = stt + 1;
             var totalmoney = item.UnitPrice * item.Quantity;
-            <tr class="border order-view" onclick="ViewDetailOrder(@stt)">
+            <tr id="m-order-@item.Id" class="border order-view" onclick="ViewDetailOrder(@stt)">
                 <td>@item.ProductName</td>
                 <td>@item.Quantity</td>
                 <td>@(totalmoney.ToString("n0"))</td>
                 <td>@item.Status</td>
                 <td><a id="order-detail-@stt" hidden="true" asp-area="Order" asp-action="DetailOrder" asp-controller="Order" asp-route-id="@item.OrderId"></a></td>
             </tr>
+
+            if(item.Status == StatusOrder.Success){
+                <script>
+                    document.getElementById("m-order-@item.Id").style.color = "green";
+                    document.getElementById("m-order-@item.Id").style.fontWeight = "bold";
+                </script>
+            }
         }
     </tbody>
 </table>

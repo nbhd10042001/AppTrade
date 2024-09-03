@@ -2,7 +2,7 @@
 @{
     Layout = "_LayoutAdmin";
     ViewData["Title"] = "Order";
-    var orders = ViewBag.orders as List<App.Models.OrderModel>;
+    var orders = ViewBag.orders;
 }
 
 <style>
@@ -17,8 +17,15 @@
 
 <partial name="_AlertMessage"></partial>
 
-<strong>All Orders</strong>
+<strong>Orders</strong>
 <hr>
+<h3>Sort</h3>
+<div class="d-flex">
+    <button class="btn btn-outline-secondary" onclick="ButtonSort(`Pending`)">Pending</button>
+    <button class="btn btn-outline-secondary" onclick="ButtonSort(`Shipping`)">Shipping</button>
+    <button class="btn btn-outline-success" onclick="ButtonSort(`Success`)">Success</button>
+    <button class="btn btn-outline-primary" onclick="ButtonSort(`All`)">All</button>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -32,11 +39,11 @@
             <th scope="col">Status</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="tbody-view-order">
         @foreach(var item in orders)
         {
             var price = item.UnitPrice * item.Quantity;
-            <tr class="border order-view" onclick="ViewDetailOrder(@item.Id)">
+            <tr id="order-@item.Id" class="border order-view" onclick="ViewDetailOrder(@item.Id)">
                 <th scope="row">@item.Id</th>
                 <td>@item.UserName</td>
                 <td>@item.ProductName</td>
@@ -47,13 +54,64 @@
                 <td>@item.Status</td>
                 <td><a id="order-detail-@item.Id" hidden="true" asp-area="Order" asp-action="ManagerDetailOrder" asp-controller="Order" asp-route-id="@item.OrderId"></a></td>
             </tr>
+            if(item.Status == StatusOrder.Success){
+                <script>
+                    document.getElementById("order-@item.Id").style.color = "green";
+                    document.getElementById("order-@item.Id").style.fontWeight = "bold";
+                </script>
+            }
         }
     </tbody>
 </table>
 
-<script>
-    function ViewDetailOrder(id)
-    {
-        document.getElementById(`order-detail-${id}`).click();
-    }
-</script>
+@section Scripts{
+    <script>
+        function ViewDetailOrder(id)
+        {
+            document.getElementById(`order-detail-${id}`).click();
+        }
+
+        function ButtonSort(sort)
+        {
+            var formData = new FormData();
+            var urlAction = "@Url.Action("GetOrders_API", "Order")";
+            formData.append("sort", sort);
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlAction,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    if(data.success === true){
+                        var element = document.getElementById("tbody-view-order");
+                        element.innerHTML = "";
+                        for(let i=0;i<data.orders.length;i++){
+                            var price = data.orders[i].unitPrice * data.orders[i].quantity;
+                            var date = new Date(data.orders[i].dateCreate);
+                            element.innerHTML += `
+                                <tr id="order-${data.orders[i].id}" class="border order-view" onclick="ViewDetailOrder(${data.orders[i].id})">
+                                    <th scope="row">${data.orders[i].id}</th>
+                                    <td>${data.orders[i].userName}</td>
+                                    <td>${data.orders[i].productName}</td>
+                                    <td>${date.toLocaleString()}</td>
+                                    <td>${data.orders[i].quantity}</td>
+                                    <td>${price}</td>
+                                    <td>${data.orders[i].paymentMethod}</td>
+                                    <td>${data.orders[i].status}</td>
+                                    <td><a id="order-detail-${data.orders[i].id}" hidden="true" href="/manager-order/detail?id=${data.orders[i].orderId}"></a></td>
+                                </tr>
+                            `;
+                            if(data.orders[i].status == "Success"){
+                                document.getElementById(`order-${data.orders[i].id}`).style.color = "green";
+                                document.getElementById(`order-${data.orders[i].id}`).style.fontWeight = "bold";
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

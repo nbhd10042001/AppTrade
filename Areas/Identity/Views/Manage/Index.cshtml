@@ -6,6 +6,15 @@
     var srcImg = "";
 }
 
+<style>
+    #avatar-user{
+        max-width: 200px;
+        max-height: 400px;
+        min-width: 100px;
+        min-height: 200px;
+    }
+</style>
+
 <h1>@ViewData["Title"].</h1>
 <p class="text-success">@ViewData["StatusMessage"]</p>
 
@@ -21,7 +30,7 @@
             else
                 srcImg = "/contents/AvatarUsers/" + Model.AvatarUser.AvatarName;
 
-            <img id="avatar-user" src=@srcImg class="w-25" alt="...">
+            <img id="avatar-user" src=@srcImg alt="...">
             
             <input  class="collapse" type="file" 
                     id="select-file-upload" onchange="AutoUploadPhoto()">
@@ -190,8 +199,4 @@
         });
     }
 
-    // kiem tra da nap tat ca document can thiet thi thuc hien load photos cua product
-    $(document).ready(function() {
-        LoadPhotos();
-    });
 </script>
